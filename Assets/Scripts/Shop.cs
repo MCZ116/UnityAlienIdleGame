@@ -16,7 +16,7 @@ public class Shop : MonoBehaviour
         //foodPrice *= alienScript.LightPower;
     }
 
-    public void feedingAlien()
+    public void FeedingAlien()
     {
         if (alienScript.mainCurrency > foodPrice)
         {

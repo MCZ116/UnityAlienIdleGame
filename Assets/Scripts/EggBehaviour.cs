@@ -84,11 +84,11 @@ public class EggBehaviour : MonoBehaviour
     public void AnimationIdle()
     {
 
-        if (alienScript.LightPower < alien1)
+        if (alienScript.AlienLevel < alien1)
         {
             animationIdle.SetBool("idleAlien", false);
         }
-        else if (alienScript.LightPower >= alien1)
+        else if (alienScript.AlienLevel >= alien1)
         {
             animationIdle.SetBool("idleAlien", true);
         }
