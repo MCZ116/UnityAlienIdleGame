@@ -5,11 +5,13 @@ public class IdleScript : MonoBehaviour
 {
 
     public int delayTime = 1;
+    public int buyModeID;
     public Text AlienLevelText;
     public Text CurrencyText;
     public Text RPointsText;
     public Text ButtonUpgradeOneText;
     public Text ButtonUpgradeMaxText;
+    public Text ChangeBuyModeText;
     public double mainCurrency;
     public double alienUpgradeCosts;
     public double researchPointsPerSecond;
@@ -32,6 +34,7 @@ public class IdleScript : MonoBehaviour
         alienUpgradeCosts = 25;
         alienLevel = 0;
         upgradeLevel1 = 0;
+        ChangeBuyModeText.text = "Upgrade: 5";
     }
 
     void Update()
@@ -42,9 +45,9 @@ public class IdleScript : MonoBehaviour
         AlienLevelText.text = "Level: " + alienLevel.ToString("F0");
         CurrencyText.text = "Research Points: " + mainCurrency.ToString("F0");
         RPointsText.text = researchPointsPerSecond.ToString("F0") + "RP/s ";
-        ButtonUpgradeOneText.text = "Upgrade: " + costIncrease.ToString("F0");
-        ButtonUpgradeMaxText.text = "Max: " + BuyMaxCount();
-
+        ButtonUpgradeOneText.text = "1 Upgrade \n Price: " + costIncrease.ToString("F0");
+        ButtonUpgradeMaxText.text = "Buy: " + BuyMaxCount();
+        
         mainCurrency += researchPointsPerSecond * Time.deltaTime;
     }
 
@@ -109,7 +112,31 @@ public class IdleScript : MonoBehaviour
             upgradeLevel1++;
             //upgradeLevel1 *= 1.07;
             alienLevel++;
-     
+
+        } 
+
+    }
+
+    public void ChangeBuyButtonMode()
+    {
+        switch (buyModeID)
+        {
+            case 0:
+                ChangeBuyModeText.text = "Upgrade: 1";
+                buyModeID = 1;
+                break;
+            case 1:
+                ChangeBuyModeText.text = "Upgrade: 10";
+                buyModeID = 2;
+                break;
+            case 2:
+                ChangeBuyModeText.text = "Upgrade: 100";
+                buyModeID = 3;
+                break;
+            case 3:
+                ChangeBuyModeText.text = "Upgrade: MAX";
+                buyModeID = 0;
+                break;
         }
     }
 
@@ -119,7 +146,19 @@ public class IdleScript : MonoBehaviour
         var c = mainCurrency;
         var r = 1.07;
         var u = upgradeLevel1;
-        var n = System.Math.Floor(System.Math.Log(c * (r - 1) / (h * System.Math.Pow(r, u)) + 1, r));
+        double n = 0;
+
+        switch (buyModeID)
+        {
+            case 0:
+                return System.Math.Floor(System.Math.Log(c * (r - 1) / (h * System.Math.Pow(r, u)) + 1, r));
+            case 1:
+                return 1;
+            case 2:
+                return 10;
+            case 3:
+                return 100;
+        }
         return n;
     }
 
@@ -129,9 +168,26 @@ public class IdleScript : MonoBehaviour
             var c = mainCurrency;
             var r = 1.07;
             var u = upgradeLevel1;
-            var n = System.Math.Floor(System.Math.Log(c * (r - 1) / (h * System.Math.Pow(r, u))+1 ,r));
 
-            var costUpgrade = h * (System.Math.Pow(r, u) * (System.Math.Pow(r, n) - 1) / (r - 1));
+        double n = 0;
+
+        switch (buyModeID)
+        {
+            case 0:
+                n = System.Math.Floor(System.Math.Log(c * (r - 1) / (h * System.Math.Pow(r, u)) + 1, r));
+                break;
+            case 1:
+                n = 1;
+                break;
+            case 2:
+                n = 10;
+                break;
+            case 3:
+                n = 100;
+                break;
+        }
+
+        var costUpgrade = h * (System.Math.Pow(r, u) * (System.Math.Pow(r, n) - 1) / (r - 1));
 
             if(mainCurrency >= costUpgrade)
             {
@@ -139,5 +195,6 @@ public class IdleScript : MonoBehaviour
               mainCurrency -= costUpgrade;
               alienLevel += n;
             }
+
     }
 }
