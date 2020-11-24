@@ -11,8 +11,7 @@ public class GameData
     public double upgradeCostsData;
     public double alienLevelData;
     public double upgradeLevelData;
-    //public DateTime oldTimeSave;
-    //OfflineProgress offlineProgress;
+
 
     public GameData (IdleScript idleScript)
     {
@@ -20,7 +19,7 @@ public class GameData
         upgradeCostsData = idleScript.alienUpgradeCosts;
         alienLevelData = idleScript.AlienLevel;
         upgradeLevelData = idleScript.upgradeLevel1;
-        //oldTimeSave = offlineProgress.oldTime;
+
     }
 
 

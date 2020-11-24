@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class IdleScript : MonoBehaviour
 {
-
+    public OfflineProgress offline;
     public int delayTime = 1;
     public int buyModeID;
     public Text AlienLevelText;
@@ -35,8 +35,10 @@ public class IdleScript : MonoBehaviour
         alienUpgradeCosts = 25;
         alienLevel = 0;
         upgradeLevel1 = 0;
-        ChangeBuyModeText.text = "Upgrade: 5";
+        ChangeBuyModeText.text = "Upgrade: 1";
         Load();
+        offline.OfflineProgressLoad();
+        
     }
 
     IEnumerator MySave()
@@ -58,6 +60,7 @@ public class IdleScript : MonoBehaviour
         
         mainCurrency += researchPointsPerSecond * Time.deltaTime;
         StartCoroutine("MySave");
+        SaveDate();
     }
 
     public void CanvasGroupMenuSwitch(bool status, CanvasGroup choosenGroup)
@@ -109,6 +112,11 @@ public class IdleScript : MonoBehaviour
         alienUpgradeCosts = gameData.upgradeCostsData;
         AlienLevel = gameData.alienLevelData;
         upgradeLevel1 = gameData.upgradeLevelData;
+    }
+
+    public void SaveDate()
+    {
+        PlayerPrefs.SetString("OfflineTime", System.DateTime.Now.ToBinary().ToString());
     }
 
     public void UpgradeButtonClicked()

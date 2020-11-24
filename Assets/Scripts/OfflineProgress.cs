@@ -6,31 +6,34 @@ using UnityEngine;
 
 public class OfflineProgress : MonoBehaviour
 {
-    //public IdleScript idleScript;
-    //public GameObject offlineRewards;
-    //public Text offlineRewardText;
-    //public DateTime currentTime;
-    //public DateTime oldTime;
+    public IdleScript idleScript;
+    public GameObject offlineRewards;
+    public Text offlineRewardText;
+    public Text offlineTimeText;
 
-    //public void OfflineProgressLoad()
-    //{
-    //    GameData gameData = SaveSystem.LoadData();
-    //    var oldTime = gameData.oldTimeSave;
-    //    var currentTime = DateTime.Now;
-    //    var difference = currentTime.Subtract(oldTime);
-    //    var rawTime = (float)difference.TotalSeconds;
-    //    var offlineTime = rawTime / 10;
 
-    //    offlineRewards.SetActive(true);
-    //    TimeSpan timeSpan = TimeSpan.FromSeconds(rawTime);
+    public void OfflineProgressLoad()
+    {
 
-    //    double totalRewards = idleScript.researchPointsPerSecond * offlineTime;
-    //    offlineRewardText.text = totalRewards.ToString("F0");
-    //}
+        var tempOfflineTime = Convert.ToInt64(PlayerPrefs.GetString("OfflineTime"));
+        var oldTime = DateTime.FromBinary(tempOfflineTime);
+        var currentTime = DateTime.Now;
+        var difference = currentTime.Subtract(oldTime);
+        var rawTime = (float)difference.TotalSeconds;
+        var offlineTime = rawTime;
 
-    //public void CloseOfflineProgress()
-    //{
-    //    offlineRewards.SetActive(false);
-    //}
+        offlineRewards.SetActive(true);
+        TimeSpan timeSpan = TimeSpan.FromSeconds(rawTime);
+        offlineTimeText.text = $"{timeSpan:dd\\:hh\\:mm\\:ss}";
+
+        double totalRewards = idleScript.upgradeLevel1 * offlineTime;
+        idleScript.mainCurrency += totalRewards;
+        offlineRewardText.text = totalRewards.ToString("F0");
+    }
+
+    public void CloseOfflineProgress()
+    {
+        offlineRewards.SetActive(false);
+    }
 
 }
