@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class IdleScript : MonoBehaviour
@@ -35,6 +36,13 @@ public class IdleScript : MonoBehaviour
         alienLevel = 0;
         upgradeLevel1 = 0;
         ChangeBuyModeText.text = "Upgrade: 5";
+        Load();
+    }
+
+    IEnumerator MySave()
+    {
+        yield return new WaitForSeconds(5f);
+        Save();
     }
 
     void Update()
@@ -49,6 +57,7 @@ public class IdleScript : MonoBehaviour
         ButtonUpgradeMaxText.text = "Buy: " + BuyMaxCount();
         
         mainCurrency += researchPointsPerSecond * Time.deltaTime;
+        StartCoroutine("MySave");
     }
 
     public void CanvasGroupMenuSwitch(bool status, CanvasGroup choosenGroup)
@@ -85,23 +94,22 @@ public class IdleScript : MonoBehaviour
         } 
     }
 
-    //public void Save()
-    //{
+    public void Save()
+    {
 
-    //    mainCurrency = double.Parse(PlayerPrefs.GetString("mainCurrency", "100"));
-    //    lightPower = double.Parse(PlayerPrefs.GetString("lightPower", "0"));
-    //    lightUpgradeCosts = double.Parse(PlayerPrefs.GetString("lightUpgradeCosts", "25"));
-    //    upgradeLevel1 = double.Parse(PlayerPrefs.GetString("upgradeLevel1", "0"));
+        SaveSystem.SaveGameData(this);
 
-    //}
+    }
 
-    //public void Load()
-    //{
-    //    PlayerPrefs.SetString("mainCurrency", mainCurrency.ToString());
-    //    PlayerPrefs.SetString("lightPower", lightPower.ToString());
-    //    PlayerPrefs.SetString("lightUpgradeCosts", lightUpgradeCosts.ToString());
-    //    PlayerPrefs.SetString("upgradeLevel1", mainCurrency.ToString());
-    //}
+    public void Load()
+    {
+        GameData gameData = SaveSystem.LoadData();
+
+        mainCurrency = gameData.researchPointsData;
+        alienUpgradeCosts = gameData.upgradeCostsData;
+        AlienLevel = gameData.alienLevelData;
+        upgradeLevel1 = gameData.upgradeLevelData;
+    }
 
     public void UpgradeButtonClicked()
     {

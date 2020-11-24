@@ -27,39 +27,17 @@ public class EggBehaviour : MonoBehaviour
     public Text Hunger;
 
     void Start()
-    {
-        
-        //render = GetComponent<SpriteRenderer>();
-        //alien1egg = Resources.Load<Sprite>("alien1egg");
-        //alien1phase3= Resources.Load<Sprite>("alien1phase3");
-        //render.sprite = alien1egg;
+    {   
         animationIdle = GetComponent<Animator>();
     }
-
 
     void Update()
     {
         Hunger.text = "Hunger: " + hunger;
 
-        //ChangingSprite();
         SurvivalStats();
         AnimationIdle();
     }
-
-    //public void ChangingSprite()
-    //{
-    //    if (alienScript.LightPower != 0)
-    //    {
-    //        if (alienScript.LightPower < alien1)
-    //        {
-    //            render.sprite = alien1egg;
-
-
-    //        }
-    //        else if (alienScript.LightPower >= alien1)
-    //            render.sprite = alien1phase3;
-    //    }
-    //}
 
     public void SurvivalStats()
     {
