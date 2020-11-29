@@ -14,7 +14,7 @@ TagManager:
   - 
   - 
   - Aliens
-  - 
+  - Background
   - 
   - 
   - 
@@ -40,4 +40,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 4195809965
+    locked: 0
+  - name: Aliens
+    uniqueID: 1320082481
     locked: 0

@@ -8,8 +8,8 @@ public class EggBehaviour : MonoBehaviour
     [SerializeField]
     private IdleScript alienScript;
 
-    private SpriteRenderer render;
-    private Sprite alien1egg, alien1phase3;
+    //private SpriteRenderer render;
+    //private Sprite alien1egg, alien1phase3;
     [SerializeField]
     private int alien1;
 

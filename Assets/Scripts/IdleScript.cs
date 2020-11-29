@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +18,7 @@ public class IdleScript : MonoBehaviour
     public double alienUpgradeCosts;
     public double researchPointsPerSecond;
     public double upgradeLevel1;
+
 
     public GameObject alienScreen;
 
@@ -51,16 +53,52 @@ public class IdleScript : MonoBehaviour
     {
         var costIncrease = 25 * System.Math.Pow(1.07, upgradeLevel1);
         researchPointsPerSecond = upgradeLevel1;
-
         AlienLevelText.text = "Level: " + alienLevel.ToString("F0");
-        CurrencyText.text = "Research Points: " + mainCurrency.ToString("F0");
+        CurrencyText.text = "Research Points: " + ExponentLetterSystem(mainCurrency, "F2");
         RPointsText.text = researchPointsPerSecond.ToString("F0") + "RP/s ";
-        ButtonUpgradeOneText.text = "1 Upgrade \n Price: " + costIncrease.ToString("F0");
+        ButtonUpgradeOneText.text = "1 Upgrade \n Price: " + ExponentLetterSystem(costIncrease, "F2");
         ButtonUpgradeMaxText.text = "Buy: " + BuyMaxCount();
         
         mainCurrency += researchPointsPerSecond * Time.deltaTime;
         StartCoroutine("MySave");
         SaveDate();
+    }
+
+
+    //public String ExponentSystem(double value, string numberAfterPoint)
+    //{
+
+    //    if (value > 1000)
+    //    {
+    //        var exponent = (System.Math.Floor(System.Math.Log10(System.Math.Abs(value))));
+    //        var mantissa = (value / System.Math.Pow(10, exponent));
+    //        return mantissa.ToString("F2") + "e" + exponent;
+    //    }
+    //    return value.ToString(numberAfterPoint);
+
+    //}
+
+ public static String ExponentLetterSystem(double value, string numberToString)
+    {
+
+        if (value <= 1000) return value.ToString(numberToString);
+
+        var exponentSci = Math.Floor(Math.Log10(value));
+        var exponentEng = 3 * Math.Floor(exponentSci / 3);
+        var letterOne = ((char)Math.Floor((((double)exponentEng - 3) / 3) % 26 + 97)).ToString();
+
+        if ((double)exponentEng / 3 >= 27)
+        {
+            var letterTwo = ((char)(Math.Floor(((double)exponentEng - 3 * 26) / (3 * 26)) % 26 + 97)).ToString();
+            return (value / Math.Pow(10, exponentEng)).ToString("F2") + letterTwo + letterOne;
+        }
+        if (value > 1000)
+        {
+            return (value / Math.Pow(10, exponentEng)).ToString("F2") + letterOne;
+
+        }
+        return value.ToString("F2");
+
     }
 
     public void CanvasGroupMenuSwitch(bool status, CanvasGroup choosenGroup)
