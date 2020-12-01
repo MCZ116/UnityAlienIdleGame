@@ -11,6 +11,7 @@ public class GameData
     public double upgradeCostsData;
     public double alienLevelData;
     public double upgradeLevelData;
+    public double mainResetLevelData;
 
 
     public GameData (IdleScript idleScript)
@@ -19,6 +20,7 @@ public class GameData
         upgradeCostsData = idleScript.alienUpgradeCosts;
         alienLevelData = idleScript.AlienLevel;
         upgradeLevelData = idleScript.upgradeLevel1;
+        mainResetLevelData = idleScript.mainResetLevel;
 
     }
 

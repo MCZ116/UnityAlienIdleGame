@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class IdleScript : MonoBehaviour
 {
     public OfflineProgress offline;
-    public int delayTime = 1;
     public int buyModeID;
     public Text AlienLevelText;
     public Text CurrencyText;
@@ -16,8 +15,8 @@ public class IdleScript : MonoBehaviour
     public Text ChangeBuyModeText;
     public double mainCurrency;
     public double alienUpgradeCosts;
-    public double researchPointsPerSecond;
     public double upgradeLevel1;
+    public double mainResetLevel;
 
 
     public GameObject alienScreen;
@@ -25,6 +24,8 @@ public class IdleScript : MonoBehaviour
     public CanvasGroup canvasShop;
 
     public CanvasGroup canvasMainGame;
+
+    public CanvasGroup canvasRebirthTab;
 
     private double alienLevel;
 
@@ -52,16 +53,23 @@ public class IdleScript : MonoBehaviour
     void Update()
     {
         var costIncrease = 25 * System.Math.Pow(1.07, upgradeLevel1);
-        researchPointsPerSecond = upgradeLevel1;
         AlienLevelText.text = "Level: " + alienLevel.ToString("F0");
         CurrencyText.text = "Research Points: " + ExponentLetterSystem(mainCurrency, "F2");
-        RPointsText.text = researchPointsPerSecond.ToString("F0") + "RP/s ";
+        RPointsText.text = researchPointsPerSecond().ToString("F2") + "RP/s ";
         ButtonUpgradeOneText.text = "1 Upgrade \n Price: " + ExponentLetterSystem(costIncrease, "F2");
         ButtonUpgradeMaxText.text = "Buy: " + BuyMaxCount();
         
-        mainCurrency += researchPointsPerSecond * Time.deltaTime;
+        mainCurrency += researchPointsPerSecond() * Time.deltaTime;
         StartCoroutine("MySave");
         SaveDate();
+    }
+
+    public double researchPointsPerSecond()
+    {
+        double temp = 0;
+        temp += upgradeLevel1;
+        temp += RebirthBoost();
+        return temp;
     }
 
 
@@ -125,12 +133,21 @@ public class IdleScript : MonoBehaviour
                 CanvasGroupMenuSwitch(true, canvasMainGame);
                 CanvasGroupMenuSwitch(false, canvasShop);
                 alienScreen.SetActive(true);
+                CanvasGroupMenuSwitch(false, canvasRebirthTab);
                 break;
 
             case "shopMenu":
                 CanvasGroupMenuSwitch(false, canvasMainGame);
                 CanvasGroupMenuSwitch(true, canvasShop);
                 alienScreen.SetActive(false);
+                CanvasGroupMenuSwitch(false, canvasRebirthTab);
+                break;
+
+            case "rebirth":
+                CanvasGroupMenuSwitch(false, canvasMainGame);
+                CanvasGroupMenuSwitch(false, canvasShop);
+                alienScreen.SetActive(false);
+                CanvasGroupMenuSwitch(true, canvasRebirthTab);
                 break;
         } 
     }
@@ -150,6 +167,7 @@ public class IdleScript : MonoBehaviour
         alienUpgradeCosts = gameData.upgradeCostsData;
         AlienLevel = gameData.alienLevelData;
         upgradeLevel1 = gameData.upgradeLevelData;
+        mainResetLevel = gameData.mainResetLevelData;
     }
 
     public void SaveDate()
@@ -250,5 +268,25 @@ public class IdleScript : MonoBehaviour
               alienLevel += n;
             }
 
+    }
+
+    public void FullReset()
+    {
+        if (mainCurrency >= 1000)
+        {
+            mainCurrency = 100;
+            alienUpgradeCosts = 25;
+            alienLevel = 0;
+            upgradeLevel1 = 0;
+            mainResetLevel++;
+        }
+    }
+
+    public double RebirthBoost()
+    {
+        double rBoost = 0;
+        rBoost += 0.05 * upgradeLevel1 * 0.1;
+        rBoost += 0.05 * mainResetLevel * 1.7;
+        return rBoost + 1;
     }
 }
