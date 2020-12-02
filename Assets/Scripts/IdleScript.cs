@@ -18,6 +18,7 @@ public class IdleScript : MonoBehaviour
     public double upgradeLevel1;
     public double mainResetLevel;
 
+    public Research research;
 
     public GameObject alienScreen;
 
@@ -27,15 +28,22 @@ public class IdleScript : MonoBehaviour
 
     public CanvasGroup canvasRebirthTab;
 
+    public CanvasGroup canvasResearchTab;
+
     private double alienLevel;
 
     public double AlienLevel { get => alienLevel; set => alienLevel = value; }
+
+    private double research1Level;
+    [SerializeField]
+    public double Research1Level { get => research1Level; set => research1Level = value; }
 
     void Start()
     {
         Application.targetFrameRate = 30;
         mainCurrency = 100;
         alienUpgradeCosts = 25;
+        research1Level = 0;
         alienLevel = 0;
         upgradeLevel1 = 0;
         ChangeBuyModeText.text = "Upgrade: 1";
@@ -55,19 +63,20 @@ public class IdleScript : MonoBehaviour
         var costIncrease = 25 * System.Math.Pow(1.07, upgradeLevel1);
         AlienLevelText.text = "Level: " + alienLevel.ToString("F0");
         CurrencyText.text = "Research Points: " + ExponentLetterSystem(mainCurrency, "F2");
-        RPointsText.text = researchPointsPerSecond().ToString("F2") + "RP/s ";
+        RPointsText.text = ResearchPointsPerSecond().ToString("F2") + "RP/s ";
         ButtonUpgradeOneText.text = "1 Upgrade \n Price: " + ExponentLetterSystem(costIncrease, "F2");
         ButtonUpgradeMaxText.text = "Buy: " + BuyMaxCount();
         
-        mainCurrency += researchPointsPerSecond() * Time.deltaTime;
+        mainCurrency += ResearchPointsPerSecond() * Time.deltaTime;
         StartCoroutine("MySave");
         SaveDate();
     }
 
-    public double researchPointsPerSecond()
+    public double ResearchPointsPerSecond()
     {
         double temp = 0;
         temp += upgradeLevel1;
+        temp += research.ResearchBoost();
         temp += RebirthBoost();
         return temp;
     }
@@ -134,6 +143,7 @@ public class IdleScript : MonoBehaviour
                 CanvasGroupMenuSwitch(false, canvasShop);
                 alienScreen.SetActive(true);
                 CanvasGroupMenuSwitch(false, canvasRebirthTab);
+                CanvasGroupMenuSwitch(false, canvasResearchTab);
                 break;
 
             case "shopMenu":
@@ -141,6 +151,7 @@ public class IdleScript : MonoBehaviour
                 CanvasGroupMenuSwitch(true, canvasShop);
                 alienScreen.SetActive(false);
                 CanvasGroupMenuSwitch(false, canvasRebirthTab);
+                CanvasGroupMenuSwitch(false, canvasResearchTab);
                 break;
 
             case "rebirth":
@@ -148,6 +159,15 @@ public class IdleScript : MonoBehaviour
                 CanvasGroupMenuSwitch(false, canvasShop);
                 alienScreen.SetActive(false);
                 CanvasGroupMenuSwitch(true, canvasRebirthTab);
+                CanvasGroupMenuSwitch(false, canvasResearchTab);
+                break;
+
+            case "researchMenu":
+                CanvasGroupMenuSwitch(false, canvasMainGame);
+                CanvasGroupMenuSwitch(false, canvasShop);
+                alienScreen.SetActive(false);
+                CanvasGroupMenuSwitch(false, canvasRebirthTab);
+                CanvasGroupMenuSwitch(true, canvasResearchTab);
                 break;
         } 
     }
@@ -168,6 +188,7 @@ public class IdleScript : MonoBehaviour
         AlienLevel = gameData.alienLevelData;
         upgradeLevel1 = gameData.upgradeLevelData;
         mainResetLevel = gameData.mainResetLevelData;
+        Research1Level = gameData.researchLevel1;
     }
 
     public void SaveDate()
@@ -279,6 +300,7 @@ public class IdleScript : MonoBehaviour
             alienLevel = 0;
             upgradeLevel1 = 0;
             mainResetLevel++;
+            research1Level = 0;
         }
     }
 

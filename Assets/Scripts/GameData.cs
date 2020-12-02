@@ -12,7 +12,7 @@ public class GameData
     public double alienLevelData;
     public double upgradeLevelData;
     public double mainResetLevelData;
-
+    public double researchLevel1;
 
     public GameData (IdleScript idleScript)
     {
@@ -21,6 +21,7 @@ public class GameData
         alienLevelData = idleScript.AlienLevel;
         upgradeLevelData = idleScript.upgradeLevel1;
         mainResetLevelData = idleScript.mainResetLevel;
+        researchLevel1 = idleScript.Research1Level;
 
     }
 
