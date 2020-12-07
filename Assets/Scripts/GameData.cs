@@ -8,20 +8,22 @@ public class GameData
 {
 
     public double researchPointsData;
-    public double upgradeCostsData;
     public double alienLevelData;
+    public double alienLevelData2;
     public double upgradeLevelData;
     public double mainResetLevelData;
     public double researchLevel1;
+    public double researchLevel2;
 
     public GameData (IdleScript idleScript)
     {
         researchPointsData = idleScript.mainCurrency;
-        upgradeCostsData = idleScript.alienUpgradeCosts;
-        alienLevelData = idleScript.AlienLevel;
+        alienLevelData = idleScript.AlienLevel[0];
+        alienLevelData2 = idleScript.AlienLevel[1];
         upgradeLevelData = idleScript.upgradeLevel1;
         mainResetLevelData = idleScript.mainResetLevel;
-        researchLevel1 = idleScript.Research1Level;
+        researchLevel1 = idleScript.Research1Level[0];
+        researchLevel2 = idleScript.Research1Level[1];
 
     }
 

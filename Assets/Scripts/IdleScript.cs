@@ -7,14 +7,13 @@ public class IdleScript : MonoBehaviour
 {
     public OfflineProgress offline;
     public int buyModeID;
-    public Text AlienLevelText;
+    public Text[] AlienLevelText;
     public Text CurrencyText;
     public Text RPointsText;
-    public Text ButtonUpgradeOneText;
-    public Text ButtonUpgradeMaxText;
+    public Text[] ButtonUpgradeMaxText;
     public Text ChangeBuyModeText;
     public double mainCurrency;
-    public double alienUpgradeCosts;
+    double[] alienUpgradeCosts = { 25, 225 };
     public double upgradeLevel1;
     public double mainResetLevel;
 
@@ -30,21 +29,24 @@ public class IdleScript : MonoBehaviour
 
     public CanvasGroup canvasResearchTab;
 
-    private double alienLevel;
+    private double[] alienLevel;
 
-    public double AlienLevel { get => alienLevel; set => alienLevel = value; }
+    public double[] AlienLevel { get => alienLevel; set => alienLevel = value; }
 
-    private double research1Level;
-    [SerializeField]
-    public double Research1Level { get => research1Level; set => research1Level = value; }
+    private double[] research1Level;
+
+    public double[] Research1Level { get => research1Level; set => research1Level = value; }
 
     void Start()
     {
         Application.targetFrameRate = 30;
         mainCurrency = 100;
-        alienUpgradeCosts = 25;
-        research1Level = 0;
-        alienLevel = 0;
+        Research1Level = new double[2];
+        Research1Level[0] = 0;
+        Research1Level[1] = 0;
+        AlienLevel = new double[2];
+        alienLevel[0] = 0;
+        alienLevel[1] = 0;
         upgradeLevel1 = 0;
         ChangeBuyModeText.text = "Upgrade: 1";
         Load();
@@ -59,14 +61,17 @@ public class IdleScript : MonoBehaviour
     }
 
     void Update()
-    {
-        var costIncrease = 25 * System.Math.Pow(1.07, upgradeLevel1);
-        AlienLevelText.text = "Level: " + alienLevel.ToString("F0");
+    {   
+        
+        
         CurrencyText.text = "Research Points: " + ExponentLetterSystem(mainCurrency, "F2");
         RPointsText.text = ResearchPointsPerSecond().ToString("F2") + "RP/s ";
-        ButtonUpgradeOneText.text = "1 Upgrade \n Price: " + ExponentLetterSystem(costIncrease, "F2");
-        ButtonUpgradeMaxText.text = "Buy: " + BuyMaxCount();
-        
+
+        for (int id = 0; id < AlienLevel.Length; id++) {
+            AlienLevelText[id].text = "Level: " + alienLevel[id].ToString("F0");
+            ButtonUpgradeMaxText[id].text = "Buy: " + BuyMaxCount(id) + "\n Price: " + ExponentLetterSystem(BuyCount(id), "F2");
+        }
+
         mainCurrency += ResearchPointsPerSecond() * Time.deltaTime;
         StartCoroutine("MySave");
         SaveDate();
@@ -76,24 +81,11 @@ public class IdleScript : MonoBehaviour
     {
         double temp = 0;
         temp += upgradeLevel1;
+        temp += upgradeLevel1;
         temp += research.ResearchBoost();
         temp += RebirthBoost();
         return temp;
     }
-
-
-    //public String ExponentSystem(double value, string numberAfterPoint)
-    //{
-
-    //    if (value > 1000)
-    //    {
-    //        var exponent = (System.Math.Floor(System.Math.Log10(System.Math.Abs(value))));
-    //        var mantissa = (value / System.Math.Pow(10, exponent));
-    //        return mantissa.ToString("F2") + "e" + exponent;
-    //    }
-    //    return value.ToString(numberAfterPoint);
-
-    //}
 
  public static String ExponentLetterSystem(double value, string numberToString)
     {
@@ -184,30 +176,17 @@ public class IdleScript : MonoBehaviour
         GameData gameData = SaveSystem.LoadData();
 
         mainCurrency = gameData.researchPointsData;
-        alienUpgradeCosts = gameData.upgradeCostsData;
-        AlienLevel = gameData.alienLevelData;
+        AlienLevel[0] = gameData.alienLevelData;
+        AlienLevel[1] = gameData.alienLevelData2;
         upgradeLevel1 = gameData.upgradeLevelData;
         mainResetLevel = gameData.mainResetLevelData;
-        Research1Level = gameData.researchLevel1;
+        Research1Level[0] = gameData.researchLevel1;
+        Research1Level[1] = gameData.researchLevel2;
     }
 
     public void SaveDate()
     {
         PlayerPrefs.SetString("OfflineTime", System.DateTime.Now.ToBinary().ToString());
-    }
-
-    public void UpgradeButtonClicked()
-    {
-        var costIncrease = 25 * System.Math.Pow(1.07, upgradeLevel1);
-        if (mainCurrency >= costIncrease)
-        {
-            mainCurrency -= costIncrease;
-            upgradeLevel1++;
-            //upgradeLevel1 *= 1.07;
-            alienLevel++;
-
-        } 
-
     }
 
     public void ChangeBuyButtonMode()
@@ -233,12 +212,39 @@ public class IdleScript : MonoBehaviour
         }
     }
 
-    public double BuyMaxCount()
+    public double BuyCount(int id)
     {
-        var h = 25;
+        var h = alienUpgradeCosts[id];
         var c = mainCurrency;
         var r = 1.07;
-        var u = upgradeLevel1;
+        var u = AlienLevel[id];
+        double n = 0;
+
+        switch (buyModeID)
+        {
+            case 0:
+                n = System.Math.Floor(System.Math.Log(c * (r - 1) / (h * System.Math.Pow(r, u)) + 1, r));
+                break;
+            case 1:
+                n = 1;
+                break;
+            case 2:
+                n = 10;
+                break;
+            case 3:
+                n = 100;
+                break;
+        }
+        var costUpgrade = h * (System.Math.Pow(r, u) * (System.Math.Pow(r, n) - 1) / (r - 1));
+        return costUpgrade;
+    }
+
+    public double BuyMaxCount(int id)
+    {
+        var h = alienUpgradeCosts[id];
+        var c = mainCurrency;
+        var r = 1.07;
+        var u = AlienLevel[id];
         double n = 0;
 
         switch (buyModeID)
@@ -255,12 +261,12 @@ public class IdleScript : MonoBehaviour
         return n;
     }
 
-    public void BuyMaxUpgradeClicked()
+    public void BuyMaxUpgradeClicked(int id)
     {
-            var h = 25;
+            var h = alienUpgradeCosts[id];
             var c = mainCurrency;
             var r = 1.07;
-            var u = upgradeLevel1;
+            var u = AlienLevel[id];
 
         double n = 0;
 
@@ -284,10 +290,10 @@ public class IdleScript : MonoBehaviour
 
             if(mainCurrency >= costUpgrade)
             {
-              upgradeLevel1 += (int)n;
+              alienLevel[id] += (int)n;
               mainCurrency -= costUpgrade;
-              alienLevel += n;
-            }
+              upgradeLevel1 += (int)n;
+        }
 
     }
 
@@ -296,11 +302,12 @@ public class IdleScript : MonoBehaviour
         if (mainCurrency >= 1000)
         {
             mainCurrency = 100;
-            alienUpgradeCosts = 25;
-            alienLevel = 0;
+            alienLevel[0] = 0;
+            alienLevel[0] = 1;
             upgradeLevel1 = 0;
             mainResetLevel++;
-            research1Level = 0;
+            Research1Level[0] = 0;
+            Research1Level[1] = 0;
         }
     }
 

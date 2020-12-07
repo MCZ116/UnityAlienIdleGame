@@ -62,11 +62,11 @@ public class EggBehaviour : MonoBehaviour
     public void AnimationIdle()
     {
 
-        if (alienScript.AlienLevel < alien1)
+        if (alienScript.AlienLevel[0] < alien1)
         {
             animationIdle.SetBool("idleAlien", false);
         }
-        else if (alienScript.AlienLevel >= alien1)
+        else if (alienScript.AlienLevel[0] >= alien1)
         {
             animationIdle.SetBool("idleAlien", true);
         }
