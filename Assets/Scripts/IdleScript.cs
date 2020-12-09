@@ -16,6 +16,7 @@ public class IdleScript : MonoBehaviour
     double[] alienUpgradeCosts = { 25, 225 };
     public double upgradeLevel1;
     public double mainResetLevel;
+    public bool[] upgradesActivated = { false };
 
     public Research research;
 
@@ -81,7 +82,8 @@ public class IdleScript : MonoBehaviour
     {
         double temp = 0;
         temp += upgradeLevel1;
-        temp += upgradeLevel1;
+        temp += AlienLevel[0] * 0.3;
+        temp += AlienLevel[1] * 0.3;
         temp += research.ResearchBoost();
         temp += RebirthBoost();
         return temp;
@@ -182,6 +184,7 @@ public class IdleScript : MonoBehaviour
         mainResetLevel = gameData.mainResetLevelData;
         Research1Level[0] = gameData.researchLevel1;
         Research1Level[1] = gameData.researchLevel2;
+        upgradesActivated[0] = gameData.upgradeActivated;
     }
 
     public void SaveDate()
@@ -302,12 +305,13 @@ public class IdleScript : MonoBehaviour
         if (mainCurrency >= 1000)
         {
             mainCurrency = 100;
-            alienLevel[0] = 0;
+            alienLevel[1]= 0;
             alienLevel[0] = 1;
             upgradeLevel1 = 0;
             mainResetLevel++;
             Research1Level[0] = 0;
             Research1Level[1] = 0;
+            upgradesActivated[0] = false;
         }
     }
 

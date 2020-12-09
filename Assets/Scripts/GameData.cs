@@ -14,6 +14,7 @@ public class GameData
     public double mainResetLevelData;
     public double researchLevel1;
     public double researchLevel2;
+    public bool upgradeActivated;
 
     public GameData (IdleScript idleScript)
     {
@@ -24,6 +25,7 @@ public class GameData
         mainResetLevelData = idleScript.mainResetLevel;
         researchLevel1 = idleScript.Research1Level[0];
         researchLevel2 = idleScript.Research1Level[1];
+        upgradeActivated = idleScript.upgradesActivated[0];
 
     }
 
