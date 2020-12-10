@@ -12,15 +12,18 @@ public class IdleScript : MonoBehaviour
     public Text RPointsText;
     public Text[] ButtonUpgradeMaxText;
     public Text ChangeBuyModeText;
+    public Text RebirthPrice;
+    public Text RebirthLevel;
     public double mainCurrency;
+    public double rebirthCost;
     double[] alienUpgradeCosts = { 25, 225 };
     public double upgradeLevel1;
     public double mainResetLevel;
     public bool[] upgradesActivated = { false };
 
-    public Research research;
+    public Button[] upgradeButtons;
 
-    public GameObject alienScreen;
+    public Research research;
 
     public CanvasGroup canvasShop;
 
@@ -42,17 +45,19 @@ public class IdleScript : MonoBehaviour
     {
         Application.targetFrameRate = 30;
         mainCurrency = 100;
+        rebirthCost = 10000;
         Research1Level = new double[2];
         Research1Level[0] = 0;
         Research1Level[1] = 0;
         AlienLevel = new double[2];
-        alienLevel[0] = 0;
-        alienLevel[1] = 0;
+        alienLevel[0] = 1;
+        alienLevel[1] = 1;
         upgradeLevel1 = 0;
         ChangeBuyModeText.text = "Upgrade: 1";
         Load();
         offline.OfflineProgressLoad();
-        
+        mainResetLevel = 1;
+
     }
 
     IEnumerator MySave()
@@ -63,15 +68,24 @@ public class IdleScript : MonoBehaviour
 
     void Update()
     {   
-        
-        
         CurrencyText.text = "Research Points: " + ExponentLetterSystem(mainCurrency, "F2");
         RPointsText.text = ResearchPointsPerSecond().ToString("F2") + "RP/s ";
+        RebirthPrice.text = "Level \n" + ExponentLetterSystem(rebirthCost, "F2");
+        RebirthLevel.text = "Rebirth " + mainResetLevel ;
 
         for (int id = 0; id < AlienLevel.Length; id++) {
             AlienLevelText[id].text = "Level: " + alienLevel[id].ToString("F0");
             ButtonUpgradeMaxText[id].text = "Buy: " + BuyMaxCount(id) + "\n Price: " + ExponentLetterSystem(BuyCount(id), "F2");
+           
+            if (mainCurrency >= BuyCount(id))
+            {
+                upgradeButtons[id].interactable = true;
+            } else {
+                upgradeButtons[id].interactable = false;
+            }
         }
+
+        
 
         mainCurrency += ResearchPointsPerSecond() * Time.deltaTime;
         StartCoroutine("MySave");
@@ -135,7 +149,6 @@ public class IdleScript : MonoBehaviour
             case "gameMenu":
                 CanvasGroupMenuSwitch(true, canvasMainGame);
                 CanvasGroupMenuSwitch(false, canvasShop);
-                alienScreen.SetActive(true);
                 CanvasGroupMenuSwitch(false, canvasRebirthTab);
                 CanvasGroupMenuSwitch(false, canvasResearchTab);
                 break;
@@ -143,7 +156,6 @@ public class IdleScript : MonoBehaviour
             case "shopMenu":
                 CanvasGroupMenuSwitch(false, canvasMainGame);
                 CanvasGroupMenuSwitch(true, canvasShop);
-                alienScreen.SetActive(false);
                 CanvasGroupMenuSwitch(false, canvasRebirthTab);
                 CanvasGroupMenuSwitch(false, canvasResearchTab);
                 break;
@@ -151,7 +163,6 @@ public class IdleScript : MonoBehaviour
             case "rebirth":
                 CanvasGroupMenuSwitch(false, canvasMainGame);
                 CanvasGroupMenuSwitch(false, canvasShop);
-                alienScreen.SetActive(false);
                 CanvasGroupMenuSwitch(true, canvasRebirthTab);
                 CanvasGroupMenuSwitch(false, canvasResearchTab);
                 break;
@@ -159,7 +170,6 @@ public class IdleScript : MonoBehaviour
             case "researchMenu":
                 CanvasGroupMenuSwitch(false, canvasMainGame);
                 CanvasGroupMenuSwitch(false, canvasShop);
-                alienScreen.SetActive(false);
                 CanvasGroupMenuSwitch(false, canvasRebirthTab);
                 CanvasGroupMenuSwitch(true, canvasResearchTab);
                 break;
@@ -185,6 +195,7 @@ public class IdleScript : MonoBehaviour
         Research1Level[0] = gameData.researchLevel1;
         Research1Level[1] = gameData.researchLevel2;
         upgradesActivated[0] = gameData.upgradeActivated;
+        rebirthCost = gameData.rebirthCostData;
     }
 
     public void SaveDate()
@@ -296,16 +307,17 @@ public class IdleScript : MonoBehaviour
               alienLevel[id] += (int)n;
               mainCurrency -= costUpgrade;
               upgradeLevel1 += (int)n;
-        }
+            }
 
     }
 
     public void FullReset()
     {
-        if (mainCurrency >= 1000)
+        rebirthCost *= (System.Math.Pow(2, mainResetLevel) * (System.Math.Pow(2, 1) - 1) / (2 - 1));
+        if (mainCurrency >= rebirthCost)
         {
             mainCurrency = 100;
-            alienLevel[1]= 0;
+            alienLevel[1] = 1;
             alienLevel[0] = 1;
             upgradeLevel1 = 0;
             mainResetLevel++;
@@ -318,6 +330,10 @@ public class IdleScript : MonoBehaviour
     public double RebirthBoost()
     {
         double rBoost = 0;
+        for (int id = 0; id < AlienLevel.Length; id++)
+        {
+            rBoost += AlienLevel[id] * 0.1;
+        }
         rBoost += 0.05 * upgradeLevel1 * 0.1;
         rBoost += 0.05 * mainResetLevel * 1.7;
         return rBoost + 1;

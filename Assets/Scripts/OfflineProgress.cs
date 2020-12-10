@@ -28,7 +28,7 @@ public class OfflineProgress : MonoBehaviour
 
         double totalRewards = idleScript.ResearchPointsPerSecond() * offlineTime;
         idleScript.mainCurrency += totalRewards;
-        offlineRewardText.text = totalRewards.ToString("F0");
+        offlineRewardText.text = IdleScript.ExponentLetterSystem(totalRewards,"F2");
     }
 
     public void CloseOfflineProgress()
