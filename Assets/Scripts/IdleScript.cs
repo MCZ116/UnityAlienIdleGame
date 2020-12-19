@@ -19,7 +19,10 @@ public class IdleScript : MonoBehaviour
     double[] alienUpgradeCosts = { 25, 225 };
     public double upgradeLevel1;
     public double mainResetLevel;
+    private GameObject[] progressBarObject;
     public bool[] upgradesActivated = { false };
+    public Image[] progressBar;
+    //public double speedEarning = 100;
 
     public Button[] upgradeButtons;
 
@@ -41,6 +44,11 @@ public class IdleScript : MonoBehaviour
 
     public double[] Research1Level { get => research1Level; set => research1Level = value; }
 
+    public double[] upgradesCounts = { 0.3, 0.4 };
+    public float[] upgradeTime = { 5f, 10f };
+    public float[] upgradeOldTime = { 5f, 10f };
+    public float[] progressTimer = { 0f, 0f };
+
     void Start()
     {
         Application.targetFrameRate = 30;
@@ -57,7 +65,7 @@ public class IdleScript : MonoBehaviour
         Load();
         offline.OfflineProgressLoad();
         mainResetLevel = 1;
-
+        
     }
 
     IEnumerator MySave()
@@ -67,7 +75,8 @@ public class IdleScript : MonoBehaviour
     }
 
     void Update()
-    {   
+    {
+        BarAssigning();
         CurrencyText.text = "Research Points: " + ExponentLetterSystem(mainCurrency, "F2");
         RPointsText.text = ResearchPointsPerSecond().ToString("F2") + "RP/s ";
         RebirthPrice.text = "Level \n" + ExponentLetterSystem(rebirthCost, "F2");
@@ -75,8 +84,16 @@ public class IdleScript : MonoBehaviour
 
         for (int id = 0; id < AlienLevel.Length; id++) {
             AlienLevelText[id].text = "Level: " + alienLevel[id].ToString("F0");
-            ButtonUpgradeMaxText[id].text = "Buy: " + BuyMaxCount(id) + "\n Price: " + ExponentLetterSystem(BuyCount(id), "F2");
-           
+            ButtonUpgradeMaxText[id].text = "Buy: " + BuyMaxCount(id) + "\n Price: " + ExponentLetterSystem(BuyCount(id), "F2");      
+
+            progressTimer[id] += Time.deltaTime;
+            progressBar[id].fillAmount = (progressTimer[id] / upgradeTime[id]);
+
+            if (progressTimer[id] >= upgradeTime[id])
+            {
+                progressTimer[id] = 0f;
+            }
+
             if (mainCurrency >= BuyCount(id))
             {
                 upgradeButtons[id].interactable = true;
@@ -85,11 +102,19 @@ public class IdleScript : MonoBehaviour
             }
         }
 
-        
-
         mainCurrency += ResearchPointsPerSecond() * Time.deltaTime;
         StartCoroutine("MySave");
         SaveDate();
+    }
+
+    public void BarAssigning()
+    {
+        progressBarObject = GameObject.FindGameObjectsWithTag("progressBars");
+        progressBar = new Image[progressBarObject.Length];
+        for (int id = 0; id < progressBarObject.Length; id++)
+        {
+            progressBar[id] = progressBarObject[id].GetComponent<Image>();
+        }
     }
 
     public double ResearchPointsPerSecond()
@@ -101,6 +126,15 @@ public class IdleScript : MonoBehaviour
         temp += research.ResearchBoost();
         temp += RebirthBoost();
         return temp;
+    }
+
+    public void ResearchPointsCalculator()
+    {
+        for (int id = 0; id < AlienLevel.Length; id++)
+        {
+            double temp = 0;
+            temp += AlienLevel[id] * upgradesCounts[id];
+        }
     }
 
  public static String ExponentLetterSystem(double value, string numberToString)
