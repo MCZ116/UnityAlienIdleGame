@@ -3215,8 +3215,8 @@ MonoBehaviour:
   mainResetLevel: 0
   upgradesActivated: 00
   progressBar:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1355006147}
+  - {fileID: 1222347827}
   upgradeButtons:
   - {fileID: 506782123}
   - {fileID: 1875325525}

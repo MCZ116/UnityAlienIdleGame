@@ -58,7 +58,7 @@ public class EggBehaviour : MonoBehaviour
            
         }
     }
-
+    // Change script here cuz its activating only when first creature evolved... or maybe it should be like this ?
     public void AnimationIdle()
     {
 
