@@ -64,6 +64,7 @@ public class Research : MonoBehaviour
         for (int id = 0; id < idleScript.Research1Level.Length ; id++) {
             resBoost += 0.05 * idleScript.Research1Level[id] * upgradeResearchValues[id];
         }
+
         return resBoost;
     }
 

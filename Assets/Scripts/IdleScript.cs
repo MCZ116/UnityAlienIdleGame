@@ -8,6 +8,7 @@ public class IdleScript : MonoBehaviour
     public OfflineProgress offline;
     public int buyModeID;
     public Text[] AlienLevelText;
+    public Text[] EarningStage;
     public Text CurrencyText;
     public Text RPointsText;
     public Text[] ButtonUpgradeMaxText;
@@ -64,7 +65,7 @@ public class IdleScript : MonoBehaviour
         ChangeBuyModeText.text = "Upgrade: 1";
         Load();
         offline.OfflineProgressLoad();
-        mainResetLevel = 1;
+        mainResetLevel = 0;
         
     }
 
@@ -76,7 +77,7 @@ public class IdleScript : MonoBehaviour
 
     void Update()
     {
-        BarAssigning();
+        
         CurrencyText.text = "Research Points: " + ExponentLetterSystem(mainCurrency, "F2");
         RPointsText.text = ResearchPointsCalculator().ToString("F2") + "RP/s ";
         RebirthPrice.text = "Level \n" + ExponentLetterSystem(rebirthCost, "F2");
@@ -85,13 +86,13 @@ public class IdleScript : MonoBehaviour
         for (int id = 0; id < AlienLevel.Length; id++) {
             AlienLevelText[id].text = "Level: " + alienLevel[id].ToString("F0");
             ButtonUpgradeMaxText[id].text = "Buy: " + BuyMaxCount(id) + "\n Price: " + ExponentLetterSystem(BuyCount(id), "F2");
+            EarningStage[id].text = StageEarningPerSecond(id).ToString("F2") + "RP/s ";
 
-            if (progressBarObject.Length == progressBar.Length)
+            if (AlienLevel[id] >= 1)
             {
                 progressTimer[id] += Time.deltaTime;
                 progressBar[id].fillAmount = (progressTimer[id] / upgradeMaxTime[id]);
             }
-
             if (progressTimer[id] >= upgradeMaxTime[id])
             {
                 progressTimer[id] = 0f;
@@ -143,20 +144,27 @@ public class IdleScript : MonoBehaviour
 
     public double ResearchPointsCalculator()
     {
-        double tempB = 0;
         double temp = 0;
-        tempB += research.ResearchBoost();
-        tempB += RebirthBoost();
-        tempB += upgradeLevel1;
+        temp += research.ResearchBoost();
+        temp += RebirthBoost();
+        //tempB += upgradeLevel1;
         for (int id = 0; id < AlienLevel.Length; id++)
         {
-            if (progressTimer[id] >= upgradeMaxTime[id])
-            {
-                    temp += AlienLevel[id] * upgradesCounts[id];
-                    return temp;
-            }
+                    temp += AlienLevel[id] * upgradesCounts[id];  
         }
-        return tempB;
+
+        return temp;
+        
+    }
+
+    public double StageEarningPerSecond(int id)
+    {
+        double temp = 0;
+
+        temp += AlienLevel[id] * upgradesCounts[id];
+        return temp;
+     
+
     }
 
     public static String ExponentLetterSystem(double value, string numberToString)
@@ -388,11 +396,11 @@ public class IdleScript : MonoBehaviour
     {
       
             double rBoost = 0;
-            for (int id = 0; id < AlienLevel.Length; id++)
-            {
-                rBoost += AlienLevel[id] * 0.1;
-            }
-            rBoost += 0.05 * upgradeLevel1 * 0.1;
+            //for (int id = 0; id < AlienLevel.Length; id++)
+            //{
+            //    rBoost += AlienLevel[id] * 0.1;
+            //}
+           
             rBoost += 0.05 * mainResetLevel * 1.7;
             return rBoost;
 
