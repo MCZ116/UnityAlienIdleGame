@@ -29,6 +29,8 @@ public class IdleScript : MonoBehaviour
 
     public Research research;
 
+    public SuitsUpgrades suitsUpgrades;
+
     public CanvasGroup canvasShop;
 
     public CanvasGroup canvasMainGame;
@@ -37,6 +39,8 @@ public class IdleScript : MonoBehaviour
 
     public CanvasGroup canvasResearchTab;
 
+    public CanvasGroup canvasSuitsTab;
+
     private double[] alienLevel;
 
     public double[] AlienLevel { get => alienLevel; set => alienLevel = value; }
@@ -44,6 +48,10 @@ public class IdleScript : MonoBehaviour
     private double[] research1Level;
 
     public double[] Research1Level { get => research1Level; set => research1Level = value; }
+
+    private double[] suitsLevel;
+
+    public double[] SuitsLevel { get => suitsLevel; set => suitsLevel = value; }
 
     public double[] upgradesCounts = { 0.3, 0.4 };
     public float[] upgradeMaxTime = { 5f, 10f };
@@ -62,6 +70,9 @@ public class IdleScript : MonoBehaviour
         alienLevel[0] = 0;
         alienLevel[1] = 0;
         upgradeLevel1 = 0;
+        SuitsLevel = new double[2];
+        suitsLevel[0] = 0;
+        suitsLevel[1] = 0;
         ChangeBuyModeText.text = "Upgrade: 1";
         Load();
         offline.OfflineProgressLoad();
@@ -146,6 +157,7 @@ public class IdleScript : MonoBehaviour
     {
         double temp = 0;
         temp += research.ResearchBoost();
+        temp += suitsUpgrades.SuitsBoost();
         temp += RebirthBoost();
         //tempB += upgradeLevel1;
         for (int id = 0; id < AlienLevel.Length; id++)
@@ -215,6 +227,7 @@ public class IdleScript : MonoBehaviour
                 CanvasGroupMenuSwitch(false, canvasShop);
                 CanvasGroupMenuSwitch(false, canvasRebirthTab);
                 CanvasGroupMenuSwitch(false, canvasResearchTab);
+                CanvasGroupMenuSwitch(false, canvasSuitsTab);
                 break;
 
             case "shopMenu":
@@ -222,6 +235,7 @@ public class IdleScript : MonoBehaviour
                 CanvasGroupMenuSwitch(true, canvasShop);
                 CanvasGroupMenuSwitch(false, canvasRebirthTab);
                 CanvasGroupMenuSwitch(false, canvasResearchTab);
+                CanvasGroupMenuSwitch(false, canvasSuitsTab);
                 break;
 
             case "rebirth":
@@ -229,6 +243,7 @@ public class IdleScript : MonoBehaviour
                 CanvasGroupMenuSwitch(false, canvasShop);
                 CanvasGroupMenuSwitch(true, canvasRebirthTab);
                 CanvasGroupMenuSwitch(false, canvasResearchTab);
+                CanvasGroupMenuSwitch(false, canvasSuitsTab);
                 break;
 
             case "researchMenu":
@@ -236,6 +251,14 @@ public class IdleScript : MonoBehaviour
                 CanvasGroupMenuSwitch(false, canvasShop);
                 CanvasGroupMenuSwitch(false, canvasRebirthTab);
                 CanvasGroupMenuSwitch(true, canvasResearchTab);
+                CanvasGroupMenuSwitch(false, canvasSuitsTab);
+                break;
+            case "suitsMenu":
+                CanvasGroupMenuSwitch(false, canvasMainGame);
+                CanvasGroupMenuSwitch(false, canvasShop);
+                CanvasGroupMenuSwitch(false, canvasRebirthTab);
+                CanvasGroupMenuSwitch(false, canvasResearchTab);
+                CanvasGroupMenuSwitch(true, canvasSuitsTab);
                 break;
         } 
     }
@@ -260,6 +283,8 @@ public class IdleScript : MonoBehaviour
         Research1Level[1] = gameData.researchLevel2;
         upgradesActivated[0] = gameData.upgradeActivated;
         rebirthCost = gameData.rebirthCostData;
+        SuitsLevel[0] = gameData.suitsLevel1;
+        SuitsLevel[1] = gameData.suitsLevel2;
     }
 
     public void SaveDate()

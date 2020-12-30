@@ -9,16 +9,18 @@ public class Research : MonoBehaviour
 
     public Text[] researchTextField;
     public Text[] researchLevels;
+
     double[] researchCosts;
     double[] upgradeResearchValues = { 0.2, 0.5 };
     string[] researchText = { "Improve oxgen tanks capacity for about 2%. Better oxygen tanks allow astronauts to stay longer on the surface of the planet", "Durability of drills improve digging for about 10%" };
-
+   
 
     void Start()
     {
         researchCosts = new double[2];
         researchCosts[0] = 10000;
         researchCosts[1] = 18000;
+      
     }
 
     void Update()
@@ -35,8 +37,8 @@ public class Research : MonoBehaviour
             }
             researchTextField[id].text = $"{researchText[id]}";
         }
-    }
 
+    }
 
     public void ResearchUpgradeButton(int id)
     {
@@ -61,11 +63,13 @@ public class Research : MonoBehaviour
     {
         double resBoost = 0;
 
-        for (int id = 0; id < idleScript.Research1Level.Length ; id++) {
+        for (int id = 0; id < idleScript.Research1Level.Length; id++) {
             resBoost += 0.05 * idleScript.Research1Level[id] * upgradeResearchValues[id];
         }
 
         return resBoost;
     }
 
+
 }
+
