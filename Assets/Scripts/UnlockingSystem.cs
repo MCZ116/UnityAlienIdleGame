@@ -14,6 +14,7 @@ public class UnlockingSystem : MonoBehaviour
 
     private void Update()
     {
+        
         unlockText.text = "Buy for : 2a";
         for (int id = 0; id < unlockCost.Length; id++)
         {

@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - progressBars
+  - stageLevels
+  - upgradeStageButtons
+  - buyMaxStageButtons
+  - barIncomeText
   layers:
   - Default
   - TransparentFX

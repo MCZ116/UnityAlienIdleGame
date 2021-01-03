@@ -16,8 +16,8 @@ public class SuitsUpgrades : MonoBehaviour
     void Start()
     {
         suitsUpgradesCosts = new double[2];
-        suitsUpgradesCosts[0] = 15000;
-        suitsUpgradesCosts[1] = 20000;
+        suitsUpgradesCosts[0] = 5;
+        suitsUpgradesCosts[1] = 10;
     }
 
     void Update()
@@ -39,15 +39,15 @@ public class SuitsUpgrades : MonoBehaviour
     public void SuitsUpgradeButtons(int id)
     {
         var h = suitsUpgradesCosts[id];
-        var c = idleScript.mainCurrency;
+        var c = idleScript.crystalCurrency;
         var r = 1.07;
         var u = idleScript.SuitsLevel[id];
         double n = 1;
         var costSuitsUpgrade = h * (System.Math.Pow(r, u) * (System.Math.Pow(r, n) - 1) / (r - 1));
 
-        if (idleScript.mainCurrency >= costSuitsUpgrade)
+        if (idleScript.crystalCurrency >= costSuitsUpgrade)
         {
-            idleScript.mainCurrency -= costSuitsUpgrade;
+            idleScript.crystalCurrency -= costSuitsUpgrade;
             idleScript.SuitsLevel[id] += (int)n;
             SuitsBoost();
 

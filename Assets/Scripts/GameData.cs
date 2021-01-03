@@ -8,6 +8,7 @@ public class GameData
 {
 
     public double researchPointsData;
+    public double crystals;
     public double alienLevelData;
     public double alienLevelData2;
     public double upgradeLevelData;
@@ -32,6 +33,7 @@ public class GameData
         rebirthCostData = idleScript.rebirthCost;
         suitsLevel1 = idleScript.SuitsLevel[0];
         suitsLevel2 = idleScript.SuitsLevel[1];
+        crystals = idleScript.crystalCurrency;
 
     }
 
