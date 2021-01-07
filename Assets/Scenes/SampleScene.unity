@@ -927,6 +927,7 @@ MonoBehaviour:
   suitsTextLevels:
   - {fileID: 436870383}
   - {fileID: 651797385}
+  suitsUpgradesCosts: []
 --- !u!1 &284558164
 GameObject:
   m_ObjectHideFlags: 0

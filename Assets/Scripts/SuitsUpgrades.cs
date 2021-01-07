@@ -9,15 +9,14 @@ public class SuitsUpgrades : MonoBehaviour
 
     public Text[] suitsTextField;
     public Text[] suitsTextLevels;
-    double[] suitsUpgradesCosts;
+    public double[] suitsUpgradesCosts;
     double[] suitsUpgradesValues = { 0.4, 0.5 };
     string[] suitsUpgradeText = { "Space is full of micro meteors, durability for suits is important. Increasing income for about 10%", "Better gloves are helping detail work. Increasing income for about 2%" };
 
     void Start()
     {
         suitsUpgradesCosts = new double[2];
-        suitsUpgradesCosts[0] = 5;
-        suitsUpgradesCosts[1] = 10;
+       
     }
 
     void Update()
