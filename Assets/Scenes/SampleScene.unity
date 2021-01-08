@@ -2861,7 +2861,7 @@ GameObject:
   - component: {fileID: 755441626}
   m_Layer: 5
   m_Name: UnlockStage
-  m_TagString: Untagged
+  m_TagString: unlockButtons
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3545,7 +3545,11 @@ MonoBehaviour:
   - {fileID: 1608157979}
   unlockButtons:
   - {fileID: 755441624}
-  unlockText: {fileID: 225244855}
+  unlockText:
+  - {fileID: 225244855}
+  unlockStage:
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &957752654
 GameObject:
   m_ObjectHideFlags: 0
@@ -4031,7 +4035,7 @@ GameObject:
   - component: {fileID: 1053095013}
   m_Layer: 5
   m_Name: UpgradeButton
-  m_TagString: Untagged
+  m_TagString: Stages
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4156,8 +4160,8 @@ MonoBehaviour:
   offline: {fileID: 1697208892}
   buyModeID: 1
   AlienLevelText:
-  - {fileID: 926630211}
-  - {fileID: 1398807029}
+  - {fileID: 0}
+  - {fileID: 0}
   EarningStage:
   - {fileID: 284558166}
   - {fileID: 1601117784}
@@ -4175,7 +4179,7 @@ MonoBehaviour:
   rebirthCost: 0
   upgradeLevel1: 0
   mainResetLevel: 0
-  upgradesActivated: 00
+  upgradesActivated: 0000
   earnedCrystal: 
   progressBar:
   - {fileID: 0}
@@ -4185,6 +4189,7 @@ MonoBehaviour:
   - {fileID: 1875325525}
   research: {fileID: 993402617}
   suitsUpgrades: {fileID: 279393645}
+  unlockingSystem: {fileID: 0}
   canvasShop: {fileID: 1921194268}
   canvasMainGame: {fileID: 942227564}
   canvasRebirthTab: {fileID: 1576241027}
@@ -4194,9 +4199,6 @@ MonoBehaviour:
   - 0.3
   - 0.4
   upgradeMaxTime:
-  - 5
-  - 10
-  upgradeTimer:
   - 5
   - 10
   progressTimer:
@@ -5266,7 +5268,7 @@ GameObject:
   - component: {fileID: 1398629783}
   m_Layer: 5
   m_Name: UpgradeAlien
-  m_TagString: Untagged
+  m_TagString: Stages
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

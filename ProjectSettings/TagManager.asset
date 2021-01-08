@@ -9,6 +9,8 @@ TagManager:
   - upgradeStageButtons
   - buyMaxStageButtons
   - barIncomeText
+  - Stages
+  - unlockButtons
   layers:
   - Default
   - TransparentFX
