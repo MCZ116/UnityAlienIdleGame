@@ -6,16 +6,15 @@ using UnityEngine;
 public class UnlockingSystem : MonoBehaviour
 {
     public IdleScript idleScript;
-    double[] unlockCost = { 2000};
+    public double[] unlockCost = { 2000,4000,8000,20000 };
     public GameObject[] upgradeObjects;
     public GameObject[] unlockButtons;
+    private GameObject[] unlockTextObject;
     public Text[] unlockText;
-    public Button[] unlockStage;
+    //public Button[] unlockStage;
 
     private void Update()
     {
-        Debug.Log(upgradeObjects.Length);
-        Debug.Log(idleScript.upgradesActivated.Length);
         for (int id = 0; id < upgradeObjects.Length; id++)
         {
             unlockText[id].text = "Buy for : " + IdleScript.ExponentLetterSystem(unlockCost[id], "F2");
@@ -26,17 +25,17 @@ public class UnlockingSystem : MonoBehaviour
             }
             else
             {
+               
                 upgradeObjects[id].SetActive(false);
                 unlockButtons[id].SetActive(true);
             }
         }
     }
 
-    public void UnlockingStages()
+    public void UnlockingStages(int id)
     {
-        for (int id = 0; id < upgradeObjects.Length; id++)
-        {
-            if (idleScript.mainCurrency >= unlockCost[id] & idleScript.upgradesActivated[id] == false)
+
+            if ((idleScript.mainCurrency >= unlockCost[id]) && (idleScript.upgradesActivated[id] == false))
             {
                 idleScript.mainCurrency -= unlockCost[id];
                 idleScript.upgradesActivated[id] = true;
@@ -44,8 +43,6 @@ public class UnlockingSystem : MonoBehaviour
                 unlockButtons[id].SetActive(false);
             } else
                 upgradeObjects[id].SetActive(false);
-                
-        }
         
     }
 }

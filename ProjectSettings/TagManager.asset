@@ -11,6 +11,8 @@ TagManager:
   - barIncomeText
   - Stages
   - unlockButtons
+  - upgradeObjects
+  - unlockText
   layers:
   - Default
   - TransparentFX

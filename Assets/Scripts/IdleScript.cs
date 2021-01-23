@@ -28,10 +28,12 @@ public class IdleScript : MonoBehaviour
     private GameObject[] buyMaxTextObject;
     private GameObject[] earningStageObject;
     private GameObject[] Stages;
-    public bool[] upgradesActivated = { false, false };
+    private GameObject[] unlockUpgradeText;
+    public GameObject[] unlockGameObjects;
+    public bool[] upgradesActivated;
     public bool[] earnedCrystal;
     double[] copyArray;
-    bool activateRB = false;
+    //bool activateRB = false;
     public Image[] progressBar;
 
     public Button[] upgradeButtons;
@@ -65,23 +67,31 @@ public class IdleScript : MonoBehaviour
     public double[] SuitsLevel { get => suitsLevel; set => suitsLevel = value; }
 
     public double[] upgradesCounts;
-    public float[] upgradeMaxTime = { 5f, 10f, 15f };
-    public float[] progressTimer = { 0f, 0f, 0f };
+    public float[] upgradeMaxTime = { 5f, 10f, 10f,20f,35f};
+    public float[] progressTimer = { 0f, 0f, 0f, 0f, 0f};
+
 
     void Start()
     {
         Application.targetFrameRate = 30;
         mainCurrency = 100;
         rebirthCost = 10000;
-        AlienLevel = new double[3];
+        AlienLevel = new double[5];
         SuitsLevel = new double[2];
+        upgradesActivated = new bool[unlockingSystem.unlockCost.Length];
+        upgradesCounts = new double[AlienLevel.Length];
         Research1Level = new double[2];
         copyArray = new double[AlienLevel.Length];
         alienUpgradeCosts = new double[AlienLevel.Length];
         earnedCrystal = new bool[alienLevel.Length];
-        foreach (int id in AlienLevel)
+        for (int id = 0; id < AlienLevel.Length; id++)
         {
             alienLevel[id] = 0;
+        }
+
+        for (int id = 0; id < unlockingSystem.unlockCost.Length; id++)
+        {
+            upgradesActivated[id] = false;
         }
 
         Research1Level[0] = 0;
@@ -89,11 +99,10 @@ public class IdleScript : MonoBehaviour
         upgradeLevel1 = 0;
         suitsLevel[0] = 0;
         suitsLevel[1] = 0;
+        mainResetLevel = 0;
         ChangeBuyModeText.text = "Upgrade: 1";
         Load();
         offline.OfflineProgressLoad();
-        mainResetLevel = 0;
-        
     }
 
     IEnumerator MySave()
@@ -110,19 +119,17 @@ public class IdleScript : MonoBehaviour
         RebirthPrice.text = "Level \n" + ExponentLetterSystem(rebirthCost, "F2");
         RebirthLevel.text = "Rebirth " + mainResetLevel ;
         CrystalsAmount.text = "Crystals: " + crystalCurrency.ToString("F0") ;
-
+        
         for (int id = 0; id < AlienLevelText.Length; id++) {
-           
-            AlienLevelText[id].text = "Level: " + alienLevel[id].ToString("F0");
-            ButtonUpgradeMaxText[id].text = "Buy: " + BuyMaxCount(id) + "\n Price: " + ExponentLetterSystem(BuyCount(id), "F2");
-            Debug.Log(BuyMaxCount(id) + " " + BuyCount(id));
-            EarningStage[id].text = ExponentLetterSystem(StageEarningPerSecond(id), "F2") + "RP/s ";
-            SoloEarningCrystals(id);
+
             AutoValuesAssigning(id, suitsUpgrades.suitsUpgradesCosts, 5, id + 1);
             AutoValuesAssigning(id, upgradesCounts, 0.3, 1.4);
             AutoValuesAssigning(id, alienUpgradeCosts, 3, 8.3);
-            Debug.Log(AlienLevelText.Length);
-            ProgressBarsIncomeTimer(id);
+            ProgressBarsIncomeTimer();
+            AlienLevelText[id].text = "Level: " + alienLevel[id].ToString("F0");
+            ButtonUpgradeMaxText[id].text = "Buy: " + BuyMaxCount(id) + "\n Price: " + ExponentLetterSystem(BuyCount(id), "F2");
+            EarningStage[id].text = ExponentLetterSystem(StageEarningPerSecond(id), "F2") + "RP/s ";
+            SoloEarningCrystals(id);
             InteractableButtons(id, upgradeButtons);
         }
         
@@ -146,8 +153,8 @@ public class IdleScript : MonoBehaviour
     {
             Array.Resize(ref ArrayToIncrease, AlienLevel.Length);
             ArrayToIncrease[id] = valueMultiplier * baseValue;
-            copyArray[id] = ArrayToIncrease[id];
-            ArrayToIncrease[id+1] = copyArray[id] * valueMultiplier;
+            //copyArray[id] = ArrayToIncrease[id];
+            //ArrayToIncrease[id+1] = copyArray[id] * valueMultiplier;
     }
 
     public void AutoObjectsAssigning()
@@ -164,7 +171,10 @@ public class IdleScript : MonoBehaviour
         EarningStage = new Text[earningStageObject.Length];
         //unlockingSystem.unlockButtons = GameObject.FindGameObjectsWithTag("unlockButtons");
         //unlockingSystem.unlockStage = new Button[unlockingSystem.unlockButtons.Length];
-        //unlockingSystem.upgradeObjects = GameObject.FindGameObjectsWithTag("upgradeObjects");
+        //unlockUpgradeText = GameObject.FindGameObjectsWithTag("unlockText");
+        //unlockingSystem.unlockText = new Text[unlockUpgradeText.Length];
+        //unlockGameObjects = GameObject.FindGameObjectsWithTag("upgradeObjects");
+        //unlockingSystem.upgradeObjects = new GameObject[unlockGameObjects.Length];
 
         // looking for all stages on the game
         Stages = GameObject.FindGameObjectsWithTag("Stages");
@@ -176,6 +186,13 @@ public class IdleScript : MonoBehaviour
             ButtonUpgradeMaxText[id] = buyMaxTextObject[id].GetComponent<Text>();
             EarningStage[id] = earningStageObject[id].GetComponent<Text>();
         }
+
+        //for (int id = 0; id < unlockUpgradeText.Length; id++)
+        //{
+        //    unlockingSystem.unlockStage[id] = unlockingSystem.unlockButtons[id].GetComponent<Button>();
+        //    unlockingSystem.unlockText[id] = unlockUpgradeText[id].GetComponent<Text>();
+        //    unlockingSystem.upgradeObjects[id] = unlockGameObjects[id];
+        //}
     }
 
     public double ResearchPointsCalculator()
@@ -187,34 +204,36 @@ public class IdleScript : MonoBehaviour
         for (int id = 0; id < AlienLevelText.Length; id++)
         {
                     temp += AlienLevel[id] * upgradesCounts[id];
-            Debug.Log(AlienLevel[id] + "value RP");
-            Debug.Log(id + "ID of Stage");
-        }
 
+        }
+        Debug.Log(temp + "Outcome");
         return temp;
-        
     }
 
-    public void ProgressBarsIncomeTimer(int id)
+    public void ProgressBarsIncomeTimer()
     {
+    
         // If level 0 bar doesn't move
-        if (AlienLevel[id] >= 1)
-        {
-            progressTimer[id] += Time.deltaTime;
-            progressBar[id].fillAmount = (progressTimer[id] / upgradeMaxTime[id]);
-
-            if (progressTimer[id] >= upgradeMaxTime[id])
+        for (int id = 0; id < progressBarObject.Length; id++)
+        {    
+            if (AlienLevel[id] >= 1)
             {
-                mainCurrency += ResearchPointsCalculator();
-                progressTimer[id] = 0f;
+                progressTimer[id] += Time.deltaTime;
+                progressBar[id].fillAmount = (progressTimer[id] / upgradeMaxTime[id]);
+
+                if (progressTimer[id] >= upgradeMaxTime[id])
+                {
+                    mainCurrency += ResearchPointsCalculator();
+                    progressTimer[id] = 0f;
+                }
             }
-        } else
-        {
-            progressBar[id].fillAmount = 0;
-            progressTimer[id] = 0f;
+            else
+            {
+                progressBar[id].fillAmount = 0;
+                progressTimer[id] = 0f;
+
+            }
         }
-
-
     }
 
     public void InteractableButtons(int id, Button[] ButtonStatus)
@@ -336,6 +355,9 @@ public class IdleScript : MonoBehaviour
         crystalCurrency = gameData.crystals;
         AlienLevel[0] = gameData.alienLevelData;
         AlienLevel[1] = gameData.alienLevelData2;
+        AlienLevel[2] = gameData.alienLevelData3;
+        AlienLevel[3] = gameData.alienLevelData4;
+        AlienLevel[4] = gameData.alienLevelData5;
         upgradeLevel1 = gameData.upgradeLevelData;
         mainResetLevel = gameData.mainResetLevelData;
         Research1Level[0] = gameData.researchLevel1;
@@ -344,7 +366,6 @@ public class IdleScript : MonoBehaviour
         rebirthCost = gameData.rebirthCostData;
         SuitsLevel[0] = gameData.suitsLevel1;
         SuitsLevel[1] = gameData.suitsLevel2;
-        mainResetLevel = gameData.mainResetLevelData;
     }
 
     public void SaveDate()
@@ -477,7 +498,10 @@ public class IdleScript : MonoBehaviour
             mainResetLevel++;
             Research1Level[0] = 0;
             Research1Level[1] = 0;
+            SuitsLevel[0] = 0;
+            SuitsLevel[1] = 0;
             upgradesActivated[0] = false;
+            upgradesActivated[1] = false;
             rebirthCost *= (System.Math.Pow(2, mainResetLevel) * (System.Math.Pow(2, 1) - 1) / (2 - 1));
         }
         

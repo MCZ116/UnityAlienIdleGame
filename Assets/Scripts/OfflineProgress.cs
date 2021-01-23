@@ -25,6 +25,7 @@ public class OfflineProgress : MonoBehaviour
         offlineTimeText.text = $"{timeSpan:dd\\:hh\\:mm\\:ss}";
 
         double totalRewards = idleScript.ResearchPointsCalculator() * offlineTime;
+        Debug.Log(totalRewards + "OutcomeOffline");
         idleScript.mainCurrency += totalRewards;
         offlineRewardText.text = IdleScript.ExponentLetterSystem(totalRewards,"F2");
     }
