@@ -7,7 +7,7 @@ public class Shop : MonoBehaviour
 
     public IdleScript alienScript;
 
-    public EggBehaviour eggScript;
+    public AstronautBehaviour astroBehaviour;
 
     private double foodPrice = 2500;
 
@@ -18,16 +18,6 @@ public class Shop : MonoBehaviour
 
     public void FeedingAlien()
     {
-        if (alienScript.mainCurrency > foodPrice)
-        {
-            alienScript.mainCurrency -= foodPrice;
-            eggScript.hunger += 50;
 
-            if (eggScript.hunger > 100)
-            {
-                eggScript.hunger = 100;
-            }
-
-        }
     }
 }

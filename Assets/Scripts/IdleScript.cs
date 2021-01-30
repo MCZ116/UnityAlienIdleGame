@@ -114,7 +114,7 @@ public class IdleScript : MonoBehaviour
     void Update()
     {
         AutoObjectsAssigning();
-        CurrencyText.text = "Research Points: " + ExponentLetterSystem(mainCurrency, "F2");
+        CurrencyText.text = ExponentLetterSystem(mainCurrency, "F2");
         RPointsText.text = ExponentLetterSystem(ResearchPointsCalculator(), "F2") + "RP/s ";
         RebirthPrice.text = "Level \n" + ExponentLetterSystem(rebirthCost, "F2");
         RebirthLevel.text = "Rebirth " + mainResetLevel ;
@@ -154,7 +154,7 @@ public class IdleScript : MonoBehaviour
             Array.Resize(ref ArrayToIncrease, AlienLevel.Length);
             ArrayToIncrease[id] = valueMultiplier * baseValue;
             //copyArray[id] = ArrayToIncrease[id];
-            //ArrayToIncrease[id+1] = copyArray[id] * valueMultiplier;
+            //ArrayToIncrease[id + 1] = copyArray[id] * valueMultiplier;
     }
 
     public void AutoObjectsAssigning()
