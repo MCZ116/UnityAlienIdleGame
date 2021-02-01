@@ -16,6 +16,7 @@ public class IdleScript : MonoBehaviour
     public Text RebirthPrice;
     public Text RebirthLevel;
     public Text CrystalsAmount;
+    public Text ProfileLevel;
     public double mainCurrency;
     public double crystalCurrency;
     public double rebirthCost;
@@ -81,7 +82,7 @@ public class IdleScript : MonoBehaviour
         upgradesActivated = new bool[unlockingSystem.unlockCost.Length];
         upgradesCounts = new double[AlienLevel.Length];
         Research1Level = new double[2];
-        copyArray = new double[AlienLevel.Length];
+        copyArray = new double[AlienLevel.Length + 1];
         alienUpgradeCosts = new double[AlienLevel.Length];
         earnedCrystal = new bool[alienLevel.Length];
         for (int id = 0; id < AlienLevel.Length; id++)
@@ -117,7 +118,8 @@ public class IdleScript : MonoBehaviour
         CurrencyText.text = ExponentLetterSystem(mainCurrency, "F2");
         RPointsText.text = ExponentLetterSystem(ResearchPointsCalculator(), "F2") + "RP/s ";
         RebirthPrice.text = "Level \n" + ExponentLetterSystem(rebirthCost, "F2");
-        RebirthLevel.text = "Rebirth " + mainResetLevel ;
+        RebirthLevel.text = "Rebirth " + ExponentLetterSystem(mainResetLevel, "F0") ;
+        ProfileLevel.text = ExponentLetterSystem(mainResetLevel, "F0");
         CrystalsAmount.text = "Crystals: " + crystalCurrency.ToString("F0") ;
         
         for (int id = 0; id < AlienLevelText.Length; id++) {
@@ -152,9 +154,13 @@ public class IdleScript : MonoBehaviour
     public void AutoValuesAssigning(int id, double[] ArrayToIncrease, double baseValue, double valueMultiplier)
     {
             Array.Resize(ref ArrayToIncrease, AlienLevel.Length);
+        if (ArrayToIncrease[0] == 0)
+        {
             ArrayToIncrease[id] = valueMultiplier * baseValue;
-            //copyArray[id] = ArrayToIncrease[id];
-            //ArrayToIncrease[id + 1] = copyArray[id] * valueMultiplier;
+            copyArray[id + 1] = ArrayToIncrease[id];
+        }
+        ArrayToIncrease[id] = copyArray[id+1] * valueMultiplier;
+        copyArray[id + 1] = ArrayToIncrease[id];
     }
 
     public void AutoObjectsAssigning()
@@ -492,8 +498,11 @@ public class IdleScript : MonoBehaviour
         if (mainCurrency >= rebirthCost)
         {
             mainCurrency = 100;
-            alienLevel[1] = 1;
-            alienLevel[0] = 0;
+            alienLevel[0] = 1;
+            for (int id = 1; id < AlienLevel.Length; id++)
+            {
+                alienLevel[id] = 0;
+            }
             upgradeLevel1 = 0;
             mainResetLevel++;
             Research1Level[0] = 0;

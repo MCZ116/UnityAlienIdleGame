@@ -11,6 +11,8 @@ public class UnlockingSystem : MonoBehaviour
     public GameObject[] unlockButtons;
     private GameObject[] unlockTextObject;
     public Text[] unlockText;
+    public bool animationUnlockConfirm = false;
+    private Animator unlockAnimation;
     //public Button[] unlockStage;
 
     private void Update()
@@ -41,8 +43,15 @@ public class UnlockingSystem : MonoBehaviour
                 idleScript.upgradesActivated[id] = true;
                 upgradeObjects[id].SetActive(true);
                 unlockButtons[id].SetActive(false);
+                animationUnlockConfirm = true;
             } else
                 upgradeObjects[id].SetActive(false);
         
     }
+
+    public void AnimationUnlock()
+    {
+        unlockAnimation.SetBool("unlockAnimation", true);
+    }
+
 }
