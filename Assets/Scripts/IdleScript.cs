@@ -103,6 +103,8 @@ public class IdleScript : MonoBehaviour
         mainResetLevel = 0;
         ChangeBuyModeText.text = "Upgrade: 1";
         Load();
+        unlockingSystem.LoadUnlocksStatus();
+
         offline.OfflineProgressLoad();
     }
 
@@ -511,6 +513,7 @@ public class IdleScript : MonoBehaviour
             SuitsLevel[1] = 0;
             upgradesActivated[0] = false;
             upgradesActivated[1] = false;
+            unlockingSystem.LoadUnlocksStatus();
             rebirthCost *= (System.Math.Pow(2, mainResetLevel) * (System.Math.Pow(2, 1) - 1) / (2 - 1));
         }
         
