@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Research : MonoBehaviour
 {
-    public IdleScript idleScript;
+    public GameManager idleScript;
 
     public Text[] researchTextField;
     public Text[] researchLevels;

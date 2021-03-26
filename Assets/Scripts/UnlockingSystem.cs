@@ -5,13 +5,15 @@ using UnityEngine;
 
 public class UnlockingSystem : MonoBehaviour
 {
-    public IdleScript idleScript;
+    public GameManager idleScript;
     public double[] unlockCost = { 2000,4000,8000,20000 };
     public GameObject[] upgradeObjects;
     public GameObject[] unlockButtons;
     private GameObject[] unlockTextObject;
     public Text[] unlockText;
-    public bool animationUnlockConfirm = false;
+
+    [System.NonSerialized]
+    public bool[] animationUnlockConfirm = { false, false, false, false };
 
     //public Button[] unlockStage;
 
@@ -24,7 +26,7 @@ public class UnlockingSystem : MonoBehaviour
     {
         for (int id = 0; id < upgradeObjects.Length; id++)
         {
-            unlockText[id].text = "Buy for : " + IdleScript.ExponentLetterSystem(unlockCost[id], "F2");
+            unlockText[id].text = "Buy for : " + GameManager.ExponentLetterSystem(unlockCost[id], "F2");
         }
     }
 
@@ -33,12 +35,12 @@ public class UnlockingSystem : MonoBehaviour
 
         if ((idleScript.mainCurrency >= unlockCost[id]) && (idleScript.upgradesActivated[id] == false))
         {
-            animationUnlockConfirm = true;
+            animationUnlockConfirm[id] = true;
             idleScript.mainCurrency -= unlockCost[id];
             upgradeObjects[id].SetActive(true);
             idleScript.upgradesActivated[id] = true;
             Debug.Log("Upgrade Unlocked!");
-
+           
         }
         else
             upgradeObjects[id].SetActive(false);

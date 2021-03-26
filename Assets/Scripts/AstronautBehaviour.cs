@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class AstronautBehaviour : MonoBehaviour
 {
     [SerializeField]
-    private IdleScript alienScript;
+    private GameManager alienScript;
 
     [SerializeField]
     private int alien1;

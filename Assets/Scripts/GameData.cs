@@ -16,11 +16,16 @@ public class GameData
     public double researchLevel1;
     public double researchLevel2;
     public bool upgradeActivated;
+    public bool upgradeActivated2;
+    public bool upgradeActivated3;
+    public bool upgradeActivated4;
+    public bool upgradeActivated5;
     public double rebirthCostData;
     public double suitsLevel1;
     public double suitsLevel2;
+    public double upgradesLoopLenght;
 
-    public GameData (IdleScript idleScript)
+    public GameData (GameManager idleScript)
     {
         researchPointsData = idleScript.mainCurrency;
         alienLevelData = idleScript.AlienLevel[0];
@@ -33,6 +38,9 @@ public class GameData
         researchLevel1 = idleScript.Research1Level[0];
         researchLevel2 = idleScript.Research1Level[1];
         upgradeActivated = idleScript.upgradesActivated[0];
+        upgradeActivated2 = idleScript.upgradesActivated[1];
+        upgradeActivated3 = idleScript.upgradesActivated[2];
+        upgradeActivated4 = idleScript.upgradesActivated[3];
         rebirthCostData = idleScript.rebirthCost;
         suitsLevel1 = idleScript.SuitsLevel[0];
         suitsLevel2 = idleScript.SuitsLevel[1];

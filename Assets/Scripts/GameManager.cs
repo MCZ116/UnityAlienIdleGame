@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class IdleScript : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
     public OfflineProgress offline;
     public int buyModeID;
@@ -23,6 +23,7 @@ public class IdleScript : MonoBehaviour
     double[] alienUpgradeCosts;
     public double upgradeLevel1;
     public double mainResetLevel;
+    public double amountOfObjects;
     private GameObject[] progressBarObject;
     private GameObject[] levelStageTextObject;
     private GameObject[] upgradeButtonObject;
@@ -119,7 +120,7 @@ public class IdleScript : MonoBehaviour
         AutoObjectsAssigning();
         CurrencyText.text = ExponentLetterSystem(mainCurrency, "F2");
         RPointsText.text = ExponentLetterSystem(ResearchPointsCalculator(), "F2") + "RP/s ";
-        RebirthPrice.text = "Level \n" + ExponentLetterSystem(rebirthCost, "F2");
+        RebirthPrice.text = "Price \n" + ExponentLetterSystem(rebirthCost, "F2");
         RebirthLevel.text = "Rebirth " + ExponentLetterSystem(mainResetLevel, "F0") ;
         ProfileLevel.text = ExponentLetterSystem(mainResetLevel, "F0");
         CrystalsAmount.text = "Crystals: " + crystalCurrency.ToString("F0") ;
@@ -371,9 +372,13 @@ public class IdleScript : MonoBehaviour
         Research1Level[0] = gameData.researchLevel1;
         Research1Level[1] = gameData.researchLevel2;
         upgradesActivated[0] = gameData.upgradeActivated;
+        upgradesActivated[1] = gameData.upgradeActivated2;
+        upgradesActivated[2] = gameData.upgradeActivated3;
+        upgradesActivated[3] = gameData.upgradeActivated4;
         rebirthCost = gameData.rebirthCostData;
         SuitsLevel[0] = gameData.suitsLevel1;
         SuitsLevel[1] = gameData.suitsLevel2;
+
     }
 
     public void SaveDate()
@@ -513,6 +518,8 @@ public class IdleScript : MonoBehaviour
             SuitsLevel[1] = 0;
             upgradesActivated[0] = false;
             upgradesActivated[1] = false;
+            upgradesActivated[2] = false;
+            upgradesActivated[3] = false;
             unlockingSystem.LoadUnlocksStatus();
             rebirthCost *= (System.Math.Pow(2, mainResetLevel) * (System.Math.Pow(2, 1) - 1) / (2 - 1));
         }

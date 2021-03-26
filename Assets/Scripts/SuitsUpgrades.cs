@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class SuitsUpgrades : MonoBehaviour
 {
-    public IdleScript idleScript;
+    public GameManager idleScript;
 
     public Text[] suitsTextField;
     public Text[] suitsTextLevels;

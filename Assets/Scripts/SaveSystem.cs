@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class SaveSystem 
 {
-    public static void SaveGameData(IdleScript idleScript)
+    public static void SaveGameData(GameManager idleScript)
     {
         BinaryFormatter formatter = new BinaryFormatter();
         string savePath = Application.persistentDataPath + "/savegame.mc";

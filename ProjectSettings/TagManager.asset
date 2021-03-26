@@ -13,6 +13,7 @@ TagManager:
   - unlockButtons
   - upgradeObjects
   - unlockText
+  - unlockAnimation
   layers:
   - Default
   - TransparentFX
