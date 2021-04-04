@@ -42,6 +42,8 @@ public class GameManager : MonoBehaviour
 
     public Research research;
 
+    public AstronautBehaviour astronautBehaviour;
+
     public SuitsUpgrades suitsUpgrades;
 
     public UnlockingSystem unlockingSystem;
@@ -208,6 +210,7 @@ public class GameManager : MonoBehaviour
     {
         double temp = 0;
         temp += research.ResearchBoost();
+        //temp += astronautBehaviour.AstronautsBoost();
         temp += suitsUpgrades.SuitsBoost();
         temp += RebirthBoost();
         for (int id = 0; id < AlienLevelText.Length; id++)
@@ -520,6 +523,11 @@ public class GameManager : MonoBehaviour
             upgradesActivated[1] = false;
             upgradesActivated[2] = false;
             upgradesActivated[3] = false;
+            for (int id = 0; id < unlockingSystem.animationUnlockConfirm.Length; id++)
+            {
+                unlockingSystem.animationUnlockConfirm[id] = false;
+            }
+        
             unlockingSystem.LoadUnlocksStatus();
             rebirthCost *= (System.Math.Pow(2, mainResetLevel) * (System.Math.Pow(2, 1) - 1) / (2 - 1));
         }

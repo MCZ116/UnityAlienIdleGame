@@ -8,36 +8,61 @@ public class AstronautBehaviour : MonoBehaviour
     [SerializeField]
     private GameManager alienScript;
 
-    [SerializeField]
-    private int alien1;
+    public GameObject[] upgradeAstronauts;
 
     private Animator animationIdle;
 
+    private double[] astronautCost = { 50, 50, 50, 50 };
+
+    public Text[] AstronautCostText;
+
+    private int[] astronauts;
 
     void Start()
     {   
-        animationIdle = GetComponent<Animator>();
+    
     }
 
     void Update()
     {
-        
-        AnimationIdle();
+        for (int id = 0; id < AstronautCostText.Length; id++)
+        {
+            AstronautCostText[id].text = astronautCost[id].ToString("F0");
+        }
+
     }
 
-    // Change script here cuz its activating only when first creature evolved... or maybe it should be like this ?
-    public void AnimationIdle()
+    public void AstronautsAppearing(int id)
     {
-
-        if (alienScript.AlienLevel[0] < alien1)
+        var h = astronautCost[id];
+        var c = alienScript.crystalCurrency;
+        var r = 2;
+        var u = id;
+        double n = 1;
+        
+        if (astronauts[id] <= 3)
         {
-            animationIdle.SetBool("idleAlien", false);
-        }
-        else if (alienScript.AlienLevel[0] >= alien1)
-        {
-            animationIdle.SetBool("idleAlien", true);
-        }
-
+            var astronautTempCost = h * (System.Math.Pow(r, u) * (System.Math.Pow(r, n) - 1) / (r - 1));
+            if (alienScript.crystalCurrency >= astronautTempCost)
+            {
+                alienScript.crystalCurrency -= astronautTempCost;
+                upgradeAstronauts[astronauts[id]].SetActive(true);
+                astronauts[id]++;
+                //AstronautsBoost();
+            }
+        } 
     }
+
+    //public double AstronautsBoost()
+    //{
+    //    double asBoost = 0;
+
+    //    for (int id = 0; id < upgradeAstronauts.Length; id++)
+    //    {
+    //        asBoost += 0.05 * astronauts[id] * 0.15;
+    //    }
+
+    //    return asBoost;
+    //}
 
 }

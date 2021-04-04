@@ -49,14 +49,13 @@ public class UnlockingAnimations : MonoBehaviour
     public void AnimationUnlock(int id)
     {
 
-            if (unlockingSystem.animationUnlockConfirm[id] == false)
-            {
-                unlockAnimation[id].SetBool("unlockAnimation", false);
-            }
-            else if (unlockingSystem.animationUnlockConfirm[id] == true)
+            if (unlockingSystem.animationUnlockConfirm[id] == true)
             {
                 unlockAnimation[id].SetBool("unlockAnimation", true);
-
+            }
+            else if (unlockingSystem.animationUnlockConfirm[id] == false)
+            {
+                unlockAnimation[id].SetBool("unlockAnimation", false);
             }
 
     }

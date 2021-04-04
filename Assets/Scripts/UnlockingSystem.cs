@@ -57,7 +57,7 @@ public class UnlockingSystem : MonoBehaviour
                 upgradeObjects[id].SetActive(true);
                 unlockButtons[id].SetActive(false);
             }
-            else
+            else if (idleScript.upgradesActivated[id] == false)
             {
 
                 upgradeObjects[id].SetActive(false);
