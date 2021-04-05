@@ -20,6 +20,10 @@ public class GameData
     public bool upgradeActivated3;
     public bool upgradeActivated4;
     public bool upgradeActivated5;
+    public bool astronautsbuy1;
+    public bool astronautsbuy2;
+    public bool astronautsbuy3;
+    public bool astronautsbuy4;
     public double rebirthCostData;
     public double suitsLevel1;
     public double suitsLevel2;
@@ -45,6 +49,10 @@ public class GameData
         suitsLevel1 = idleScript.SuitsLevel[0];
         suitsLevel2 = idleScript.SuitsLevel[1];
         crystals = idleScript.crystalCurrency;
+        astronautsbuy1 = idleScript.confirmAstronautBuy[0];
+        astronautsbuy2 = idleScript.confirmAstronautBuy[1];
+        astronautsbuy3 = idleScript.confirmAstronautBuy[2];
+        astronautsbuy4 = idleScript.confirmAstronautBuy[3];
 
     }
 

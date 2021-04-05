@@ -6,9 +6,10 @@ using UnityEngine.UI;
 public class AstronautBehaviour : MonoBehaviour
 {
     [SerializeField]
-    private GameManager alienScript;
+    private GameManager gameManager;
 
     public GameObject[] upgradeAstronauts;
+    private GameObject[] astronautsUpgrades;
 
     private Animator animationIdle;
 
@@ -16,11 +17,15 @@ public class AstronautBehaviour : MonoBehaviour
 
     public Text[] AstronautCostText;
 
-    private int[] astronauts;
+    private int[] astronautsID;
+
+ 
+
 
     void Start()
-    {   
-    
+    {
+        astronautsID = new int[4];
+        AssigningAstronautsOnStart();
     }
 
     void Update()
@@ -29,40 +34,70 @@ public class AstronautBehaviour : MonoBehaviour
         {
             AstronautCostText[id].text = astronautCost[id].ToString("F0");
         }
+        for (int id = 0; id < astronautsUpgrades.Length; id++)
+        {
+            Debug.Log(gameManager.confirmAstronautBuy[id] + "  ConfirmAstronautBuy ID" + id);
+        }
+    }
 
+    public void AssigningAstronautsOnStart()
+    {
+        astronautsUpgrades = GameObject.FindGameObjectsWithTag("astronauts");
+        Debug.Log(astronautsUpgrades.Length + " astronautsObjects");
+        upgradeAstronauts = new GameObject[astronautsUpgrades.Length];
+
+        for (int id = 0; id < astronautsUpgrades.Length; id++)
+        {
+            upgradeAstronauts[id] = astronautsUpgrades[id];
+            upgradeAstronauts[astronautsID[id]].SetActive(false);
+
+            if(gameManager.confirmAstronautBuy[id] == true)
+            {
+                upgradeAstronauts[astronautsID[id]].SetActive(true);
+            }
+            Debug.Log(gameManager.confirmAstronautBuy[id] + "  ConfirmAstronautBuy ID" + id);
+        }
     }
 
     public void AstronautsAppearing(int id)
     {
         var h = astronautCost[id];
-        var c = alienScript.crystalCurrency;
+        var c = gameManager.crystalCurrency;
         var r = 2;
         var u = id;
         double n = 1;
         
-        if (astronauts[id] <= 3)
+        if (astronautsID[id] <= 3)
         {
             var astronautTempCost = h * (System.Math.Pow(r, u) * (System.Math.Pow(r, n) - 1) / (r - 1));
-            if (alienScript.crystalCurrency >= astronautTempCost)
+            if (gameManager.crystalCurrency >= astronautTempCost)
             {
-                alienScript.crystalCurrency -= astronautTempCost;
-                upgradeAstronauts[astronauts[id]].SetActive(true);
-                astronauts[id]++;
-                //AstronautsBoost();
+                gameManager.crystalCurrency -= astronautTempCost;
+                upgradeAstronauts[astronautsID[id]].SetActive(true);
+                astronautsID[id]++;
+                gameManager.confirmAstronautBuy[astronautsID[id]] = true;
+                AstronautsBoost();
             }
         } 
     }
 
-    //public double AstronautsBoost()
-    //{
-    //    double asBoost = 0;
+    public double AstronautsBoost()
+    {
+        double asBoost = 0;
 
-    //    for (int id = 0; id < upgradeAstronauts.Length; id++)
-    //    {
-    //        asBoost += 0.05 * astronauts[id] * 0.15;
-    //    }
+       
+            for (int id = 0; id < upgradeAstronauts.Length; id++)
+            {
 
-    //    return asBoost;
-    //}
+                asBoost += astronautsID[id] * 0.15;
+                Debug.Log(astronautsID[id] + " astronautsLvl ID" +id);
+                Debug.Log(asBoost + " asBoost");
+                Debug.Log(upgradeAstronauts.Length + " upgradeAstronauts");
+
+            }
+
+            return asBoost;
+        
+    }
 
 }

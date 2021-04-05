@@ -39,7 +39,6 @@ public class UnlockingAnimations : MonoBehaviour
         for (int id = 0; id < animationUnlockObject.Length; id++)
         {
             animationUnlockObject = GameObject.FindGameObjectsWithTag("unlockAnimation");
-            //unlockAnimation[id] = animationUnlockObject[id].GetComponent<Animator>();
             unlockAnimation.Add(animationUnlockObject[id].GetComponent<Animator>());
             Debug.Log($"The index value of \"i\" is {id}");
             Debug.Log($"The collection \"ListaNaszychPrzedmiotow\" is {unlockAnimation.Count()}");

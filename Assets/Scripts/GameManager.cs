@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     public GameObject[] unlockGameObjects;
     public bool[] upgradesActivated;
     public bool[] earnedCrystal;
+    public bool[] confirmAstronautBuy = { false, false, false, false };
     double[] copyArray;
     //bool activateRB = false;
     public Image[] progressBar;
@@ -210,7 +211,7 @@ public class GameManager : MonoBehaviour
     {
         double temp = 0;
         temp += research.ResearchBoost();
-        //temp += astronautBehaviour.AstronautsBoost();
+        temp += astronautBehaviour.AstronautsBoost();
         temp += suitsUpgrades.SuitsBoost();
         temp += RebirthBoost();
         for (int id = 0; id < AlienLevelText.Length; id++)
@@ -378,6 +379,10 @@ public class GameManager : MonoBehaviour
         upgradesActivated[1] = gameData.upgradeActivated2;
         upgradesActivated[2] = gameData.upgradeActivated3;
         upgradesActivated[3] = gameData.upgradeActivated4;
+        confirmAstronautBuy[0] = gameData.astronautsbuy1;
+        confirmAstronautBuy[1] = gameData.astronautsbuy2;
+        confirmAstronautBuy[2] = gameData.astronautsbuy3;
+        confirmAstronautBuy[3] = gameData.astronautsbuy4;
         rebirthCost = gameData.rebirthCostData;
         SuitsLevel[0] = gameData.suitsLevel1;
         SuitsLevel[1] = gameData.suitsLevel2;
@@ -523,6 +528,11 @@ public class GameManager : MonoBehaviour
             upgradesActivated[1] = false;
             upgradesActivated[2] = false;
             upgradesActivated[3] = false;
+            for (int id = 0; id < confirmAstronautBuy.Length; id++)
+            {
+                confirmAstronautBuy[id] = false;
+            }
+
             for (int id = 0; id < unlockingSystem.animationUnlockConfirm.Length; id++)
             {
                 unlockingSystem.animationUnlockConfirm[id] = false;
