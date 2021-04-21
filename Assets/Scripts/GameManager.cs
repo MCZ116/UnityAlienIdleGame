@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
     public GameObject[] unlockGameObjects;
     public bool[] upgradesActivated;
     public bool[] earnedCrystal;
-    public bool[] confirmAstronautBuy = { false, false, false, false };
+    public bool[] confirmAstronautBuy;
     double[] copyArray;
     //bool activateRB = false;
     public Image[] progressBar;
@@ -71,6 +71,8 @@ public class GameManager : MonoBehaviour
 
     public double[] SuitsLevel { get => suitsLevel; set => suitsLevel = value; }
 
+    public int[] astronautsID;
+
     public double[] upgradesCounts;
     public float[] upgradeMaxTime = { 5f, 10f, 10f,20f,35f};
     public float[] progressTimer = { 0f, 0f, 0f, 0f, 0f};
@@ -99,6 +101,11 @@ public class GameManager : MonoBehaviour
             upgradesActivated[id] = false;
         }
 
+        for (int id = 0; id < 4; id++) // add unlockingSystem.unlockCost.Length*4
+        {
+            confirmAstronautBuy[astronautsID[id]] = false;
+        }
+
         Research1Level[0] = 0;
         Research1Level[1] = 0;
         upgradeLevel1 = 0;
@@ -108,7 +115,7 @@ public class GameManager : MonoBehaviour
         ChangeBuyModeText.text = "Upgrade: 1";
         Load();
         unlockingSystem.LoadUnlocksStatus();
-
+        astronautBehaviour.AstronautsControl();
         offline.OfflineProgressLoad();
     }
 
@@ -386,6 +393,7 @@ public class GameManager : MonoBehaviour
         rebirthCost = gameData.rebirthCostData;
         SuitsLevel[0] = gameData.suitsLevel1;
         SuitsLevel[1] = gameData.suitsLevel2;
+        astronautsID[0] = gameData.astronautsLevel;
 
     }
 
@@ -533,12 +541,18 @@ public class GameManager : MonoBehaviour
                 confirmAstronautBuy[id] = false;
             }
 
+            for (int id = 0; id < 4; id++)
+            {
+                astronautsID[id] = 0;
+            }
+
             for (int id = 0; id < unlockingSystem.animationUnlockConfirm.Length; id++)
             {
                 unlockingSystem.animationUnlockConfirm[id] = false;
             }
         
             unlockingSystem.LoadUnlocksStatus();
+            astronautBehaviour.AstronautsControl();
             rebirthCost *= (System.Math.Pow(2, mainResetLevel) * (System.Math.Pow(2, 1) - 1) / (2 - 1));
         }
         

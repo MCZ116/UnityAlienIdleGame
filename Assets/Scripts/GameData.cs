@@ -28,6 +28,7 @@ public class GameData
     public double suitsLevel1;
     public double suitsLevel2;
     public double upgradesLoopLenght;
+    public int astronautsLevel;
 
     public GameData (GameManager idleScript)
     {
@@ -53,6 +54,7 @@ public class GameData
         astronautsbuy2 = idleScript.confirmAstronautBuy[1];
         astronautsbuy3 = idleScript.confirmAstronautBuy[2];
         astronautsbuy4 = idleScript.confirmAstronautBuy[3];
+        astronautsLevel = idleScript.astronautsID[0]; 
 
     }
 
