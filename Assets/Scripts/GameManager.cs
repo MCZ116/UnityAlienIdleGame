@@ -141,7 +141,7 @@ public class GameManager : MonoBehaviour
             AutoValuesAssigning(id, upgradesCounts, 0.3, 1.4);
             AutoValuesAssigning(id, alienUpgradeCosts, 3, 8.3);
             ProgressBarsIncomeTimer();
-            AlienLevelText[id].text = "Level: " + alienLevel[id].ToString("F0");
+            AlienLevelText[id].text = alienLevel[id].ToString("F0");
             ButtonUpgradeMaxText[id].text = "Buy: " + BuyMaxCount(id) + "\n Price: " + ExponentLetterSystem(BuyCount(id), "F2");
             EarningStage[id].text = ExponentLetterSystem(StageEarningPerSecond(id), "F2") + "RP/s ";
             SoloEarningCrystals(id);
