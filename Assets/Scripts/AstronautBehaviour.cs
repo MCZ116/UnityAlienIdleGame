@@ -13,11 +13,11 @@ public class AstronautBehaviour : MonoBehaviour
 
     private Animator animationIdle;
 
-    private double[] astronautCost = { 50, 50, 50, 50 };
+    private double[] astronautCost = { 50, 100, 150, 300 };
 
     public Text[] AstronautCostText;
 
-    
+    public Button[] astronautsBuyButton;
 
  
 
@@ -33,6 +33,7 @@ public class AstronautBehaviour : MonoBehaviour
         for (int id = 0; id < AstronautCostText.Length; id++)
         {
             AstronautCostText[id].text = astronautCost[id].ToString("F0");
+            AstronautsBuyButtonControl(id);
         }
         for (int id = 0; id < astronautsUpgrades.Length; id++)
         {
@@ -79,6 +80,18 @@ public class AstronautBehaviour : MonoBehaviour
                 AstronautsBoost();
             }
         } 
+    }
+
+    public void AstronautsBuyButtonControl(int id)
+    {
+        if (gameManager.crystalCurrency >= astronautCost[id])
+        {
+            astronautsBuyButton[id].interactable = true;
+        }
+        else
+        {
+            astronautsBuyButton[id].interactable = false;
+        }
     }
 
     public void AstronautsControl()

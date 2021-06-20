@@ -134,7 +134,7 @@ public class GameManager : MonoBehaviour
         RebirthLevel.text = "Rebirth " + ExponentLetterSystem(mainResetLevel, "F0") ;
         ProfileLevel.text = ExponentLetterSystem(mainResetLevel, "F0");
         CrystalsAmount.text = "Crystals: " + crystalCurrency.ToString("F0") ;
-        
+
         for (int id = 0; id < AlienLevelText.Length; id++) {
 
             AutoValuesAssigning(id, suitsUpgrades.suitsUpgradesCosts, 5, id + 1);
@@ -142,8 +142,8 @@ public class GameManager : MonoBehaviour
             AutoValuesAssigning(id, alienUpgradeCosts, 3, 8.3);
             ProgressBarsIncomeTimer();
             AlienLevelText[id].text = alienLevel[id].ToString("F0");
-            ButtonUpgradeMaxText[id].text = "Buy: " + BuyMaxCount(id) + "\n Price: " + ExponentLetterSystem(BuyCount(id), "F2");
-            EarningStage[id].text = ExponentLetterSystem(StageEarningPerSecond(id), "F2") + "RP/s ";
+            ButtonUpgradeMaxText[id].text = "X" + BuyMaxCount(id) + "\n" + ExponentLetterSystem(BuyCount(id), "F2");
+            EarningStage[id].text = ExponentLetterSystem(StageEarningPerSecond(id), "F2") +" " + "RP/s ";
             SoloEarningCrystals(id);
             InteractableButtons(id, upgradeButtons);
         }
@@ -258,7 +258,7 @@ public class GameManager : MonoBehaviour
 
     public void InteractableButtons(int id, Button[] ButtonStatus)
     {
-        if (mainCurrency >= BuyCount(id))
+        if (mainCurrency >= BuyCount(id) && BuyCount(id) != 0)
         {
             ButtonStatus[id].interactable = true;
         }
