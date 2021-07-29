@@ -39,7 +39,7 @@ public class UnlockingSystem : MonoBehaviour
             idleScript.mainCurrency -= unlockCost[id];
             upgradeObjects[id].SetActive(true);
             idleScript.upgradesActivated[id] = true;
-            Debug.Log("Upgrade Unlocked!");
+            //Debug.Log("Upgrade Unlocked!");
            
         }
         else

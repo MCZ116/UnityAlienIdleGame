@@ -32,12 +32,12 @@ public class AstronautBehaviour : MonoBehaviour
     {
         for (int id = 0; id < AstronautCostText.Length; id++)
         {
-            AstronautCostText[id].text = astronautCost[id].ToString("F0");
+            AstronautCostText[id].text = AstronautPriceDisplay(id).ToString("F0");
             AstronautsBuyButtonControl(id);
         }
         for (int id = 0; id < astronautsUpgrades.Length; id++)
         {
-            Debug.Log(gameManager.confirmAstronautBuy[id] + "  ConfirmAstronautBuy ID" + id);
+            //Debug.Log(gameManager.confirmAstronautBuy[id] + "  ConfirmAstronautBuy ID" + id);
         }
     }
 
@@ -59,29 +59,38 @@ public class AstronautBehaviour : MonoBehaviour
             Debug.Log(gameManager.confirmAstronautBuy[id] + "  ConfirmAstronautBuy ID" + id);
         }
     }
-
+    // Button for buying astronauts
     public void AstronautsAppearing(int id)
     {
         var h = astronautCost[id];
-        var c = gameManager.crystalCurrency;
-        var r = 2;
-        var u = id;
-        double n = 1;
-        
+
+        var astronautTempCost = h * AstronautsLvlAssigning();
+        if(astronautTempCost > 150) { astronautTempCost = 300;}
+
         if (gameManager.astronautsID[id] <= 3)
         {
-            var astronautTempCost = h * (System.Math.Pow(r, u) * (System.Math.Pow(r, n) - 1) / (r - 1));
             if (gameManager.crystalCurrency >= astronautTempCost)
             {
                 gameManager.crystalCurrency -= astronautTempCost;
                 upgradeAstronauts[gameManager.astronautsID[id]].SetActive(true);
                 gameManager.confirmAstronautBuy[gameManager.astronautsID[id]] = true;
                 gameManager.astronautsID[id]++;
+                AstronautsLvlAssigning();
                 AstronautsBoost();
             }
-        } 
+        }
     }
+    // Calculating price for displaying
+    public double AstronautPriceDisplay(int id)
+    {
+        var h = astronautCost[id];
 
+        var astronautTempCost = h * AstronautsLvlAssigning();
+        if (astronautTempCost > 150) { astronautTempCost = 300; }
+
+        return astronautTempCost;
+    }
+    // Setting button interactable off and on depending from amount of crystals needed
     public void AstronautsBuyButtonControl(int id)
     {
         if (gameManager.crystalCurrency >= astronautCost[id])
@@ -94,6 +103,7 @@ public class AstronautBehaviour : MonoBehaviour
         }
     }
 
+    // Controlling display of activated astronauts
     public void AstronautsControl()
     {
         for (int id = 0; id < 4; id++)
@@ -109,7 +119,21 @@ public class AstronautBehaviour : MonoBehaviour
             }
         }
     }
+    // Function used to increase level of astronauts and calculations
+    public double AstronautsLvlAssigning()
+    {
+        double AstroLvl = 1;
+        for (int id = 0; id < upgradeAstronauts.Length; id++)
+        {
 
+            AstroLvl += gameManager.astronautsID[id];
+
+        }
+
+        return AstroLvl;
+    }
+
+    // A function which calculate an income boost of research points based on level of astronauts
     public double AstronautsBoost()
     {
         double asBoost = 0;
@@ -119,9 +143,9 @@ public class AstronautBehaviour : MonoBehaviour
             {
 
                 asBoost += gameManager.astronautsID[id] * 0.15;
-                Debug.Log(gameManager.astronautsID[id] + " astronautsLvl ID" +id);
-                Debug.Log(asBoost + " asBoost");
-                Debug.Log(upgradeAstronauts.Length + " upgradeAstronauts");
+                //Debug.Log(gameManager.astronautsID[id] + " astronautsLvl ID" +id);
+                //Debug.Log(asBoost + " asBoost");
+                //Debug.Log(upgradeAstronauts.Length + " upgradeAstronauts");
 
             }
 

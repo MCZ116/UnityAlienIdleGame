@@ -20,10 +20,10 @@ public class UnlockingAnimations : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("Unloking objects Update" + unlockingSystem.upgradeObjects.Length);
-        Debug.Log("Unloking objects" + unlockingSystem.upgradeObjects.Length);
-        Debug.Log("Animation Object " + animationUnlockObject.Length);
-        Debug.Log("UnlockText " + unlockingSystem.unlockText.Length);
+        //Debug.Log("Unloking objects Update" + unlockingSystem.upgradeObjects.Length);
+        //Debug.Log("Unloking objects" + unlockingSystem.upgradeObjects.Length);
+        //Debug.Log("Animation Object " + animationUnlockObject.Length);
+        //Debug.Log("UnlockText " + unlockingSystem.unlockText.Length);
         for (int id = 0; id < unlockingSystem.upgradeObjects.Length; id++)
         {
             AnimationUnlock(id);
@@ -40,8 +40,8 @@ public class UnlockingAnimations : MonoBehaviour
         {
             animationUnlockObject = GameObject.FindGameObjectsWithTag("unlockAnimation");
             unlockAnimation.Add(animationUnlockObject[id].GetComponent<Animator>());
-            Debug.Log($"The index value of \"i\" is {id}");
-            Debug.Log($"The collection \"ListaNaszychPrzedmiotow\" is {unlockAnimation.Count()}");
+            //Debug.Log($"The index value of \"i\" is {id}");
+            //Debug.Log($"The collection \"ListaNaszychPrzedmiotow\" is {unlockAnimation.Count()}");
         }
     }
 
