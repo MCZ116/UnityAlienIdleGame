@@ -24,11 +24,18 @@ public class GameData
     public bool astronautsbuy2;
     public bool astronautsbuy3;
     public bool astronautsbuy4;
+    public bool astronautsbuy5;
+    public bool astronautsbuy6;
+    public bool astronautsbuy7;
+    public bool astronautsbuy8;
     public double rebirthCostData;
     public double suitsLevel1;
     public double suitsLevel2;
     public double upgradesLoopLenght;
     public int astronautsLevel;
+    public int astronautsLevel2;
+    public int astronautIDStart1;
+    public int astronautIDStart2;
 
     public GameData (GameManager idleScript)
     {
@@ -54,7 +61,13 @@ public class GameData
         astronautsbuy2 = idleScript.confirmAstronautBuy[1];
         astronautsbuy3 = idleScript.confirmAstronautBuy[2];
         astronautsbuy4 = idleScript.confirmAstronautBuy[3];
-        astronautsLevel = idleScript.astronautsID[0]; 
+        astronautsbuy5 = idleScript.confirmAstronautBuy[4];
+        astronautsbuy6 = idleScript.confirmAstronautBuy[5];
+        astronautsbuy7 = idleScript.confirmAstronautBuy[6];
+        astronautsbuy8 = idleScript.confirmAstronautBuy[7];
+
+        astronautsLevel = idleScript.astronautsLevel[0];
+        astronautsLevel2 = idleScript.astronautsLevel[1];
 
     }
 

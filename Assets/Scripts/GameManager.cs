@@ -71,7 +71,8 @@ public class GameManager : MonoBehaviour
 
     public double[] SuitsLevel { get => suitsLevel; set => suitsLevel = value; }
 
-    public int[] astronautsID;
+    public int[] astronautsLevel;
+    public int[] astronautBuyStartID = { 0, 4 };
 
     public double[] upgradesCounts;
     public float[] upgradeMaxTime = { 5f, 10f, 10f,20f,35f};
@@ -101,9 +102,9 @@ public class GameManager : MonoBehaviour
             upgradesActivated[id] = false;
         }
 
-        for (int id = 0; id < 4; id++) // add unlockingSystem.unlockCost.Length*4
+        for (int id = 0; id < 8; id++) // add unlockingSystem.unlockCost.Length*4
         {
-            confirmAstronautBuy[astronautsID[id]] = false;
+            confirmAstronautBuy[id] = false;
         }
 
         Research1Level[0] = 0;
@@ -115,6 +116,7 @@ public class GameManager : MonoBehaviour
         ChangeBuyModeText.text = "Upgrade: 1";
         Load();
         unlockingSystem.LoadUnlocksStatus();
+        astronautBehaviour.AssigningAstronautsOnStart();
         astronautBehaviour.AstronautsControl();
         offline.OfflineProgressLoad();
     }
@@ -390,11 +392,15 @@ public class GameManager : MonoBehaviour
         confirmAstronautBuy[1] = gameData.astronautsbuy2;
         confirmAstronautBuy[2] = gameData.astronautsbuy3;
         confirmAstronautBuy[3] = gameData.astronautsbuy4;
+        confirmAstronautBuy[4] = gameData.astronautsbuy5;
+        confirmAstronautBuy[5] = gameData.astronautsbuy6;
+        confirmAstronautBuy[6] = gameData.astronautsbuy7;
+        confirmAstronautBuy[7] = gameData.astronautsbuy8;
         rebirthCost = gameData.rebirthCostData;
         SuitsLevel[0] = gameData.suitsLevel1;
         SuitsLevel[1] = gameData.suitsLevel2;
-        astronautsID[0] = gameData.astronautsLevel;
-
+        astronautsLevel[0] = gameData.astronautsLevel;
+        astronautsLevel[1] = gameData.astronautsLevel2;
     }
 
     public void SaveDate()
@@ -541,9 +547,9 @@ public class GameManager : MonoBehaviour
                 confirmAstronautBuy[id] = false;
             }
 
-            for (int id = 0; id < 4; id++)
+            for (int id = 0; id < 8; id++)
             {
-                astronautsID[id] = 0;
+                astronautsLevel[id] = 0;
             }
 
             for (int id = 0; id < unlockingSystem.animationUnlockConfirm.Length; id++)
