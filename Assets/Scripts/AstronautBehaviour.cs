@@ -9,17 +9,17 @@ public class AstronautBehaviour : MonoBehaviour
     private GameManager gameManager;
 
     public GameObject[] upgradeAstronauts;
-    private GameObject[] astronautsUpgrades;
+    public GameObject[] astronautsUpgrades;
 
     private Animator animationIdle;
 
-    private double[] astronautCost = { 50, 50};
+    private double[] astronautCost = { 50, 50, 50, 50, 50 };
 
     public Text[] AstronautCostText;
 
     public Button[] astronautsBuyButton;
 
-    public int[] astronautBuyStartID = { 0, 4 };
+   
 
     //[SerializeField]
     //public int[] astronautBuyStartID;
@@ -28,9 +28,8 @@ public class AstronautBehaviour : MonoBehaviour
 
     void Start()
     {
-        // astronauts amount in total 8
-        gameManager.astronautsLevel = new int[2];
-        
+        gameManager.astronautsLevel = new int[5];
+       
     }
 
     void Update()
@@ -42,7 +41,8 @@ public class AstronautBehaviour : MonoBehaviour
         }
         for (int id = 0; id < astronautsUpgrades.Length; id++)
         {
-            Debug.Log(gameManager.confirmAstronautBuy[id] + "  ConfirmAstronautBuy ID" + id);
+            //Debug.Log(gameManager.confirmAstronautBuy[id] + "  ConfirmAstronautBuy ID" + id);
+           
         }
     }
 
@@ -110,9 +110,9 @@ public class AstronautBehaviour : MonoBehaviour
                 if (gameManager.crystalCurrency >= astronautTempCost)
                 {
                     gameManager.crystalCurrency -= astronautTempCost;
-                    upgradeAstronauts[astronautBuyStartID[id]].SetActive(true);
-                    gameManager.confirmAstronautBuy[astronautBuyStartID[id]] = true;
-                    astronautBuyStartID[id]++;
+                    upgradeAstronauts[gameManager.astronautBuyStartID[id]].SetActive(true);
+                    gameManager.confirmAstronautBuy[gameManager.astronautBuyStartID[id]] = true;
+                    gameManager.astronautBuyStartID[id]++;
                     gameManager.astronautsLevel[id]++;
                     AstronautsBoost();
                 }
@@ -148,7 +148,7 @@ public class AstronautBehaviour : MonoBehaviour
     // Controlling display of activated astronauts
     public void AstronautsControl()
     {
-        for (int id = 0; id < 8; id++)
+        for (int id = 0; id < 20; id++)
         {
             if (gameManager.confirmAstronautBuy[id] == false)
             {

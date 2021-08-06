@@ -23,7 +23,6 @@ public class GameManager : MonoBehaviour
     double[] alienUpgradeCosts;
     public double upgradeLevel1;
     public double mainResetLevel;
-    public double amountOfObjects;
     private GameObject[] progressBarObject;
     private GameObject[] levelStageTextObject;
     private GameObject[] upgradeButtonObject;
@@ -31,7 +30,6 @@ public class GameManager : MonoBehaviour
     private GameObject[] earningStageObject;
     private GameObject[] Stages;
     private GameObject[] unlockUpgradeText;
-    public GameObject[] unlockGameObjects;
     public bool[] upgradesActivated;
     public bool[] earnedCrystal;
     public bool[] confirmAstronautBuy;
@@ -72,7 +70,7 @@ public class GameManager : MonoBehaviour
     public double[] SuitsLevel { get => suitsLevel; set => suitsLevel = value; }
 
     public int[] astronautsLevel;
-    public int[] astronautBuyStartID = { 0, 4 };
+    public int[] astronautBuyStartID;
 
     public double[] upgradesCounts;
     public float[] upgradeMaxTime = { 5f, 10f, 10f,20f,35f};
@@ -86,6 +84,7 @@ public class GameManager : MonoBehaviour
         rebirthCost = 10000;
         AlienLevel = new double[5];
         SuitsLevel = new double[2];
+        astronautBuyStartID = new int[5];
         upgradesActivated = new bool[unlockingSystem.unlockCost.Length];
         upgradesCounts = new double[AlienLevel.Length];
         Research1Level = new double[2];
@@ -102,9 +101,13 @@ public class GameManager : MonoBehaviour
             upgradesActivated[id] = false;
         }
 
-        for (int id = 0; id < 8; id++) // add unlockingSystem.unlockCost.Length*4
+        for (int id = 0; id < astronautBehaviour.astronautsUpgrades.Length; id++) // add unlockingSystem.unlockCost.Length*4
         {
             confirmAstronautBuy[id] = false;
+        }
+        for (int id = 0; id < astronautBuyStartID.Length ; id++)
+        {
+            astronautBuyStartID[id] = id * 4;
         }
 
         Research1Level[0] = 0;
@@ -113,11 +116,13 @@ public class GameManager : MonoBehaviour
         suitsLevel[0] = 0;
         suitsLevel[1] = 0;
         mainResetLevel = 0;
-        ChangeBuyModeText.text = "Upgrade: 1";
-        Load();
-        unlockingSystem.LoadUnlocksStatus();
+        ChangeBuyModeText.text = "Upgrade: 1";      
         astronautBehaviour.AssigningAstronautsOnStart();
+        //------------------------------------------------------------------------
+        //Load after assigning variables and before loading unlock status or it won't appear
+        Load();
         astronautBehaviour.AstronautsControl();
+        unlockingSystem.LoadUnlocksStatus();
         offline.OfflineProgressLoad();
     }
 
@@ -129,6 +134,8 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        //saving here because of bug which causing not creating save file after deleting it cuz IEnumerator won't have time to work
+        Save();
         AutoObjectsAssigning();
         CurrencyText.text = ExponentLetterSystem(mainCurrency, "F2");
         RPointsText.text = ExponentLetterSystem(ResearchPointsCalculator(), "F2") + "RP/s ";
@@ -396,11 +403,31 @@ public class GameManager : MonoBehaviour
         confirmAstronautBuy[5] = gameData.astronautsbuy6;
         confirmAstronautBuy[6] = gameData.astronautsbuy7;
         confirmAstronautBuy[7] = gameData.astronautsbuy8;
+        confirmAstronautBuy[8] = gameData.astronautsbuy9;
+        confirmAstronautBuy[9] = gameData.astronautsbuy10;
+        confirmAstronautBuy[10] = gameData.astronautsbuy11;
+        confirmAstronautBuy[11] = gameData.astronautsbuy12;
+        confirmAstronautBuy[12] = gameData.astronautsbuy13;
+        confirmAstronautBuy[13] = gameData.astronautsbuy14;
+        confirmAstronautBuy[14] = gameData.astronautsbuy15;
+        confirmAstronautBuy[15] = gameData.astronautsbuy16;
+        confirmAstronautBuy[16] = gameData.astronautsbuy17;
+        confirmAstronautBuy[17] = gameData.astronautsbuy18;
+        confirmAstronautBuy[18] = gameData.astronautsbuy19;
+        confirmAstronautBuy[19] = gameData.astronautsbuy20;
         rebirthCost = gameData.rebirthCostData;
         SuitsLevel[0] = gameData.suitsLevel1;
         SuitsLevel[1] = gameData.suitsLevel2;
         astronautsLevel[0] = gameData.astronautsLevel;
         astronautsLevel[1] = gameData.astronautsLevel2;
+        astronautsLevel[2] = gameData.astronautsLevel3;
+        astronautsLevel[3] = gameData.astronautsLevel4;
+        astronautsLevel[4] = gameData.astronautsLevel5;
+        astronautBuyStartID[0] = gameData.astronautIDStart1;
+        astronautBuyStartID[1] = gameData.astronautIDStart2;
+        astronautBuyStartID[2] = gameData.astronautIDStart3;
+        astronautBuyStartID[3] = gameData.astronautIDStart4;
+        astronautBuyStartID[4] = gameData.astronautIDStart5;
     }
 
     public void SaveDate()
@@ -542,12 +569,16 @@ public class GameManager : MonoBehaviour
             upgradesActivated[1] = false;
             upgradesActivated[2] = false;
             upgradesActivated[3] = false;
+            for (int id = 0; id < astronautBuyStartID.Length; id++)
+            {
+                astronautBuyStartID[id] = id * 4;
+            }
             for (int id = 0; id < confirmAstronautBuy.Length; id++)
             {
                 confirmAstronautBuy[id] = false;
             }
 
-            for (int id = 0; id < 8; id++)
+            for (int id = 0; id < astronautsLevel.Length; id++)
             {
                 astronautsLevel[id] = 0;
             }

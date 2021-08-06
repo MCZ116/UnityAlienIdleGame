@@ -28,6 +28,7 @@ public class UnlockingSystem : MonoBehaviour
         {
             unlockText[id].text = "Buy for : " + GameManager.ExponentLetterSystem(unlockCost[id], "F2");
         }
+
     }
 
     public void UnlockingStages(int id)

@@ -28,15 +28,32 @@ public class GameData
     public bool astronautsbuy6;
     public bool astronautsbuy7;
     public bool astronautsbuy8;
+    public bool astronautsbuy9;
+    public bool astronautsbuy10;
+    public bool astronautsbuy11;
+    public bool astronautsbuy12;
+    public bool astronautsbuy13;
+    public bool astronautsbuy14;
+    public bool astronautsbuy15;
+    public bool astronautsbuy16;
+    public bool astronautsbuy17;
+    public bool astronautsbuy18;
+    public bool astronautsbuy19;
+    public bool astronautsbuy20;
     public double rebirthCostData;
     public double suitsLevel1;
     public double suitsLevel2;
     public double upgradesLoopLenght;
     public int astronautsLevel;
     public int astronautsLevel2;
+    public int astronautsLevel3;
+    public int astronautsLevel4;
+    public int astronautsLevel5;
     public int astronautIDStart1;
     public int astronautIDStart2;
-
+    public int astronautIDStart3;
+    public int astronautIDStart4;
+    public int astronautIDStart5;
     public GameData (GameManager idleScript)
     {
         researchPointsData = idleScript.mainCurrency;
@@ -65,9 +82,29 @@ public class GameData
         astronautsbuy6 = idleScript.confirmAstronautBuy[5];
         astronautsbuy7 = idleScript.confirmAstronautBuy[6];
         astronautsbuy8 = idleScript.confirmAstronautBuy[7];
+        astronautsbuy9 = idleScript.confirmAstronautBuy[8];
+        astronautsbuy10 = idleScript.confirmAstronautBuy[9];
+        astronautsbuy11 = idleScript.confirmAstronautBuy[10];
+        astronautsbuy12 = idleScript.confirmAstronautBuy[11];
+        astronautsbuy13 = idleScript.confirmAstronautBuy[12];
+        astronautsbuy14 = idleScript.confirmAstronautBuy[13];
+        astronautsbuy15 = idleScript.confirmAstronautBuy[14];
+        astronautsbuy16 = idleScript.confirmAstronautBuy[15];
+        astronautsbuy17 = idleScript.confirmAstronautBuy[16];
+        astronautsbuy18 = idleScript.confirmAstronautBuy[17];
+        astronautsbuy19 = idleScript.confirmAstronautBuy[18];
+        astronautsbuy20 = idleScript.confirmAstronautBuy[19];
 
         astronautsLevel = idleScript.astronautsLevel[0];
         astronautsLevel2 = idleScript.astronautsLevel[1];
+        astronautsLevel3 = idleScript.astronautsLevel[2];
+        astronautsLevel4 = idleScript.astronautsLevel[3];
+        astronautsLevel5 = idleScript.astronautsLevel[4];
+        astronautIDStart1 = idleScript.astronautBuyStartID[0];
+        astronautIDStart2 = idleScript.astronautBuyStartID[1];
+        astronautIDStart3 = idleScript.astronautBuyStartID[2];
+        astronautIDStart4 = idleScript.astronautBuyStartID[3];
+        astronautIDStart5 = idleScript.astronautBuyStartID[4];
 
     }
 
