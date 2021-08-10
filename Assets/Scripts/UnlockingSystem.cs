@@ -26,7 +26,7 @@ public class UnlockingSystem : MonoBehaviour
     {
         for (int id = 0; id < upgradeObjects.Length; id++)
         {
-            unlockText[id].text = "Buy for : " + GameManager.ExponentLetterSystem(unlockCost[id], "F2");
+            unlockText[id].text = GameManager.ExponentLetterSystem(unlockCost[id], "F2");
         }
 
     }

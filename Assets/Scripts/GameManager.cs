@@ -83,10 +83,10 @@ public class GameManager : MonoBehaviour
         mainCurrency = 100;
         rebirthCost = 10000;
         AlienLevel = new double[5];
+        upgradesCounts = new double[AlienLevel.Length];
         SuitsLevel = new double[2];
         astronautBuyStartID = new int[5];
         upgradesActivated = new bool[unlockingSystem.unlockCost.Length];
-        upgradesCounts = new double[AlienLevel.Length];
         Research1Level = new double[2];
         copyArray = new double[AlienLevel.Length + 1];
         alienUpgradeCosts = new double[AlienLevel.Length];
@@ -115,15 +115,22 @@ public class GameManager : MonoBehaviour
         upgradeLevel1 = 0;
         suitsLevel[0] = 0;
         suitsLevel[1] = 0;
-        mainResetLevel = 0;
+        mainResetLevel = 1;
         ChangeBuyModeText.text = "Upgrade: 1";      
         astronautBehaviour.AssigningAstronautsOnStart();
         //------------------------------------------------------------------------
         //Load after assigning variables and before loading unlock status or it won't appear
         Load();
+        // Assignign once before update for offline calculations
+        for (int id = 0; id < AlienLevel.Length; id++)
+        {
+            AutoValuesAssigning(id, upgradesCounts, 0.3, 1.4);
+        }
+
         astronautBehaviour.AstronautsControl();
         unlockingSystem.LoadUnlocksStatus();
         offline.OfflineProgressLoad();
+        Debug.Log(" AstroLenght: " + AlienLevel.Length);
     }
 
     IEnumerator MySave()
@@ -222,19 +229,23 @@ public class GameManager : MonoBehaviour
         //    unlockingSystem.upgradeObjects[id] = unlockGameObjects[id];
         //}
     }
-
+    // Important part of code calculating all income and bonuses in game
     public double ResearchPointsCalculator()
     {
         double temp = 0;
+
+        for (int id = 0; id < AlienLevelText.Length; id++)
+        {
+            temp += (AlienLevel[id] * upgradesCounts[id]);
+            Debug.Log("ID: " + AlienLevel[id] + " UpgradeCount: " +  upgradesCounts[id]);
+            Debug.Log(" Astronaut Earning temp: " + temp);
+        }
+
         temp += research.ResearchBoost();
         temp += astronautBehaviour.AstronautsBoost();
         temp += suitsUpgrades.SuitsBoost();
         temp += RebirthBoost();
-        for (int id = 0; id < AlienLevelText.Length; id++)
-        {
-                    temp += AlienLevel[id] * upgradesCounts[id];
 
-        }
         Debug.Log(temp + "Outcome");
         return temp;
     }
@@ -594,18 +605,18 @@ public class GameManager : MonoBehaviour
         }
         
     }
-    // Deleted +1 on return
+
     public double RebirthBoost()
     {
       
-            double rBoost = 0;
-            //for (int id = 0; id < AlienLevel.Length; id++)
-            //{
-            //    rBoost += AlienLevel[id] * 0.1;
-            //}
-           
+        double rBoost = 0;
+        // secure to not give bonus before going higher than 1 lvl of rebirth
+        if (mainResetLevel != 1)
+        {
             rBoost += 0.05 * mainResetLevel * 1.7;
             return rBoost;
+        } 
+        return rBoost;
 
     }
 }

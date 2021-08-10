@@ -9,15 +9,13 @@ public class Shop : MonoBehaviour
 
     public AstronautBehaviour astroBehaviour;
 
-    private double foodPrice = 2500;
+    void Start()
+    {
+        
+    }
 
     void Update()
     {
-        //foodPrice *= alienScript.LightPower;
-    }
-
-    public void FeedingAlien()
-    {
-
+        
     }
 }

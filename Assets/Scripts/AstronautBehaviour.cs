@@ -19,6 +19,7 @@ public class AstronautBehaviour : MonoBehaviour
 
     public Button[] astronautsBuyButton;
 
+    private bool[] astronautMaxConfirm;
    
 
     //[SerializeField]
@@ -29,6 +30,12 @@ public class AstronautBehaviour : MonoBehaviour
     void Start()
     {
         gameManager.astronautsLevel = new int[5];
+        astronautMaxConfirm = new bool[AstronautCostText.Length];
+
+        for (int id = 0; id < astronautMaxConfirm.Length; id++)
+        {
+            astronautMaxConfirm[id] = false;
+        }
        
     }
 
@@ -36,7 +43,18 @@ public class AstronautBehaviour : MonoBehaviour
     {
         for (int id = 0; id < AstronautCostText.Length; id++)
         {
-            AstronautCostText[id].text = AstronautPriceDisplay(id).ToString("F0");
+            if (astronautMaxConfirm[id] == false)
+            {
+                AstronautCostText[id].text = AstronautPriceDisplay(id).ToString("F0");
+            }
+            else
+            {
+                AstronautCostText[id].text = "MAX";
+
+                astronautsBuyButton[id].GetComponent<Image>().color = Color.yellow;
+
+                AstronautCostText[id].color = Color.black;
+            }
             AstronautsBuyButtonControl(id);
         }
         for (int id = 0; id < astronautsUpgrades.Length; id++)
@@ -52,6 +70,7 @@ public class AstronautBehaviour : MonoBehaviour
         Debug.Log(astronautsUpgrades.Length + " astronautsObjects");
         upgradeAstronauts = new GameObject[astronautsUpgrades.Length];
 
+
         for (int id = 0; id < astronautsUpgrades.Length; id++)
         {
             upgradeAstronauts[id] = astronautsUpgrades[id];
@@ -61,7 +80,7 @@ public class AstronautBehaviour : MonoBehaviour
             {
                 upgradeAstronauts[id].SetActive(true);
             }
-            Debug.Log(gameManager.confirmAstronautBuy[id] + "  ConfirmAstronautBuy ID " + id);
+            //Debug.Log(gameManager.confirmAstronautBuy[id] + "  ConfirmAstronautBuy ID " + id);
         }
     }
     // Button listener tries
@@ -100,25 +119,22 @@ public class AstronautBehaviour : MonoBehaviour
     {
         var h = astronautCost[id];
         var astronautTempCost = h * (gameManager.astronautsLevel[id]+1);
+        Debug.Log(" TempCostAstro: " + h * (gameManager.astronautsLevel[id] + 1));
         
-        if (astronautTempCost == 150) { astronautTempCost = 300; }
+        if (astronautTempCost == 200) { astronautTempCost = 300; }
 
-        if ( astronautTempCost <= 300 )
-        {
-            if (gameManager.astronautsLevel[id] <= 3)
-            {
-                if (gameManager.crystalCurrency >= astronautTempCost)
-                {
-                    gameManager.crystalCurrency -= astronautTempCost;
-                    upgradeAstronauts[gameManager.astronautBuyStartID[id]].SetActive(true);
-                    gameManager.confirmAstronautBuy[gameManager.astronautBuyStartID[id]] = true;
-                    gameManager.astronautBuyStartID[id]++;
-                    gameManager.astronautsLevel[id]++;
-                    AstronautsBoost();
-                }
-            }
+        if ( astronautTempCost <= 300 && gameManager.astronautsLevel[id] <= 3 && gameManager.crystalCurrency >= astronautTempCost)
+        {  
+            gameManager.crystalCurrency -= astronautTempCost;
+            upgradeAstronauts[gameManager.astronautBuyStartID[id]].SetActive(true);
+            gameManager.confirmAstronautBuy[gameManager.astronautBuyStartID[id]] = true;
+            gameManager.astronautBuyStartID[id]++;
+            gameManager.astronautsLevel[id]++;
+            AstronautsBoost();
+
+            Debug.Log("AstroPrice: " + astronautTempCost );
         }
-        Debug.Log("Button Clicked. Received int: " + gameManager.astronautsLevel[id] + " ID: " + id);
+        //Debug.Log("Button Clicked. Received int: " + gameManager.astronautsLevel[id] + " ID: " + id);
     }
 
     // Calculating price for displaying
@@ -128,14 +144,18 @@ public class AstronautBehaviour : MonoBehaviour
 
         var astronautTempCost = h * (gameManager.astronautsLevel[id]+1);
 
-        if (astronautTempCost > 150) { astronautTempCost = 300; }
+        if (astronautTempCost == 200) { astronautTempCost = 300; }
+        if (astronautTempCost == 250)
+        {
+            astronautMaxConfirm[id] = true;
+        }
 
         return astronautTempCost;
     }
     // Setting button interactable off and on depending from amount of crystals needed
     public void AstronautsBuyButtonControl(int id)
     {
-        if (gameManager.crystalCurrency >= astronautCost[id])
+        if (gameManager.crystalCurrency >= astronautCost[id] && astronautMaxConfirm[id] == false)
         {
             astronautsBuyButton[id].interactable = true;
         }
@@ -185,9 +205,6 @@ public class AstronautBehaviour : MonoBehaviour
             {
 
                 asBoost += gameManager.astronautsLevel[id] * 0.15;
-                //Debug.Log(gameManager.astronautsID[id] + " astronautsLvl ID" +id);
-                //Debug.Log(asBoost + " asBoost");
-                //Debug.Log(upgradeAstronauts.Length + " upgradeAstronauts");
 
             }
 
