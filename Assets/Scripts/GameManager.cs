@@ -116,7 +116,7 @@ public class GameManager : MonoBehaviour
         suitsLevel[0] = 0;
         suitsLevel[1] = 0;
         mainResetLevel = 1;
-        ChangeBuyModeText.text = "Upgrade: 1";      
+        ChangeBuyModeText.text = "1";      
         astronautBehaviour.AssigningAstronautsOnStart();
         //------------------------------------------------------------------------
         //Load after assigning variables and before loading unlock status or it won't appear
@@ -149,7 +149,7 @@ public class GameManager : MonoBehaviour
         RebirthPrice.text = "Price \n" + ExponentLetterSystem(rebirthCost, "F2");
         RebirthLevel.text = "Rebirth " + ExponentLetterSystem(mainResetLevel, "F0") ;
         ProfileLevel.text = ExponentLetterSystem(mainResetLevel, "F0");
-        CrystalsAmount.text = "Crystals: " + crystalCurrency.ToString("F0") ;
+        CrystalsAmount.text = crystalCurrency.ToString("F0") ;
 
         for (int id = 0; id < AlienLevelText.Length; id++) {
 
@@ -451,19 +451,19 @@ public class GameManager : MonoBehaviour
         switch (buyModeID)
         {
             case 0:
-                ChangeBuyModeText.text = "Upgrade: 1";
+                ChangeBuyModeText.text = "1";
                 buyModeID = 1;
                 break;
             case 1:
-                ChangeBuyModeText.text = "Upgrade: 10";
+                ChangeBuyModeText.text = "10";
                 buyModeID = 2;
                 break;
             case 2:
-                ChangeBuyModeText.text = "Upgrade: 100";
+                ChangeBuyModeText.text = "100";
                 buyModeID = 3;
                 break;
             case 3:
-                ChangeBuyModeText.text = "Upgrade: MAX";
+                ChangeBuyModeText.text = "MAX";
                 buyModeID = 0;
                 break;
         }
