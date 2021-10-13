@@ -7,13 +7,13 @@ public class Research : MonoBehaviour
 {
     public GameManager idleScript;
 
-    public Text[] researchTextField;
+    public Text researchTextField;
     public Text[] researchLevels;
 
     double[] researchCosts;
     double[] upgradeResearchValues = { 0.2, 0.5 };
     string[] researchText = { "Improve oxgen tanks capacity for about 2%. Better oxygen tanks allow astronauts to stay longer on the surface of the planet", "Durability of drills improve digging for about 10%" };
-   
+    public bool[] researchCanBeDone = { false, false, false };
 
     void Start()
     {
@@ -29,32 +29,38 @@ public class Research : MonoBehaviour
         {
             if (idleScript.Research1Level[id] >= 1)
             {
-                researchLevels[id].text = "Level: " + idleScript.Research1Level[id].ToString("F0");
+                researchLevels[id].text = "Lvl: " + idleScript.Research1Level[id].ToString("F0");
             }
             else
             {
                 researchLevels[id].text = "Not Activated";
             }
-            researchTextField[id].text = $"{researchText[id]}";
+            
         }
 
     }
 
+    public void ResearchInfoWindowOnClick(int id)
+    {
+                researchTextField.text = $"{researchText[id]}";
+    }
+
     public void ResearchUpgradeButton(int id)
     {
+        ResearchInfoWindowOnClick(id);
         var h = researchCosts[id];
         var c = idleScript.mainCurrency;
         var r = 1.07;
         var u = idleScript.Research1Level[id];
         double n = 1;
         var costResearchUpgrade = h * (System.Math.Pow(r, u) * (System.Math.Pow(r, n) - 1) / (r - 1));
-
-        if (idleScript.mainCurrency >= costResearchUpgrade)
+        
+        if (idleScript.mainCurrency >= costResearchUpgrade && researchCanBeDone[id] == true)
         {
             idleScript.mainCurrency -= costResearchUpgrade;
             idleScript.Research1Level[id] += (int)n;
             ResearchBoost();
-
+            
         }
 
     }

@@ -6,7 +6,9 @@ using UnityEngine;
 public class UnlockingSystem : MonoBehaviour
 {
     public GameManager idleScript;
+    public Research research;
     public double[] unlockCost = { 2000,4000,8000,20000 };
+    public int researchID = 0;
     public GameObject[] upgradeObjects;
     public GameObject[] unlockButtons;
     private GameObject[] unlockTextObject;
@@ -41,7 +43,7 @@ public class UnlockingSystem : MonoBehaviour
             upgradeObjects[id].SetActive(true);
             idleScript.upgradesActivated[id] = true;
             //Debug.Log("Upgrade Unlocked!");
-           
+            ResearchUnlocking(id);
         }
         else
             upgradeObjects[id].SetActive(false);
@@ -64,6 +66,15 @@ public class UnlockingSystem : MonoBehaviour
                 upgradeObjects[id].SetActive(false);
                 unlockButtons[id].SetActive(true);
             }
+        }
+    }
+
+    public void ResearchUnlocking(int id)
+    {
+        if (id == 0 || id == 3 && !research.researchCanBeDone[researchID])
+        {
+            research.researchCanBeDone[researchID] = true;
+            researchID++;
         }
     }
 

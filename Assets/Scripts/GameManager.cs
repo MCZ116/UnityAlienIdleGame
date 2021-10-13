@@ -71,7 +71,6 @@ public class GameManager : MonoBehaviour
 
     public int[] astronautsLevel;
     public int[] astronautBuyStartID;
-
     public double[] upgradesCounts;
     public float[] upgradeMaxTime = { 5f, 10f, 10f,20f,35f};
     public float[] progressTimer = { 0f, 0f, 0f, 0f, 0f};
@@ -558,6 +557,7 @@ public class GameManager : MonoBehaviour
               upgradeLevel1 += (int)n;
             }
 
+        
     }
 
     public void FullReset()
@@ -580,6 +580,7 @@ public class GameManager : MonoBehaviour
             upgradesActivated[1] = false;
             upgradesActivated[2] = false;
             upgradesActivated[3] = false;
+
             for (int id = 0; id < astronautBuyStartID.Length; id++)
             {
                 astronautBuyStartID[id] = id * 4;
