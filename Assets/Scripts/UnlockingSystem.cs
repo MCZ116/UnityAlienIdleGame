@@ -7,7 +7,6 @@ public class UnlockingSystem : MonoBehaviour
 {
     public GameManager idleScript;
     public Research research;
-    public double[] unlockCost = { 2000,4000,8000,20000 };
     public int researchID = 0;
     public GameObject[] upgradeObjects;
     public GameObject[] unlockButtons;
@@ -15,7 +14,9 @@ public class UnlockingSystem : MonoBehaviour
     public Text[] unlockText;
 
     [System.NonSerialized]
-    public bool[] animationUnlockConfirm = { false, false, false, false };
+    public bool[] animationUnlockConfirm = { false, false, false, false, false, false, false, false };
+    [System.NonSerialized]
+    public double[] unlockCost = { 2000, 4000, 8000, 20000, 100000, 135000, 160000, 180000 };
 
     //public Button[] unlockStage;
 

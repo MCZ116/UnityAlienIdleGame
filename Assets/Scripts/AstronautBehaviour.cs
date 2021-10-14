@@ -13,7 +13,7 @@ public class AstronautBehaviour : MonoBehaviour
 
     private Animator animationIdle;
 
-    private double[] astronautCost = { 50, 50, 50, 50, 50 };
+    private double[] astronautCost = { 50, 50, 50, 50, 50, 50, 50, 50, 50, 50 };
 
     public Text[] AstronautCostText;
 
@@ -29,7 +29,7 @@ public class AstronautBehaviour : MonoBehaviour
 
     void Start()
     {
-        gameManager.astronautsLevel = new int[5];
+        gameManager.astronautsLevel = new int[10];
         astronautMaxConfirm = new bool[AstronautCostText.Length];
 
         for (int id = 0; id < astronautMaxConfirm.Length; id++)
@@ -168,7 +168,8 @@ public class AstronautBehaviour : MonoBehaviour
     // Controlling display of activated astronauts
     public void AstronautsControl()
     {
-        for (int id = 0; id < 20; id++)
+        // NEED TO CHANGE IT A BIT 
+        for (int id = 0; id < 40; id++)
         {
             if (gameManager.confirmAstronautBuy[id] == false)
             {

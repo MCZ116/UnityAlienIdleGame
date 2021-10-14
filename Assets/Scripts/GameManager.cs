@@ -57,6 +57,10 @@ public class GameManager : MonoBehaviour
 
     public CanvasGroup canvasSuitsTab;
 
+    public CanvasGroup moonMenu;
+
+    public CanvasGroup marsMenu;
+
     private double[] alienLevel;
 
     public double[] AlienLevel { get => alienLevel; set => alienLevel = value; }
@@ -72,8 +76,8 @@ public class GameManager : MonoBehaviour
     public int[] astronautsLevel;
     public int[] astronautBuyStartID;
     public double[] upgradesCounts;
-    public float[] upgradeMaxTime = { 5f, 10f, 10f,20f,35f};
-    public float[] progressTimer = { 0f, 0f, 0f, 0f, 0f};
+    public float[] upgradeMaxTime = { 5f, 10f, 10f,20f,35f, 5f, 10f, 10f, 20f, 35f };
+    public float[] progressTimer = { 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f };
 
 
     void Start()
@@ -81,10 +85,10 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = 30;
         mainCurrency = 100;
         rebirthCost = 10000;
-        AlienLevel = new double[5];
+        AlienLevel = new double[10];
         upgradesCounts = new double[AlienLevel.Length];
         SuitsLevel = new double[2];
-        astronautBuyStartID = new int[5];
+        astronautBuyStartID = new int[10];
         upgradesActivated = new bool[unlockingSystem.unlockCost.Length];
         Research1Level = new double[2];
         copyArray = new double[AlienLevel.Length + 1];
@@ -344,6 +348,7 @@ public class GameManager : MonoBehaviour
                 CanvasGroupMenuSwitch(false, canvasRebirthTab);
                 CanvasGroupMenuSwitch(false, canvasResearchTab);
                 CanvasGroupMenuSwitch(false, canvasSuitsTab);
+
                 break;
 
             case "shopMenu":
@@ -352,6 +357,7 @@ public class GameManager : MonoBehaviour
                 CanvasGroupMenuSwitch(false, canvasRebirthTab);
                 CanvasGroupMenuSwitch(false, canvasResearchTab);
                 CanvasGroupMenuSwitch(false, canvasSuitsTab);
+
                 break;
 
             case "rebirth":
@@ -360,6 +366,7 @@ public class GameManager : MonoBehaviour
                 CanvasGroupMenuSwitch(true, canvasRebirthTab);
                 CanvasGroupMenuSwitch(false, canvasResearchTab);
                 CanvasGroupMenuSwitch(false, canvasSuitsTab);
+
                 break;
 
             case "researchMenu":
@@ -368,6 +375,7 @@ public class GameManager : MonoBehaviour
                 CanvasGroupMenuSwitch(false, canvasRebirthTab);
                 CanvasGroupMenuSwitch(true, canvasResearchTab);
                 CanvasGroupMenuSwitch(false, canvasSuitsTab);
+
                 break;
             case "suitsMenu":
                 CanvasGroupMenuSwitch(false, canvasMainGame);
@@ -375,7 +383,27 @@ public class GameManager : MonoBehaviour
                 CanvasGroupMenuSwitch(false, canvasRebirthTab);
                 CanvasGroupMenuSwitch(false, canvasResearchTab);
                 CanvasGroupMenuSwitch(true, canvasSuitsTab);
+
                 break;
+            case "moonMenu":
+                CanvasGroupMenuSwitch(true, canvasMainGame);
+                CanvasGroupMenuSwitch(false, canvasShop);
+                CanvasGroupMenuSwitch(false, canvasRebirthTab);
+                CanvasGroupMenuSwitch(false, canvasResearchTab);
+                CanvasGroupMenuSwitch(false, canvasSuitsTab);
+                CanvasGroupMenuSwitch(true, moonMenu);
+                CanvasGroupMenuSwitch(false, marsMenu);
+                break;
+            case "marsMenu":
+                CanvasGroupMenuSwitch(true, canvasMainGame);
+                CanvasGroupMenuSwitch(false, canvasShop);
+                CanvasGroupMenuSwitch(false, canvasRebirthTab);
+                CanvasGroupMenuSwitch(false, canvasResearchTab);
+                CanvasGroupMenuSwitch(false, canvasSuitsTab);
+                CanvasGroupMenuSwitch(false, moonMenu);
+                CanvasGroupMenuSwitch(true, marsMenu);
+                break;
+
         } 
     }
 
