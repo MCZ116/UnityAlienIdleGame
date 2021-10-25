@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     public bool[] upgradesActivated;
     public bool[] earnedCrystal;
     public bool[] confirmAstronautBuy;
+    public bool activeTab;
     double[] copyArray;
     //bool activateRB = false;
     public Image[] progressBar;
@@ -61,6 +62,8 @@ public class GameManager : MonoBehaviour
 
     public CanvasGroup marsMenu;
 
+    public CanvasGroup planetsMenu;
+
     private double[] alienLevel;
 
     public double[] AlienLevel { get => alienLevel; set => alienLevel = value; }
@@ -85,6 +88,7 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = 30;
         mainCurrency = 100;
         rebirthCost = 10000;
+        activeTab = false;
         AlienLevel = new double[10];
         upgradesCounts = new double[AlienLevel.Length];
         SuitsLevel = new double[2];
@@ -324,18 +328,22 @@ public class GameManager : MonoBehaviour
 
     public void CanvasGroupMenuSwitch(bool status, CanvasGroup choosenGroup)
     {
+
         if (status)
         {
             choosenGroup.alpha = 1;
             choosenGroup.interactable = true;
             choosenGroup.blocksRaycasts = true;
+            Debug.Log(activeTab + "ON");
         }
         else
         {
             choosenGroup.alpha = 0;
             choosenGroup.interactable = false;
             choosenGroup.blocksRaycasts = false;
+            Debug.Log(activeTab + "OFF");
         }
+
     }
 
     public void ChangeTab(string tabName)
@@ -348,7 +356,7 @@ public class GameManager : MonoBehaviour
                 CanvasGroupMenuSwitch(false, canvasRebirthTab);
                 CanvasGroupMenuSwitch(false, canvasResearchTab);
                 CanvasGroupMenuSwitch(false, canvasSuitsTab);
-
+                CanvasGroupMenuSwitch(false, planetsMenu);
                 break;
 
             case "shopMenu":
@@ -357,32 +365,75 @@ public class GameManager : MonoBehaviour
                 CanvasGroupMenuSwitch(false, canvasRebirthTab);
                 CanvasGroupMenuSwitch(false, canvasResearchTab);
                 CanvasGroupMenuSwitch(false, canvasSuitsTab);
+                CanvasGroupMenuSwitch(false, planetsMenu);
 
                 break;
 
             case "rebirth":
-                CanvasGroupMenuSwitch(false, canvasMainGame);
-                CanvasGroupMenuSwitch(false, canvasShop);
-                CanvasGroupMenuSwitch(true, canvasRebirthTab);
-                CanvasGroupMenuSwitch(false, canvasResearchTab);
-                CanvasGroupMenuSwitch(false, canvasSuitsTab);
-
-                break;
+                if (!activeTab)
+                {
+                    CanvasGroupMenuSwitch(false, canvasMainGame);
+                    CanvasGroupMenuSwitch(false, canvasShop);
+                    CanvasGroupMenuSwitch(true, canvasRebirthTab);
+                    CanvasGroupMenuSwitch(false, canvasResearchTab);
+                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
+                    CanvasGroupMenuSwitch(false, planetsMenu);
+                    activeTab = true;
+                }
+                else
+                {
+                    CanvasGroupMenuSwitch(false, canvasShop);
+                    CanvasGroupMenuSwitch(false, canvasResearchTab);
+                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
+                    CanvasGroupMenuSwitch(true, canvasMainGame);
+                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
+                    CanvasGroupMenuSwitch(false, planetsMenu);
+                    activeTab = false;
+                }
+                    break;
 
             case "researchMenu":
-                CanvasGroupMenuSwitch(false, canvasMainGame);
-                CanvasGroupMenuSwitch(false, canvasShop);
-                CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                CanvasGroupMenuSwitch(true, canvasResearchTab);
-                CanvasGroupMenuSwitch(false, canvasSuitsTab);
-
+                if (!activeTab)
+                {
+                    CanvasGroupMenuSwitch(false, canvasMainGame);
+                    CanvasGroupMenuSwitch(false, canvasShop);
+                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
+                    CanvasGroupMenuSwitch(true, canvasResearchTab);
+                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
+                    CanvasGroupMenuSwitch(false, planetsMenu);
+                    activeTab = true;
+                }
+                else
+                {
+                    CanvasGroupMenuSwitch(false, canvasResearchTab);
+                    CanvasGroupMenuSwitch(true, canvasMainGame);
+                    CanvasGroupMenuSwitch(false, canvasShop);
+                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
+                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
+                    CanvasGroupMenuSwitch(false, planetsMenu);
+                    activeTab = false;
+                }
                 break;
             case "suitsMenu":
-                CanvasGroupMenuSwitch(false, canvasMainGame);
-                CanvasGroupMenuSwitch(false, canvasShop);
-                CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                CanvasGroupMenuSwitch(false, canvasResearchTab);
-                CanvasGroupMenuSwitch(true, canvasSuitsTab);
+                if (!activeTab)
+                {
+                    CanvasGroupMenuSwitch(false, canvasMainGame);
+                    CanvasGroupMenuSwitch(false, canvasShop);
+                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
+                    CanvasGroupMenuSwitch(false, canvasResearchTab);
+                    CanvasGroupMenuSwitch(true, canvasSuitsTab);
+                    CanvasGroupMenuSwitch(false, planetsMenu);
+                    activeTab = true;
+                } else
+                {
+                    CanvasGroupMenuSwitch(false, canvasShop);
+                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
+                    CanvasGroupMenuSwitch(false, canvasResearchTab);
+                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
+                    CanvasGroupMenuSwitch(true, canvasMainGame);
+                    CanvasGroupMenuSwitch(false, planetsMenu);
+                    activeTab = false;
+                }
 
                 break;
             case "moonMenu":
@@ -393,6 +444,7 @@ public class GameManager : MonoBehaviour
                 CanvasGroupMenuSwitch(false, canvasSuitsTab);
                 CanvasGroupMenuSwitch(true, moonMenu);
                 CanvasGroupMenuSwitch(false, marsMenu);
+                CanvasGroupMenuSwitch(false, planetsMenu);
                 break;
             case "marsMenu":
                 CanvasGroupMenuSwitch(true, canvasMainGame);
@@ -401,9 +453,30 @@ public class GameManager : MonoBehaviour
                 CanvasGroupMenuSwitch(false, canvasResearchTab);
                 CanvasGroupMenuSwitch(false, canvasSuitsTab);
                 CanvasGroupMenuSwitch(false, moonMenu);
+                CanvasGroupMenuSwitch(false, planetsMenu);
                 CanvasGroupMenuSwitch(true, marsMenu);
                 break;
-
+            case "planetsMenu":
+                if (!activeTab)
+                {
+                    CanvasGroupMenuSwitch(false, canvasMainGame);
+                    CanvasGroupMenuSwitch(false, canvasShop);
+                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
+                    CanvasGroupMenuSwitch(false, canvasResearchTab);
+                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
+                    CanvasGroupMenuSwitch(true, planetsMenu);
+                    activeTab = true;
+                } else
+                {
+                    CanvasGroupMenuSwitch(true, canvasMainGame);
+                    CanvasGroupMenuSwitch(false, canvasShop);
+                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
+                    CanvasGroupMenuSwitch(false, canvasResearchTab);
+                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
+                    CanvasGroupMenuSwitch(false, planetsMenu);
+                    activeTab = false;
+                }
+                break;
         } 
     }
 
