@@ -155,7 +155,10 @@ public class AstronautBehaviour : MonoBehaviour
     // Setting button interactable off and on depending from amount of crystals needed
     public void AstronautsBuyButtonControl(int id)
     {
-        if (gameManager.crystalCurrency >= astronautCost[id] && astronautMaxConfirm[id] == false)
+        var h = astronautCost[id];
+        var astronautTempCost = h * (gameManager.astronautsLevel[id] + 1);
+        if (astronautTempCost == 200) { astronautTempCost = 300; }
+        if (gameManager.crystalCurrency >= astronautTempCost && astronautMaxConfirm[id] == false)
         {
             astronautsBuyButton[id].interactable = true;
         }

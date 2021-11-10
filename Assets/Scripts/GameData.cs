@@ -54,6 +54,7 @@ public class GameData
     public int astronautIDStart3;
     public int astronautIDStart4;
     public int astronautIDStart5;
+    public bool planetUnlocked1;
     public GameData (GameManager idleScript)
     {
         researchPointsData = idleScript.mainCurrency;
@@ -105,7 +106,7 @@ public class GameData
         astronautIDStart3 = idleScript.astronautBuyStartID[2];
         astronautIDStart4 = idleScript.astronautBuyStartID[3];
         astronautIDStart5 = idleScript.astronautBuyStartID[4];
-
+        planetUnlocked1 = idleScript.planetUnlocked[0];
     }
 
 

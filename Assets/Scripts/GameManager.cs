@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     public bool[] upgradesActivated;
     public bool[] earnedCrystal;
     public bool[] confirmAstronautBuy;
+    public bool[] planetUnlocked = { false };
     public bool activeTab;
     double[] copyArray;
     //bool activateRB = false;
@@ -79,9 +80,13 @@ public class GameManager : MonoBehaviour
     public int[] astronautsLevel;
     public int[] astronautBuyStartID;
     public double[] upgradesCounts;
-    public float[] upgradeMaxTime = { 5f, 10f, 10f,20f,35f, 5f, 10f, 10f, 20f, 35f };
+    public float[] upgradeMaxTime = { 5f, 10f, 10f, 20f, 35f, 5f, 10f, 10f, 20f, 35f };
     public float[] progressTimer = { 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f };
 
+    void Awake()
+    {
+        AutoObjectsAssigning();
+    }
 
     void Start()
     {
@@ -98,6 +103,7 @@ public class GameManager : MonoBehaviour
         copyArray = new double[AlienLevel.Length + 1];
         alienUpgradeCosts = new double[AlienLevel.Length];
         earnedCrystal = new bool[alienLevel.Length];
+        planetUnlocked = new bool[unlockingSystem.planetsPanelsObjects.Length];
         for (int id = 0; id < AlienLevel.Length; id++)
         {
             alienLevel[id] = 0;
@@ -112,7 +118,7 @@ public class GameManager : MonoBehaviour
         {
             confirmAstronautBuy[id] = false;
         }
-        for (int id = 0; id < astronautBuyStartID.Length ; id++)
+        for (int id = 0; id < astronautBuyStartID.Length; id++)
         {
             astronautBuyStartID[id] = id * 4;
         }
@@ -123,7 +129,7 @@ public class GameManager : MonoBehaviour
         suitsLevel[0] = 0;
         suitsLevel[1] = 0;
         mainResetLevel = 1;
-        ChangeBuyModeText.text = "1";      
+        ChangeBuyModeText.text = "1";
         astronautBehaviour.AssigningAstronautsOnStart();
         //------------------------------------------------------------------------
         //Load after assigning variables and before loading unlock status or it won't appear
@@ -135,8 +141,10 @@ public class GameManager : MonoBehaviour
         }
 
         astronautBehaviour.AstronautsControl();
+        unlockingSystem.PlanetsUnlockCheck();
         unlockingSystem.LoadUnlocksStatus();
         offline.OfflineProgressLoad();
+
         Debug.Log(" AstroLenght: " + AlienLevel.Length);
     }
 
@@ -150,13 +158,13 @@ public class GameManager : MonoBehaviour
     {
         //saving here because of bug which causing not creating save file after deleting it cuz IEnumerator won't have time to work
         Save();
-        AutoObjectsAssigning();
+        unlockingSystem.PlanetsUnlockCheck();
         CurrencyText.text = ExponentLetterSystem(mainCurrency, "F2");
         RPointsText.text = ExponentLetterSystem(ResearchPointsCalculator(), "F2") + "RP/s ";
         RebirthPrice.text = "Price \n" + ExponentLetterSystem(rebirthCost, "F2");
-        RebirthLevel.text = "Rebirth " + ExponentLetterSystem(mainResetLevel, "F0") ;
+        RebirthLevel.text = "Rebirth " + ExponentLetterSystem(mainResetLevel, "F0");
         ProfileLevel.text = ExponentLetterSystem(mainResetLevel, "F0");
-        CrystalsAmount.text = crystalCurrency.ToString("F0") ;
+        CrystalsAmount.text = crystalCurrency.ToString("F0");
 
         for (int id = 0; id < AlienLevelText.Length; id++) {
 
@@ -166,11 +174,11 @@ public class GameManager : MonoBehaviour
             ProgressBarsIncomeTimer();
             AlienLevelText[id].text = alienLevel[id].ToString("F0");
             ButtonUpgradeMaxText[id].text = "X" + BuyMaxCount(id) + "\n" + ExponentLetterSystem(BuyCount(id), "F2");
-            EarningStage[id].text = ExponentLetterSystem(StageEarningPerSecond(id), "F2") +" " + "RP/s ";
+            EarningStage[id].text = ExponentLetterSystem(StageEarningPerSecond(id), "F2") + " " + "RP/s ";
             SoloEarningCrystals(id);
             InteractableButtons(id, upgradeButtons);
         }
-        
+
         StartCoroutine("MySave");
         SaveDate();
     }
@@ -181,7 +189,7 @@ public class GameManager : MonoBehaviour
         {
             crystalCurrency++;
             earnedCrystal[id] = false;
-        } else if(alienLevel[id] % 10 != 0)
+        } else if (alienLevel[id] % 10 != 0)
         {
             earnedCrystal[id] = true;
         }
@@ -189,13 +197,13 @@ public class GameManager : MonoBehaviour
     // Working only for two atm
     public void AutoValuesAssigning(int id, double[] ArrayToIncrease, double baseValue, double valueMultiplier)
     {
-            Array.Resize(ref ArrayToIncrease, AlienLevel.Length);
+        Array.Resize(ref ArrayToIncrease, AlienLevel.Length);
         if (ArrayToIncrease[0] == 0)
         {
             ArrayToIncrease[id] = valueMultiplier * baseValue;
             copyArray[id + 1] = ArrayToIncrease[id];
         }
-        ArrayToIncrease[id] = copyArray[id+1] * valueMultiplier;
+        ArrayToIncrease[id] = copyArray[id + 1] * valueMultiplier;
         copyArray[id + 1] = ArrayToIncrease[id];
     }
 
@@ -244,7 +252,7 @@ public class GameManager : MonoBehaviour
         for (int id = 0; id < AlienLevelText.Length; id++)
         {
             temp += (AlienLevel[id] * upgradesCounts[id]);
-            Debug.Log("ID: " + AlienLevel[id] + " UpgradeCount: " +  upgradesCounts[id]);
+            Debug.Log("ID: " + AlienLevel[id] + " UpgradeCount: " + upgradesCounts[id]);
             Debug.Log(" Astronaut Earning temp: " + temp);
         }
 
@@ -259,10 +267,10 @@ public class GameManager : MonoBehaviour
 
     public void ProgressBarsIncomeTimer()
     {
-    
+
         // If level 0 bar doesn't move
         for (int id = 0; id < progressBarObject.Length; id++)
-        {    
+        {
             if (AlienLevel[id] >= 1)
             {
                 progressTimer[id] += Time.deltaTime;
@@ -334,18 +342,18 @@ public class GameManager : MonoBehaviour
             choosenGroup.alpha = 1;
             choosenGroup.interactable = true;
             choosenGroup.blocksRaycasts = true;
-            Debug.Log(activeTab + "ON");
+            Debug.Log(activeTab + "ON" + choosenGroup);
         }
         else
         {
             choosenGroup.alpha = 0;
             choosenGroup.interactable = false;
             choosenGroup.blocksRaycasts = false;
-            Debug.Log(activeTab + "OFF");
+            Debug.Log(activeTab + "OFF" + choosenGroup);
         }
 
     }
-
+    
     public void ChangeTab(string tabName)
     {
         switch (tabName)
@@ -390,7 +398,7 @@ public class GameManager : MonoBehaviour
                     CanvasGroupMenuSwitch(false, planetsMenu);
                     activeTab = false;
                 }
-                    break;
+                break;
 
             case "researchMenu":
                 if (!activeTab)
@@ -414,6 +422,7 @@ public class GameManager : MonoBehaviour
                     activeTab = false;
                 }
                 break;
+
             case "suitsMenu":
                 if (!activeTab)
                 {
@@ -436,26 +445,7 @@ public class GameManager : MonoBehaviour
                 }
 
                 break;
-            case "moonMenu":
-                CanvasGroupMenuSwitch(true, canvasMainGame);
-                CanvasGroupMenuSwitch(false, canvasShop);
-                CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                CanvasGroupMenuSwitch(false, canvasResearchTab);
-                CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                CanvasGroupMenuSwitch(true, moonMenu);
-                CanvasGroupMenuSwitch(false, marsMenu);
-                CanvasGroupMenuSwitch(false, planetsMenu);
-                break;
-            case "marsMenu":
-                CanvasGroupMenuSwitch(true, canvasMainGame);
-                CanvasGroupMenuSwitch(false, canvasShop);
-                CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                CanvasGroupMenuSwitch(false, canvasResearchTab);
-                CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                CanvasGroupMenuSwitch(false, moonMenu);
-                CanvasGroupMenuSwitch(false, planetsMenu);
-                CanvasGroupMenuSwitch(true, marsMenu);
-                break;
+
             case "planetsMenu":
                 if (!activeTab)
                 {
@@ -466,7 +456,8 @@ public class GameManager : MonoBehaviour
                     CanvasGroupMenuSwitch(false, canvasSuitsTab);
                     CanvasGroupMenuSwitch(true, planetsMenu);
                     activeTab = true;
-                } else
+                }
+                else
                 {
                     CanvasGroupMenuSwitch(true, canvasMainGame);
                     CanvasGroupMenuSwitch(false, canvasShop);
@@ -477,6 +468,34 @@ public class GameManager : MonoBehaviour
                     activeTab = false;
                 }
                 break;
+
+            case "moonMenu":
+                CanvasGroupMenuSwitch(true, canvasMainGame);
+                CanvasGroupMenuSwitch(false, canvasShop);
+                CanvasGroupMenuSwitch(false, canvasRebirthTab);
+                CanvasGroupMenuSwitch(false, canvasResearchTab);
+                CanvasGroupMenuSwitch(false, canvasSuitsTab);
+                CanvasGroupMenuSwitch(true, moonMenu);
+                CanvasGroupMenuSwitch(false, marsMenu);
+                CanvasGroupMenuSwitch(false, planetsMenu);
+                activeTab = false;
+                break;
+
+            case "marsMenu":
+                    if (planetUnlocked[0])
+                    {
+                        CanvasGroupMenuSwitch(true, canvasMainGame);
+                        CanvasGroupMenuSwitch(false, canvasShop);
+                        CanvasGroupMenuSwitch(false, canvasRebirthTab);
+                        CanvasGroupMenuSwitch(false, canvasResearchTab);
+                        CanvasGroupMenuSwitch(false, canvasSuitsTab);
+                        CanvasGroupMenuSwitch(false, moonMenu);
+                        CanvasGroupMenuSwitch(false, planetsMenu);
+                        CanvasGroupMenuSwitch(true, marsMenu);
+                        activeTab = false;
+                    }                    
+                break;
+
         } 
     }
 
@@ -539,6 +558,7 @@ public class GameManager : MonoBehaviour
         astronautBuyStartID[2] = gameData.astronautIDStart3;
         astronautBuyStartID[3] = gameData.astronautIDStart4;
         astronautBuyStartID[4] = gameData.astronautIDStart5;
+        planetUnlocked[0] = gameData.planetUnlocked1;
     }
 
     public void SaveDate()
@@ -681,6 +701,17 @@ public class GameManager : MonoBehaviour
             upgradesActivated[1] = false;
             upgradesActivated[2] = false;
             upgradesActivated[3] = false;
+            unlockingSystem.researchID = 0;
+
+            for (int id = 0; id < research.researchCanBeDone.Length; id++)
+            {
+                research.researchCanBeDone[id] = false;
+            }
+
+            for (int id = 0; id < planetUnlocked.Length; id++)
+            {
+                planetUnlocked[id] = false;
+            }
 
             for (int id = 0; id < astronautBuyStartID.Length; id++)
             {
