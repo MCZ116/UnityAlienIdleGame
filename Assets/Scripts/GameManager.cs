@@ -82,28 +82,30 @@ public class GameManager : MonoBehaviour
     public double[] upgradesCounts;
     public float[] upgradeMaxTime = { 5f, 10f, 10f, 20f, 35f, 5f, 10f, 10f, 20f, 35f };
     public float[] progressTimer = { 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f };
+    public bool[] researchCanBeDone;
 
     void Awake()
     {
-        AutoObjectsAssigning();
-    }
-
-    void Start()
-    {
         Application.targetFrameRate = 30;
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
         mainCurrency = 100;
         rebirthCost = 10000;
         activeTab = false;
         AlienLevel = new double[10];
+        Research1Level = new double[2];
         upgradesCounts = new double[AlienLevel.Length];
+        astronautsLevel = new int[10];
         SuitsLevel = new double[2];
         astronautBuyStartID = new int[10];
         upgradesActivated = new bool[unlockingSystem.unlockCost.Length];
-        Research1Level = new double[2];
         copyArray = new double[AlienLevel.Length + 1];
         alienUpgradeCosts = new double[AlienLevel.Length];
         earnedCrystal = new bool[alienLevel.Length];
         planetUnlocked = new bool[unlockingSystem.planetsPanelsObjects.Length];
+        researchCanBeDone = new bool[research1Level.Length];
+
+        AutoObjectsAssigning();
+
         for (int id = 0; id < AlienLevel.Length; id++)
         {
             alienLevel[id] = 0;
@@ -122,15 +124,30 @@ public class GameManager : MonoBehaviour
         {
             astronautBuyStartID[id] = id * 4;
         }
-
+        for (int id = 0; id < astronautsLevel.Length; id++)
+        {
+            astronautsLevel[id] = 0;
+            Debug.Log("astroLevelBeforeLoad = " + astronautsLevel[id]);
+        }
         Research1Level[0] = 0;
         Research1Level[1] = 0;
         upgradeLevel1 = 0;
         suitsLevel[0] = 0;
         suitsLevel[1] = 0;
         mainResetLevel = 1;
-        ChangeBuyModeText.text = "1";
         astronautBehaviour.AssigningAstronautsOnStart();
+       
+    }
+
+    void Start()
+    {       
+        for (int id = 0; id < researchCanBeDone.Length; id++)
+        {
+            researchCanBeDone[id] = false;
+        }
+
+        ChangeBuyModeText.text = "1";
+
         //------------------------------------------------------------------------
         //Load after assigning variables and before loading unlock status or it won't appear
         Load();
@@ -140,6 +157,10 @@ public class GameManager : MonoBehaviour
             AutoValuesAssigning(id, upgradesCounts, 0.3, 1.4);
         }
 
+        for (int id = 0; id < astronautsLevel.Length; id++)
+        {
+            Debug.Log("astroLevelAfterLoad = " + astronautsLevel[id]);
+        }
         astronautBehaviour.AstronautsControl();
         unlockingSystem.PlanetsUnlockCheck();
         unlockingSystem.LoadUnlocksStatus();
@@ -158,6 +179,8 @@ public class GameManager : MonoBehaviour
     {
         //saving here because of bug which causing not creating save file after deleting it cuz IEnumerator won't have time to work
         Save();
+
+        AutoObjectsAssigning();
         unlockingSystem.PlanetsUnlockCheck();
         CurrencyText.text = ExponentLetterSystem(mainCurrency, "F2");
         RPointsText.text = ExponentLetterSystem(ResearchPointsCalculator(), "F2") + "RP/s ";
@@ -517,6 +540,11 @@ public class GameManager : MonoBehaviour
         AlienLevel[2] = gameData.alienLevelData3;
         AlienLevel[3] = gameData.alienLevelData4;
         AlienLevel[4] = gameData.alienLevelData5;
+        AlienLevel[5] = gameData.alienLevelData6;
+        AlienLevel[6] = gameData.alienLevelData7;
+        AlienLevel[7] = gameData.alienLevelData8;
+        AlienLevel[8] = gameData.alienLevelData9;
+        AlienLevel[9] = gameData.alienLevelData10;
         upgradeLevel1 = gameData.upgradeLevelData;
         mainResetLevel = gameData.mainResetLevelData;
         Research1Level[0] = gameData.researchLevel1;
@@ -525,6 +553,11 @@ public class GameManager : MonoBehaviour
         upgradesActivated[1] = gameData.upgradeActivated2;
         upgradesActivated[2] = gameData.upgradeActivated3;
         upgradesActivated[3] = gameData.upgradeActivated4;
+        upgradesActivated[4] = gameData.upgradeActivated5;
+        upgradesActivated[5] = gameData.upgradeActivated6;
+        upgradesActivated[6] = gameData.upgradeActivated7;
+        upgradesActivated[7] = gameData.upgradeActivated8;
+        upgradesActivated[8] = gameData.upgradeActivated9;
         confirmAstronautBuy[0] = gameData.astronautsbuy1;
         confirmAstronautBuy[1] = gameData.astronautsbuy2;
         confirmAstronautBuy[2] = gameData.astronautsbuy3;
@@ -545,6 +578,26 @@ public class GameManager : MonoBehaviour
         confirmAstronautBuy[17] = gameData.astronautsbuy18;
         confirmAstronautBuy[18] = gameData.astronautsbuy19;
         confirmAstronautBuy[19] = gameData.astronautsbuy20;
+        confirmAstronautBuy[20] = gameData.astronautsbuy21;
+        confirmAstronautBuy[21] = gameData.astronautsbuy22;
+        confirmAstronautBuy[22] = gameData.astronautsbuy23;
+        confirmAstronautBuy[23] = gameData.astronautsbuy24;
+        confirmAstronautBuy[24] = gameData.astronautsbuy25;
+        confirmAstronautBuy[25] = gameData.astronautsbuy26;
+        confirmAstronautBuy[26] = gameData.astronautsbuy27;
+        confirmAstronautBuy[27] = gameData.astronautsbuy28;
+        confirmAstronautBuy[28] = gameData.astronautsbuy29;
+        confirmAstronautBuy[29] = gameData.astronautsbuy30;
+        confirmAstronautBuy[30] = gameData.astronautsbuy31;
+        confirmAstronautBuy[31] = gameData.astronautsbuy32;
+        confirmAstronautBuy[32] = gameData.astronautsbuy33;
+        confirmAstronautBuy[33] = gameData.astronautsbuy34;
+        confirmAstronautBuy[34] = gameData.astronautsbuy35;
+        confirmAstronautBuy[35] = gameData.astronautsbuy36;
+        confirmAstronautBuy[36] = gameData.astronautsbuy37;
+        confirmAstronautBuy[37] = gameData.astronautsbuy38;
+        confirmAstronautBuy[38] = gameData.astronautsbuy39;
+        confirmAstronautBuy[39] = gameData.astronautsbuy40;
         rebirthCost = gameData.rebirthCostData;
         SuitsLevel[0] = gameData.suitsLevel1;
         SuitsLevel[1] = gameData.suitsLevel2;
@@ -553,12 +606,24 @@ public class GameManager : MonoBehaviour
         astronautsLevel[2] = gameData.astronautsLevel3;
         astronautsLevel[3] = gameData.astronautsLevel4;
         astronautsLevel[4] = gameData.astronautsLevel5;
+        astronautsLevel[5] = gameData.astronautsLevel6;
+        astronautsLevel[6] = gameData.astronautsLevel7;
+        astronautsLevel[7] = gameData.astronautsLevel8;
+        astronautsLevel[8] = gameData.astronautsLevel9;
+        astronautsLevel[9] = gameData.astronautsLevel10;
         astronautBuyStartID[0] = gameData.astronautIDStart1;
         astronautBuyStartID[1] = gameData.astronautIDStart2;
         astronautBuyStartID[2] = gameData.astronautIDStart3;
         astronautBuyStartID[3] = gameData.astronautIDStart4;
         astronautBuyStartID[4] = gameData.astronautIDStart5;
+        astronautBuyStartID[5] = gameData.astronautIDStart6;
+        astronautBuyStartID[6] = gameData.astronautIDStart7;
+        astronautBuyStartID[7] = gameData.astronautIDStart8;
+        astronautBuyStartID[8] = gameData.astronautIDStart9;
+        astronautBuyStartID[9] = gameData.astronautIDStart10;
         planetUnlocked[0] = gameData.planetUnlocked1;
+        researchCanBeDone[0] = gameData.researchCanBeDone1;
+        researchCanBeDone[1] = gameData.researchCanBeDone2;
     }
 
     public void SaveDate()
@@ -693,19 +758,27 @@ public class GameManager : MonoBehaviour
             }
             upgradeLevel1 = 0;
             mainResetLevel++;
-            Research1Level[0] = 0;
+            for (int id = 0; id < Research1Level.Length; id++)
+            {
+                Research1Level[id] = 0;
+            }
+            
             Research1Level[1] = 0;
-            SuitsLevel[0] = 0;
-            SuitsLevel[1] = 0;
-            upgradesActivated[0] = false;
-            upgradesActivated[1] = false;
-            upgradesActivated[2] = false;
-            upgradesActivated[3] = false;
+            for (int id = 0; id < SuitsLevel.Length; id++)
+            {
+                SuitsLevel[id] = 0;
+            }
+        
+            for (int id = 0; id < upgradesActivated.Length; id++)
+            {
+                upgradesActivated[id] = false;
+            }
+
             unlockingSystem.researchID = 0;
 
-            for (int id = 0; id < research.researchCanBeDone.Length; id++)
+            for (int id = 0; id < researchCanBeDone.Length; id++)
             {
-                research.researchCanBeDone[id] = false;
+                researchCanBeDone[id] = false;
             }
 
             for (int id = 0; id < planetUnlocked.Length; id++)

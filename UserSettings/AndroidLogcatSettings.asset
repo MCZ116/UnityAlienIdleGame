@@ -1,0 +1,119 @@
+{
+    "m_SelectedDeviceId": "26EBB18821153566",
+    "m_SelectedPackage": {
+        "deviceId": "",
+        "name": "",
+        "processId": 0,
+        "exited": false
+    },
+    "m_SelectedPriority": 0,
+    "m_KnownPackagesForSerialization": [
+        {
+            "deviceId": "26EBB18821153566",
+            "name": "com.MCZ.UniverseDiscoveryIdle",
+            "processId": 24640,
+            "exited": true
+        },
+        {
+            "deviceId": "26EBB18821153566",
+            "name": "com.MCZ.UniverseDiscoveryIdle",
+            "processId": 25345,
+            "exited": true
+        },
+        {
+            "deviceId": "26EBB18821153566",
+            "name": "com.MCZ.UniverseDiscoveryIdle",
+            "processId": 28999,
+            "exited": true
+        },
+        {
+            "deviceId": "26EBB18821153566",
+            "name": "com.huawei.android.launcher",
+            "processId": 2769,
+            "exited": false
+        },
+        {
+            "deviceId": "26EBB18821153566",
+            "name": "com.MCZ.UniverseDiscoveryIdle",
+            "processId": 1441,
+            "exited": true
+        },
+        {
+            "deviceId": "26EBB18821153566",
+            "name": "com.MCZ.UniverseDiscoveryIdle",
+            "processId": 3343,
+            "exited": true
+        },
+        {
+            "deviceId": "192.168.0.73:5555",
+            "name": "com.MCZ.UniverseDiscoveryIdle",
+            "processId": 24640,
+            "exited": true
+        },
+        {
+            "deviceId": "192.168.0.73:5555",
+            "name": "com.MCZ.UniverseDiscoveryIdle",
+            "processId": 25345,
+            "exited": true
+        },
+        {
+            "deviceId": "192.168.0.73:5555",
+            "name": "com.facebook.orca",
+            "processId": 11350,
+            "exited": false
+        }
+    ],
+    "m_Tags": {
+        "m_Entries": [
+            {
+                "m_Name": "Filter by all listed tags",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "No Filter",
+                "m_Selected": true
+            },
+            {
+                "m_Name": "",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "Tag Control...",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "Unity",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "CRASH",
+                "m_Selected": false
+            }
+        ]
+    },
+    "m_MemoryViewerState": {
+        "MemoryWindowHeight": 300.0,
+        "MemoryWindowWidth": 170.0,
+        "MemoryTypeEnabled": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+        ],
+        "MemoryGroup": 2,
+        "Behavior": 0
+    },
+    "m_Filter": "",
+    "m_FilterIsRegularExpression": false,
+    "m_SymbolPaths": []
+}

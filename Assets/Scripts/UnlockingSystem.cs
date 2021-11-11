@@ -16,18 +16,21 @@ public class UnlockingSystem : MonoBehaviour
     private GameObject[] unlockTextObject;
     public Text[] unlockText;
     public Text[] planetPriceText;
-    public string changecanvas;
 
     [System.NonSerialized]
     public bool[] animationUnlockConfirm = { false, false, false, false, false, false, false, false, false };
     [System.NonSerialized]
     public double[] unlockCost = { 2000, 4000, 8000, 20000, 100000, 135000, 160000, 180000, 220000 };
     public double[] planetCost = { 220000 };
+    public bool[] researchUnlocked;
 
     void Start()
     {
-
-
+        researchUnlocked = new bool[2];
+        for (int id = 0; id < researchUnlocked.Length; id++)
+        {
+            researchUnlocked[id] = false;
+        }
     }
 
     private void Update()
@@ -88,10 +91,11 @@ public class UnlockingSystem : MonoBehaviour
     // Let's think about that system...
     public void ResearchUnlocking(int id)
     {
-        if (id == 0 || id == 3 && !research.researchCanBeDone[researchID])
+        if (id == 0 || id == 3 && !idleScript.researchCanBeDone[researchID])
         {
-            research.researchCanBeDone[researchID] = true;
+            idleScript.researchCanBeDone[researchID] = true; 
             researchID++;
+            
         }
     }
 
@@ -116,7 +120,7 @@ public class UnlockingSystem : MonoBehaviour
 
     public void PlanetsUnlocking(int id)
     {
-        if (research.researchCanBeDone[1]==true && idleScript.mainCurrency >= planetCost[id] && idleScript.planetUnlocked[id] == false)
+        if (researchUnlocked[1] == true && idleScript.mainCurrency >= planetCost[id] && idleScript.planetUnlocked[id] == false)
         {
             idleScript.mainCurrency -= planetCost[id]; 
             planetsPanelsObjects[id].SetActive(true);

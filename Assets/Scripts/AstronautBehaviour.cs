@@ -19,7 +19,7 @@ public class AstronautBehaviour : MonoBehaviour
 
     public Button[] astronautsBuyButton;
 
-    private bool[] astronautMaxConfirm;
+    public bool[] astronautMaxConfirm;
    
 
     //[SerializeField]
@@ -29,7 +29,6 @@ public class AstronautBehaviour : MonoBehaviour
 
     void Start()
     {
-        gameManager.astronautsLevel = new int[10];
         astronautMaxConfirm = new bool[AstronautCostText.Length];
 
         for (int id = 0; id < astronautMaxConfirm.Length; id++)
@@ -145,7 +144,7 @@ public class AstronautBehaviour : MonoBehaviour
         var astronautTempCost = h * (gameManager.astronautsLevel[id]+1);
 
         if (astronautTempCost == 200) { astronautTempCost = 300; }
-        if (astronautTempCost == 250)
+        if (gameManager.astronautsLevel[id] == 4)
         {
             astronautMaxConfirm[id] = true;
         }
