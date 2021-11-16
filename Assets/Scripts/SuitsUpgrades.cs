@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class SuitsUpgrades : MonoBehaviour
 {
-    public GameManager idleScript;
+    public GameManager gameManager;
 
     public Text[] suitsTextField;
     public Text[] suitsTextLevels;
@@ -16,16 +16,18 @@ public class SuitsUpgrades : MonoBehaviour
     void Start()
     {
         suitsUpgradesCosts = new double[2];
-       
+
+
+
     }
 
     void Update()
     {
-        for (int id = 0; id < idleScript.SuitsLevel.Length; id++)
+        for (int id = 0; id < gameManager.SuitsLevel.Length; id++)
         {
-            if (idleScript.SuitsLevel[id] >= 1)
+            if (gameManager.SuitsLevel[id] >= 1)
             {
-                suitsTextLevels[id].text = "Level: " + idleScript.SuitsLevel[id].ToString("F0");
+                suitsTextLevels[id].text = "Level: " + gameManager.SuitsLevel[id].ToString("F0");
             }
             else
             {
@@ -38,16 +40,16 @@ public class SuitsUpgrades : MonoBehaviour
     public void SuitsUpgradeButtons(int id)
     {
         var h = suitsUpgradesCosts[id];
-        var c = idleScript.crystalCurrency;
+        var c = gameManager.crystalCurrency;
         var r = 1.07;
-        var u = idleScript.SuitsLevel[id];
+        var u = gameManager.SuitsLevel[id];
         double n = 1;
         var costSuitsUpgrade = h * (System.Math.Pow(r, u) * (System.Math.Pow(r, n) - 1) / (r - 1));
 
-        if (idleScript.crystalCurrency >= costSuitsUpgrade)
+        if (gameManager.crystalCurrency >= costSuitsUpgrade)
         {
-            idleScript.crystalCurrency -= costSuitsUpgrade;
-            idleScript.SuitsLevel[id] += (int)n;
+            gameManager.crystalCurrency -= costSuitsUpgrade;
+            gameManager.SuitsLevel[id] += (int)n;
             SuitsBoost();
 
         }
@@ -58,9 +60,9 @@ public class SuitsUpgrades : MonoBehaviour
     {
         double suitBoost = 0;
 
-        for (int id = 0; id < idleScript.SuitsLevel.Length; id++)
+        for (int id = 0; id < gameManager.SuitsLevel.Length; id++)
         {
-            suitBoost += 0.05 * idleScript.SuitsLevel[id] * suitsUpgradesValues[id];
+            suitBoost += 0.05 * gameManager.SuitsLevel[id] * suitsUpgradesValues[id];
         }
 
         return suitBoost;

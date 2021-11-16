@@ -13,7 +13,7 @@ public class AstronautBehaviour : MonoBehaviour
 
     private Animator animationIdle;
 
-    private double[] astronautCost = { 50, 50, 50, 50, 50, 50, 50, 50, 50, 50 };
+    private double[] astronautCost;
 
     public Text[] AstronautCostText;
 
@@ -29,6 +29,12 @@ public class AstronautBehaviour : MonoBehaviour
 
     void Start()
     {
+        astronautCost = new double[10];
+        for (int id = 0; id < astronautCost.Length; id++)
+        {
+            astronautCost[id] = 50;
+        }
+
         astronautMaxConfirm = new bool[AstronautCostText.Length];
 
         for (int id = 0; id < astronautMaxConfirm.Length; id++)
@@ -40,11 +46,19 @@ public class AstronautBehaviour : MonoBehaviour
 
     void Update()
     {
+        AstronautButtonTextCheck();
+    }
+
+    public void AstronautButtonTextCheck()
+    {
         for (int id = 0; id < AstronautCostText.Length; id++)
         {
             if (astronautMaxConfirm[id] == false)
             {
                 AstronautCostText[id].text = AstronautPriceDisplay(id).ToString("F0");
+
+                astronautsBuyButton[id].GetComponent<Image>().color = Color.white;
+
             }
             else
             {
@@ -56,64 +70,24 @@ public class AstronautBehaviour : MonoBehaviour
             }
             AstronautsBuyButtonControl(id);
         }
-        for (int id = 0; id < astronautsUpgrades.Length; id++)
-        {
-            //Debug.Log(gameManager.confirmAstronautBuy[id] + "  ConfirmAstronautBuy ID" + id);
-           
-        }
     }
 
+    //NEED DEBUG
     public void AssigningAstronautsOnStart()
     {
         astronautsUpgrades = GameObject.FindGameObjectsWithTag("astronauts");
-        Debug.Log(astronautsUpgrades.Length + " astronautsObjects");
-        upgradeAstronauts = new GameObject[astronautsUpgrades.Length];
-
 
         for (int id = 0; id < astronautsUpgrades.Length; id++)
         {
-            upgradeAstronauts[id] = astronautsUpgrades[id];
-            upgradeAstronauts[id].SetActive(false);
+            astronautsUpgrades[id].SetActive(false);
 
             if(gameManager.confirmAstronautBuy[id] == true)
             {
-                upgradeAstronauts[id].SetActive(true);
+                astronautsUpgrades[id].SetActive(true);
             }
-            //Debug.Log(gameManager.confirmAstronautBuy[id] + "  ConfirmAstronautBuy ID " + id);
         }
     }
-    // Button listener tries
-
-    //void OnEnable()
-    //{
-
-    //            astronautsBuyButton[idButton].onClick.AddListener(() => ButtonCallBack(idButton, idAstro));                             
-
-    //}
-
-    //private void ButtonCallBack(int buttonID, int astronautBuyStartID)
-    //{
-    //    Debug.Log("Button Clicked. Received intID: " + buttonID + " with int: " + astronautBuyStartID + " asIDstar: " + gameManager.astronautsID[astronautBuyStartID]);
-    //    var h = astronautCost[buttonID];
-
-    //    var astronautTempCost = h * AstronautsLvlAssigning();
-    //    if (astronautTempCost > 150) { astronautTempCost = 300; }
-
-    //    if (gameManager.astronautsID[astronautBuyStartID] <= 3)
-    //    {
-    //        if (gameManager.crystalCurrency >= astronautTempCost)
-    //        {
-    //            gameManager.crystalCurrency -= astronautTempCost;
-    //            upgradeAstronauts[gameManager.astronautsID[astronautBuyStartID]].SetActive(true);
-    //            gameManager.confirmAstronautBuy[gameManager.astronautsID[astronautBuyStartID]] = true;
-    //            gameManager.astronautsID[astronautBuyStartID]++;
-    //            AstronautsLvlAssigning();
-    //            AstronautsBoost();
-    //        }
-    //    }
-    //}
-
-    // Button for buying astronauts
+  
     public void AstronautsAppearing(int id)
     {
         var h = astronautCost[id];
@@ -125,7 +99,7 @@ public class AstronautBehaviour : MonoBehaviour
         if ( astronautTempCost <= 300 && gameManager.astronautsLevel[id] <= 3 && gameManager.crystalCurrency >= astronautTempCost)
         {  
             gameManager.crystalCurrency -= astronautTempCost;
-            upgradeAstronauts[gameManager.astronautBuyStartID[id]].SetActive(true);
+            astronautsUpgrades[gameManager.astronautBuyStartID[id]].SetActive(true);
             gameManager.confirmAstronautBuy[gameManager.astronautBuyStartID[id]] = true;
             gameManager.astronautBuyStartID[id]++;
             gameManager.astronautsLevel[id]++;
@@ -175,12 +149,12 @@ public class AstronautBehaviour : MonoBehaviour
         {
             if (gameManager.confirmAstronautBuy[id] == false)
             {
-                upgradeAstronauts[id].SetActive(false);
+                astronautsUpgrades[id].SetActive(false);
 
             }
             else if (gameManager.confirmAstronautBuy[id] == true)
             {
-                upgradeAstronauts[id].SetActive(true);
+                astronautsUpgrades[id].SetActive(true);
             }
         }
     }

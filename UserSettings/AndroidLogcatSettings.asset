@@ -1,31 +1,13 @@
 {
     "m_SelectedDeviceId": "26EBB18821153566",
     "m_SelectedPackage": {
-        "deviceId": "",
-        "name": "",
-        "processId": 0,
+        "deviceId": "26EBB18821153566",
+        "name": "com.MCZ.UniverseDiscoveryIdle",
+        "processId": 12965,
         "exited": false
     },
     "m_SelectedPriority": 0,
     "m_KnownPackagesForSerialization": [
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 24640,
-            "exited": true
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 25345,
-            "exited": true
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 28999,
-            "exited": true
-        },
         {
             "deviceId": "26EBB18821153566",
             "name": "com.huawei.android.launcher",
@@ -35,14 +17,56 @@
         {
             "deviceId": "26EBB18821153566",
             "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 1441,
+            "processId": 28536,
             "exited": true
         },
         {
             "deviceId": "26EBB18821153566",
             "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 3343,
+            "processId": 7614,
             "exited": true
+        },
+        {
+            "deviceId": "26EBB18821153566",
+            "name": "com.google.android.packageinstaller",
+            "processId": 10160,
+            "exited": true
+        },
+        {
+            "deviceId": "26EBB18821153566",
+            "name": "com.MCZ.UniverseDiscoveryIdle",
+            "processId": 11199,
+            "exited": true
+        },
+        {
+            "deviceId": "26EBB18821153566",
+            "name": "com.MCZ.UniverseDiscoveryIdle",
+            "processId": 16471,
+            "exited": true
+        },
+        {
+            "deviceId": "26EBB18821153566",
+            "name": "com.MCZ.UniverseDiscoveryIdle",
+            "processId": 20595,
+            "exited": false
+        },
+        {
+            "deviceId": "26EBB18821153566",
+            "name": "com.MCZ.UniverseDiscoveryIdle",
+            "processId": 7668,
+            "exited": false
+        },
+        {
+            "deviceId": "26EBB18821153566",
+            "name": "com.MCZ.UniverseDiscoveryIdle",
+            "processId": 10455,
+            "exited": false
+        },
+        {
+            "deviceId": "26EBB18821153566",
+            "name": "com.MCZ.UniverseDiscoveryIdle",
+            "processId": 12965,
+            "exited": false
         },
         {
             "deviceId": "192.168.0.73:5555",

@@ -5,62 +5,81 @@ using UnityEngine;
 
 public class UnlockingSystem : MonoBehaviour
 {
-    public GameManager idleScript;
+    public GameManager gameManager;
     public Research research;
-    public int researchID = 0;
     public GameObject[] upgradeObjects;
     public GameObject[] planetsPanelsObjects;
     public Button[] planetsUnlockBtnObj;
     public Button nextButton;
     public GameObject[] unlockButtons;
-    private GameObject[] unlockTextObject;
     public Text[] unlockText;
     public Text[] planetPriceText;
+    public Text[] planetRequirementResearch;
 
     [System.NonSerialized]
-    public bool[] animationUnlockConfirm = { false, false, false, false, false, false, false, false, false };
+    public bool[] animationUnlockConfirm;
     [System.NonSerialized]
-    public double[] unlockCost = { 2000, 4000, 8000, 20000, 100000, 135000, 160000, 180000, 220000 };
-    public double[] planetCost = { 220000 };
-    public bool[] researchUnlocked;
+    public double[] unlockCost;
+    public double[] planetCost;
+    public int researchID;
 
     void Start()
     {
-        researchUnlocked = new bool[2];
-        for (int id = 0; id < researchUnlocked.Length; id++)
-        {
-            researchUnlocked[id] = false;
-        }
+        researchID = 0;
     }
 
-    private void Update()
+    void Update()
     {
+        Debug.Log("UnlockingSystem!");
         for (int id = 0; id < upgradeObjects.Length; id++)
         {
             unlockText[id].text = GameManager.ExponentLetterSystem(unlockCost[id], "F2");
-        }  
+        }
+        PlanetStatusCheck();
+
+    }
+
+    public void PlanetStatusCheck()
+    {
         for (int id = 0; id < planetsPanelsObjects.Length; id++)
         {
-            if (!idleScript.planetUnlocked[id])
+            if (!gameManager.planetUnlocked[id])
             {
                 planetPriceText[id].enabled = true;
+                planetRequirementResearch[id].enabled = true;
                 planetPriceText[id].text = GameManager.ExponentLetterSystem(planetCost[id], "F2");
+                planetRequirementResearch[id].text = "Ion Engines";
             }
             else
+            {
                 planetPriceText[id].enabled = false;
+                planetRequirementResearch[id].enabled = false;
+            }
+                
+
+            if (gameManager.mainCurrency >= planetCost[id])
+            {
+                planetPriceText[id].color = Color.green;
+            } else
+                planetPriceText[id].color = Color.red;
+
+            if (gameManager.researchUnlocked[1])
+            {
+                planetRequirementResearch[id].color = Color.green;
+            } else
+                planetRequirementResearch[id].color = Color.red;
         }
-       
-}
+    }
 
     public void UnlockingStages(int id)
     {
 
-        if ((idleScript.mainCurrency >= unlockCost[id]) && (idleScript.upgradesActivated[id] == false))
+        if ((gameManager.mainCurrency >= unlockCost[id]) && (gameManager.upgradesActivated[id] == false))
         {
             animationUnlockConfirm[id] = true;
-            idleScript.mainCurrency -= unlockCost[id];
+            gameManager.mainCurrency -= unlockCost[id];
             upgradeObjects[id].SetActive(true);
-            idleScript.upgradesActivated[id] = true;
+            gameManager.upgradesActivated[id] = true;
             //Debug.Log("Upgrade Unlocked!");
             ResearchUnlocking(id);
         }
@@ -74,12 +93,12 @@ public class UnlockingSystem : MonoBehaviour
         for (int id = 0; id < upgradeObjects.Length; id++)
         {
 
-            if (idleScript.upgradesActivated[id] == true)
+            if (gameManager.upgradesActivated[id] == true)
             {
                 upgradeObjects[id].SetActive(true);
                 unlockButtons[id].SetActive(false);
             }
-            else if (idleScript.upgradesActivated[id] == false)
+            else if (gameManager.upgradesActivated[id] == false)
             {
 
                 upgradeObjects[id].SetActive(false);
@@ -91,9 +110,9 @@ public class UnlockingSystem : MonoBehaviour
     // Let's think about that system...
     public void ResearchUnlocking(int id)
     {
-        if (id == 0 || id == 3 && !idleScript.researchCanBeDone[researchID])
+        if (id == 0 || id == 3 && !gameManager.researchCanBeDone[researchID])
         {
-            idleScript.researchCanBeDone[researchID] = true; 
+            gameManager.researchCanBeDone[researchID] = true; 
             researchID++;
             
         }
@@ -104,12 +123,12 @@ public class UnlockingSystem : MonoBehaviour
         for (int id = 0; id < planetsPanelsObjects.Length; id++)
         {
 
-            if (idleScript.planetUnlocked[id] == true)
+            if (gameManager.planetUnlocked[id] == true)
             {
                 planetsPanelsObjects[id].SetActive(true);
                 nextButton.interactable = true;
             }
-            else if (!idleScript.planetUnlocked[id])
+            else if (!gameManager.planetUnlocked[id])
             {
 
                 planetsPanelsObjects[id].SetActive(false);
@@ -120,12 +139,12 @@ public class UnlockingSystem : MonoBehaviour
 
     public void PlanetsUnlocking(int id)
     {
-        if (researchUnlocked[1] == true && idleScript.mainCurrency >= planetCost[id] && idleScript.planetUnlocked[id] == false)
+        if (gameManager.researchUnlocked[1] == true && gameManager.mainCurrency >= planetCost[id] && gameManager.planetUnlocked[id] == false)
         {
-            idleScript.mainCurrency -= planetCost[id]; 
+            gameManager.mainCurrency -= planetCost[id]; 
             planetsPanelsObjects[id].SetActive(true);
             planetsUnlockBtnObj[id].interactable = true;
-            idleScript.planetUnlocked[id] = true;
+            gameManager.planetUnlocked[id] = true;
         } 
 
     }

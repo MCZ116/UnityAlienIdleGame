@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class OfflineProgress : MonoBehaviour
 {
-    public GameManager idleScript;
+    public GameManager gameManager;
     public GameObject offlineRewards;
     public Text offlineRewardText;
     public Text offlineTimeText;
@@ -24,9 +24,9 @@ public class OfflineProgress : MonoBehaviour
         TimeSpan timeSpan = TimeSpan.FromSeconds(rawTime);
         offlineTimeText.text = $"{timeSpan:dd\\:hh\\:mm\\:ss}";
 
-        double totalRewards = idleScript.ResearchPointsCalculator() * offlineTime;
+        double totalRewards = gameManager.ResearchPointsCalculator() * offlineTime;
         Debug.Log(totalRewards + "OutcomeOffline");
-        idleScript.mainCurrency += totalRewards;
+        gameManager.mainCurrency += totalRewards;
         offlineRewardText.text = GameManager.ExponentLetterSystem(totalRewards,"F2");
     }
 

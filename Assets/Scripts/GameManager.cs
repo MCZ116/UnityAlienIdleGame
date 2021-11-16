@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public OfflineProgress offline;
     public int buyModeID;
-    public Text[] AlienLevelText;
+    public Text[] StageLevelText;
     public Text[] EarningStage;
     public Text CurrencyText;
     public Text RPointsText;
@@ -20,21 +20,23 @@ public class GameManager : MonoBehaviour
     public double mainCurrency;
     public double crystalCurrency;
     public double rebirthCost;
-    double[] alienUpgradeCosts;
+
+    double[] stageUpgradeCosts;
     public double upgradeLevel1;
     public double mainResetLevel;
-    private GameObject[] progressBarObject;
-    private GameObject[] levelStageTextObject;
-    private GameObject[] upgradeButtonObject;
-    private GameObject[] buyMaxTextObject;
-    private GameObject[] earningStageObject;
-    private GameObject[] Stages;
+    public GameObject[] progressBarObject;
+    public GameObject[] levelStageTextObject;
+    public GameObject[] upgradeButtonObject;
+    public GameObject[] buyMaxTextObject;
+    public GameObject[] earningStageObject;
+    public GameObject[] Stages;
     private GameObject[] unlockUpgradeText;
     public bool[] upgradesActivated;
-    public bool[] earnedCrystal;
+    private bool[] earnedCrystal;
     public bool[] confirmAstronautBuy;
-    public bool[] planetUnlocked = { false };
-    public bool activeTab;
+    public bool[] planetUnlocked;
+    public bool[] researchUnlocked;
+    private bool activeTab;
     double[] copyArray;
     //bool activateRB = false;
     public Image[] progressBar;
@@ -48,6 +50,8 @@ public class GameManager : MonoBehaviour
     public SuitsUpgrades suitsUpgrades;
 
     public UnlockingSystem unlockingSystem;
+
+    public UnlockingAnimations unlockingAnimations;
 
     public CanvasGroup canvasShop;
 
@@ -65,9 +69,9 @@ public class GameManager : MonoBehaviour
 
     public CanvasGroup planetsMenu;
 
-    private double[] alienLevel;
+    private double[] stageLevel;
 
-    public double[] AlienLevel { get => alienLevel; set => alienLevel = value; }
+    public double[] StageLevel { get => stageLevel; set => stageLevel = value; }
 
     private double[] research1Level;
 
@@ -81,92 +85,118 @@ public class GameManager : MonoBehaviour
     public int[] astronautBuyStartID;
     public double[] upgradesCounts;
     public float[] upgradeMaxTime = { 5f, 10f, 10f, 20f, 35f, 5f, 10f, 10f, 20f, 35f };
-    public float[] progressTimer = { 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f };
+    public float[] progressTimer;
     public bool[] researchCanBeDone;
 
     void Awake()
     {
+        Debug.Log("GameManagerStarted!");
+        QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 30;
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         mainCurrency = 100;
         rebirthCost = 10000;
+        unlockingSystem.unlockCost = new double[9];
+        unlockingSystem.unlockCost[0] = 2000;
+        unlockingSystem.unlockCost[1] = 4000;
+        unlockingSystem.unlockCost[2] = 8000;
+        unlockingSystem.unlockCost[3] = 20000;
+        unlockingSystem.unlockCost[4] = 100000;
+        unlockingSystem.unlockCost[5] = 135000;
+        unlockingSystem.unlockCost[6] = 160000;
+        unlockingSystem.unlockCost[7] = 180000;
+        unlockingSystem.unlockCost[8] = 220000;
+        unlockingSystem.planetCost = new double[1];
+        unlockingSystem.planetCost[0] = 220000;
+        progressTimer = new float[10];
         activeTab = false;
-        AlienLevel = new double[10];
+        StageLevel = new double[10];
         Research1Level = new double[2];
-        upgradesCounts = new double[AlienLevel.Length];
-        astronautsLevel = new int[10];
+        astronautsLevel = new int[stageLevel.Length];
         SuitsLevel = new double[2];
-        astronautBuyStartID = new int[10];
+        astronautBuyStartID = new int[stageLevel.Length];
+        researchUnlocked = new bool[2];
+        unlockingSystem.animationUnlockConfirm = new bool[9];
+        upgradesCounts = new double[StageLevel.Length];
         upgradesActivated = new bool[unlockingSystem.unlockCost.Length];
-        copyArray = new double[AlienLevel.Length + 1];
-        alienUpgradeCosts = new double[AlienLevel.Length];
-        earnedCrystal = new bool[alienLevel.Length];
+        copyArray = new double[StageLevel.Length + 1];
+        stageUpgradeCosts = new double[StageLevel.Length];
+        earnedCrystal = new bool[StageLevel.Length];
         planetUnlocked = new bool[unlockingSystem.planetsPanelsObjects.Length];
-        researchCanBeDone = new bool[research1Level.Length];
+        researchCanBeDone = new bool[Research1Level.Length];
+        research.upgradeResearchValues = new double[research1Level.Length];
+        research.upgradeResearchValues[0] = 0.5;
+        research.upgradeResearchValues[1] = 0.8;
+        planetUnlocked[0] = false;
 
-        AutoObjectsAssigning();
+        // Here was AutoObjectAssigning
 
-        for (int id = 0; id < AlienLevel.Length; id++)
+        for (int id = 0; id < StageLevel.Length; id++)
         {
-            alienLevel[id] = 0;
+            progressTimer[id] = 0f;
+            StageLevel[id] = 0;
+            astronautBuyStartID[id] = id * 4;
+            astronautsLevel[id] = 0;
+            //alienUpgradeCosts[id] = 50 + id * 0.2;
+            Debug.Log("astroLevelBeforeLoad = " + astronautsLevel.Length);
+            Debug.Log("alienlevelBeforeLoad = " + StageLevel.Length);
+            Debug.Log("Loaded Assignig");
         }
 
-        for (int id = 0; id < unlockingSystem.unlockCost.Length; id++)
+        for (int id = 0; id < unlockingSystem.animationUnlockConfirm.Length; id++)
         {
+            unlockingSystem.animationUnlockConfirm[id] = false;
             upgradesActivated[id] = false;
         }
 
-        for (int id = 0; id < astronautBehaviour.astronautsUpgrades.Length; id++) // add unlockingSystem.unlockCost.Length*4
+        for (int id = 0; id < researchUnlocked.Length; id++)
         {
-            confirmAstronautBuy[id] = false;
+            researchUnlocked[id] = false;
+            researchCanBeDone[id] = false;
         }
-        for (int id = 0; id < astronautBuyStartID.Length; id++)
-        {
-            astronautBuyStartID[id] = id * 4;
-        }
-        for (int id = 0; id < astronautsLevel.Length; id++)
-        {
-            astronautsLevel[id] = 0;
-            Debug.Log("astroLevelBeforeLoad = " + astronautsLevel[id]);
-        }
+
         Research1Level[0] = 0;
         Research1Level[1] = 0;
         upgradeLevel1 = 0;
         suitsLevel[0] = 0;
         suitsLevel[1] = 0;
         mainResetLevel = 1;
-        astronautBehaviour.AssigningAstronautsOnStart();
-       
+
+        //AutoObjectsAssigning();
+        //unlockingAnimations.AnimationGateAssigning();
+        astronautBehaviour.AssigningAstronautsOnStart();                
+        Debug.Log("Price for level = " + stageUpgradeCosts[0]);
+        Debug.Log("UpgradeCounts = " + upgradesCounts[0]);
+        Debug.Log("ProgressBarLenght = " + progressBarObject.Length);
     }
 
     void Start()
-    {       
-        for (int id = 0; id < researchCanBeDone.Length; id++)
+    {
+
+        for (int id = 0; id < astronautBehaviour.astronautsUpgrades.Length; id++) // add unlockingSystem.unlockCost.Length*4
         {
-            researchCanBeDone[id] = false;
+            confirmAstronautBuy[id] = false;
         }
 
         ChangeBuyModeText.text = "1";
 
-        //------------------------------------------------------------------------
         //Load after assigning variables and before loading unlock status or it won't appear
         Load();
         // Assignign once before update for offline calculations
-        for (int id = 0; id < AlienLevel.Length; id++)
+        for (int id = 0; id < stageLevel.Length; id++)
         {
             AutoValuesAssigning(id, upgradesCounts, 0.3, 1.4);
         }
 
         for (int id = 0; id < astronautsLevel.Length; id++)
         {
-            Debug.Log("astroLevelAfterLoad = " + astronautsLevel[id]);
+            Debug.Log("astroLevelAfterLoad = " + astronautsLevel.Length);
         }
         astronautBehaviour.AstronautsControl();
         unlockingSystem.PlanetsUnlockCheck();
         unlockingSystem.LoadUnlocksStatus();
         offline.OfflineProgressLoad();
-
-        Debug.Log(" AstroLenght: " + AlienLevel.Length);
+        Debug.Log(" AstroLenght: " + StageLevel.Length);
     }
 
     IEnumerator MySave()
@@ -177,10 +207,10 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        QuitButtonAndroid();
         //saving here because of bug which causing not creating save file after deleting it cuz IEnumerator won't have time to work
         Save();
 
-        AutoObjectsAssigning();
         unlockingSystem.PlanetsUnlockCheck();
         CurrencyText.text = ExponentLetterSystem(mainCurrency, "F2");
         RPointsText.text = ExponentLetterSystem(ResearchPointsCalculator(), "F2") + "RP/s ";
@@ -189,30 +219,40 @@ public class GameManager : MonoBehaviour
         ProfileLevel.text = ExponentLetterSystem(mainResetLevel, "F0");
         CrystalsAmount.text = crystalCurrency.ToString("F0");
 
-        for (int id = 0; id < AlienLevelText.Length; id++) {
-
+        for (int id = 0; id < stageLevel.Length; id++)
+        {
+            Debug.Log("AssigningInUpate = " + id + "alienupgradecost = " + stageUpgradeCosts[id] + " upgradeCounts = " + upgradesCounts[id]);
             AutoValuesAssigning(id, suitsUpgrades.suitsUpgradesCosts, 5, id + 1);
             AutoValuesAssigning(id, upgradesCounts, 0.3, 1.4);
-            AutoValuesAssigning(id, alienUpgradeCosts, 3, 8.3);
+            AutoValuesAssigning(id, stageUpgradeCosts, 3, 8.3);
             ProgressBarsIncomeTimer();
-            AlienLevelText[id].text = alienLevel[id].ToString("F0");
+            StageLevelText[id].text = StageLevel[id].ToString("F0");
             ButtonUpgradeMaxText[id].text = "X" + BuyMaxCount(id) + "\n" + ExponentLetterSystem(BuyCount(id), "F2");
             EarningStage[id].text = ExponentLetterSystem(StageEarningPerSecond(id), "F2") + " " + "RP/s ";
             SoloEarningCrystals(id);
             InteractableButtons(id, upgradeButtons);
+            Debug.Log("After Loop AssigningInUpate = " + id + "alienupgradecost = " + stageUpgradeCosts[id] + " upgradeCounts = " + upgradesCounts[id]);
         }
 
         StartCoroutine("MySave");
         SaveDate();
     }
 
+    public void QuitButtonAndroid()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+    }
+
     public void SoloEarningCrystals(int id)
     {
-        if (alienLevel[id] % 10 == 0 && earnedCrystal[id] == true)
+        if (stageLevel[id] % 10 == 0 && earnedCrystal[id] == true)
         {
             crystalCurrency++;
             earnedCrystal[id] = false;
-        } else if (alienLevel[id] % 10 != 0)
+        } else if (stageLevel[id] % 10 != 0)
         {
             earnedCrystal[id] = true;
         }
@@ -220,7 +260,7 @@ public class GameManager : MonoBehaviour
     // Working only for two atm
     public void AutoValuesAssigning(int id, double[] ArrayToIncrease, double baseValue, double valueMultiplier)
     {
-        Array.Resize(ref ArrayToIncrease, AlienLevel.Length);
+        Array.Resize(ref ArrayToIncrease, StageLevel.Length);
         if (ArrayToIncrease[0] == 0)
         {
             ArrayToIncrease[id] = valueMultiplier * baseValue;
@@ -230,52 +270,38 @@ public class GameManager : MonoBehaviour
         copyArray[id + 1] = ArrayToIncrease[id];
     }
 
-    public void AutoObjectsAssigning()
-    {
-        progressBarObject = GameObject.FindGameObjectsWithTag("progressBars");
-        progressBar = new Image[progressBarObject.Length];
-        levelStageTextObject = GameObject.FindGameObjectsWithTag("stageLevels");
-        AlienLevelText = new Text[levelStageTextObject.Length];
-        upgradeButtonObject = GameObject.FindGameObjectsWithTag("upgradeStageButtons");
-        upgradeButtons = new Button[upgradeButtonObject.Length];
-        buyMaxTextObject = GameObject.FindGameObjectsWithTag("buyMaxStageButtons");
-        ButtonUpgradeMaxText = new Text[buyMaxTextObject.Length];
-        earningStageObject = GameObject.FindGameObjectsWithTag("barIncomeText");
-        EarningStage = new Text[earningStageObject.Length];
-        //unlockingSystem.unlockButtons = GameObject.FindGameObjectsWithTag("unlockButtons");
-        //unlockingSystem.unlockStage = new Button[unlockingSystem.unlockButtons.Length];
-        //unlockUpgradeText = GameObject.FindGameObjectsWithTag("unlockText");
-        //unlockingSystem.unlockText = new Text[unlockUpgradeText.Length];
-        //unlockGameObjects = GameObject.FindGameObjectsWithTag("upgradeObjects");
-        //unlockingSystem.upgradeObjects = new GameObject[unlockGameObjects.Length];
+    //public void AutoObjectsAssigning()
+    //{
+    //    progressBarObject = GameObject.FindGameObjectsWithTag("progressBars");
+    //    progressBar = new Image[progressBarObject.Length];
+    //    levelStageTextObject = GameObject.FindGameObjectsWithTag("stageLevels");
+    //    AlienLevelText = new Text[levelStageTextObject.Length];
+    //    upgradeButtonObject = GameObject.FindGameObjectsWithTag("upgradeStageButtons");
+    //    upgradeButtons = new Button[upgradeButtonObject.Length];
+    //    buyMaxTextObject = GameObject.FindGameObjectsWithTag("buyMaxStageButtons");
+    //    ButtonUpgradeMaxText = new Text[buyMaxTextObject.Length];
+    //    earningStageObject = GameObject.FindGameObjectsWithTag("barIncomeText");
+    //    EarningStage = new Text[earningStageObject.Length];
+    //    Stages = GameObject.FindGameObjectsWithTag("Stages");
 
-        // looking for all stages on the game
-        Stages = GameObject.FindGameObjectsWithTag("Stages");
-        for (int id = 0; id < progressBarObject.Length; id++)
-        {
-            progressBar[id] = progressBarObject[id].GetComponent<Image>();
-            AlienLevelText[id] = levelStageTextObject[id].GetComponent<Text>();
-            upgradeButtons[id] = upgradeButtonObject[id].GetComponent<Button>();
-            ButtonUpgradeMaxText[id] = buyMaxTextObject[id].GetComponent<Text>();
-            EarningStage[id] = earningStageObject[id].GetComponent<Text>();
-        }
-
-        //for (int id = 0; id < unlockUpgradeText.Length; id++)
-        //{
-        //    unlockingSystem.unlockStage[id] = unlockingSystem.unlockButtons[id].GetComponent<Button>();
-        //    unlockingSystem.unlockText[id] = unlockUpgradeText[id].GetComponent<Text>();
-        //    unlockingSystem.upgradeObjects[id] = unlockGameObjects[id];
-        //}
-    }
+    //    for (int id = 0; id < alienLevel.Length; id++)
+    //    {
+    //        progressBar[id] = progressBarObject[id].GetComponent<Image>();
+    //        AlienLevelText[id] = levelStageTextObject[id].GetComponent<Text>();
+    //        upgradeButtons[id] = upgradeButtonObject[id].GetComponent<Button>();
+    //        ButtonUpgradeMaxText[id] = buyMaxTextObject[id].GetComponent<Text>();
+    //        EarningStage[id] = earningStageObject[id].GetComponent<Text>();
+    //    }
+    //}
     // Important part of code calculating all income and bonuses in game
     public double ResearchPointsCalculator()
     {
         double temp = 0;
 
-        for (int id = 0; id < AlienLevelText.Length; id++)
+        for (int id = 0; id < stageLevel.Length; id++)
         {
-            temp += (AlienLevel[id] * upgradesCounts[id]);
-            Debug.Log("ID: " + AlienLevel[id] + " UpgradeCount: " + upgradesCounts[id]);
+            temp += (stageLevel[id] * upgradesCounts[id]);
+            Debug.Log("ID: " + stageLevel[id] + " UpgradeCount: " + upgradesCounts[id]);
             Debug.Log(" Astronaut Earning temp: " + temp);
         }
 
@@ -294,7 +320,7 @@ public class GameManager : MonoBehaviour
         // If level 0 bar doesn't move
         for (int id = 0; id < progressBarObject.Length; id++)
         {
-            if (AlienLevel[id] >= 1)
+            if (stageLevel[id] >= 1)
             {
                 progressTimer[id] += Time.deltaTime;
                 progressBar[id].fillAmount = (progressTimer[id] / upgradeMaxTime[id]);
@@ -330,7 +356,7 @@ public class GameManager : MonoBehaviour
     {
         double temp = 0;
 
-        temp += AlienLevel[id] * upgradesCounts[id];
+        temp += stageLevel[id] * upgradesCounts[id];
         return temp;
     }
 
@@ -535,16 +561,16 @@ public class GameManager : MonoBehaviour
 
         mainCurrency = gameData.researchPointsData;
         crystalCurrency = gameData.crystals;
-        AlienLevel[0] = gameData.alienLevelData;
-        AlienLevel[1] = gameData.alienLevelData2;
-        AlienLevel[2] = gameData.alienLevelData3;
-        AlienLevel[3] = gameData.alienLevelData4;
-        AlienLevel[4] = gameData.alienLevelData5;
-        AlienLevel[5] = gameData.alienLevelData6;
-        AlienLevel[6] = gameData.alienLevelData7;
-        AlienLevel[7] = gameData.alienLevelData8;
-        AlienLevel[8] = gameData.alienLevelData9;
-        AlienLevel[9] = gameData.alienLevelData10;
+        StageLevel[0] = gameData.alienLevelData;
+        StageLevel[1] = gameData.alienLevelData2;
+        StageLevel[2] = gameData.alienLevelData3;
+        StageLevel[3] = gameData.alienLevelData4;
+        StageLevel[4] = gameData.alienLevelData5;
+        StageLevel[5] = gameData.alienLevelData6;
+        StageLevel[6] = gameData.alienLevelData7;
+        StageLevel[7] = gameData.alienLevelData8;
+        StageLevel[8] = gameData.alienLevelData9;
+        StageLevel[9] = gameData.alienLevelData10;
         upgradeLevel1 = gameData.upgradeLevelData;
         mainResetLevel = gameData.mainResetLevelData;
         Research1Level[0] = gameData.researchLevel1;
@@ -624,6 +650,8 @@ public class GameManager : MonoBehaviour
         planetUnlocked[0] = gameData.planetUnlocked1;
         researchCanBeDone[0] = gameData.researchCanBeDone1;
         researchCanBeDone[1] = gameData.researchCanBeDone2;
+        researchUnlocked[0] = gameData.researchUnlocked1;
+        researchUnlocked[1] = gameData.researchUnlocked2;
     }
 
     public void SaveDate()
@@ -656,10 +684,10 @@ public class GameManager : MonoBehaviour
 
     public double BuyCount(int id)
     {
-        var h = alienUpgradeCosts[id];
+        var h = stageUpgradeCosts[id];
         var c = mainCurrency;
         var r = 1.07;
-        var u = AlienLevel[id];
+        var u = StageLevel[id];
         double n = 0;
 
         switch (buyModeID)
@@ -683,10 +711,10 @@ public class GameManager : MonoBehaviour
 
     public double BuyMaxCount(int id)
     {
-        var h = alienUpgradeCosts[id];
+        var h = stageUpgradeCosts[id];
         var c = mainCurrency;
         var r = 1.07;
-        var u = AlienLevel[id];
+        var u = StageLevel[id];
         double n = 0;
 
         switch (buyModeID)
@@ -705,10 +733,10 @@ public class GameManager : MonoBehaviour
 
     public void BuyMaxUpgradeClicked(int id)
     {
-            var h = alienUpgradeCosts[id];
+            var h = stageUpgradeCosts[id];
             var c = mainCurrency;
             var r = 1.07;
-            var u = AlienLevel[id];
+            var u = StageLevel[id];
 
         double n = 0;
         int crystalsInMax;
@@ -723,6 +751,7 @@ public class GameManager : MonoBehaviour
                 break;
             case 1:
                 n = 1;
+                Debug.Log("Bought 1 of ID = " + id);
                 break;
             case 2:
                 n = 10;
@@ -738,7 +767,7 @@ public class GameManager : MonoBehaviour
 
             if(mainCurrency >= costUpgrade)
             {
-              alienLevel[id] += (int)n;
+              stageLevel[id] += (int)n;
               mainCurrency -= costUpgrade;
               upgradeLevel1 += (int)n;
             }
@@ -751,19 +780,21 @@ public class GameManager : MonoBehaviour
         if (mainCurrency >= rebirthCost)
         {
             mainCurrency = 100;
-            alienLevel[0] = 1;
-            for (int id = 1; id < AlienLevel.Length; id++)
-            {
-                alienLevel[id] = 0;
-            }
+            stageLevel[0] = 1;
             upgradeLevel1 = 0;
             mainResetLevel++;
+            unlockingSystem.researchID = 0;
+
+            for (int id = 1; id < stageLevel.Length; id++)
+            {
+                stageLevel[id] = 0;
+            }
+
             for (int id = 0; id < Research1Level.Length; id++)
             {
                 Research1Level[id] = 0;
             }
             
-            Research1Level[1] = 0;
             for (int id = 0; id < SuitsLevel.Length; id++)
             {
                 SuitsLevel[id] = 0;
@@ -772,13 +803,13 @@ public class GameManager : MonoBehaviour
             for (int id = 0; id < upgradesActivated.Length; id++)
             {
                 upgradesActivated[id] = false;
+                unlockingSystem.animationUnlockConfirm[id] = false;
             }
-
-            unlockingSystem.researchID = 0;
 
             for (int id = 0; id < researchCanBeDone.Length; id++)
             {
                 researchCanBeDone[id] = false;
+                researchUnlocked[id] = false;
             }
 
             for (int id = 0; id < planetUnlocked.Length; id++)
@@ -786,10 +817,6 @@ public class GameManager : MonoBehaviour
                 planetUnlocked[id] = false;
             }
 
-            for (int id = 0; id < astronautBuyStartID.Length; id++)
-            {
-                astronautBuyStartID[id] = id * 4;
-            }
             for (int id = 0; id < confirmAstronautBuy.Length; id++)
             {
                 confirmAstronautBuy[id] = false;
@@ -798,15 +825,13 @@ public class GameManager : MonoBehaviour
             for (int id = 0; id < astronautsLevel.Length; id++)
             {
                 astronautsLevel[id] = 0;
+                astronautBehaviour.astronautMaxConfirm[id] = false;
+                astronautBuyStartID[id] = id * 4;
             }
 
-            for (int id = 0; id < unlockingSystem.animationUnlockConfirm.Length; id++)
-            {
-                unlockingSystem.animationUnlockConfirm[id] = false;
-            }
-        
-            unlockingSystem.LoadUnlocksStatus();
             astronautBehaviour.AstronautsControl();
+            unlockingSystem.LoadUnlocksStatus();
+            unlockingSystem.PlanetsUnlockCheck();
             rebirthCost *= (System.Math.Pow(2, mainResetLevel) * (System.Math.Pow(2, 1) - 1) / (2 - 1));
         }
         
