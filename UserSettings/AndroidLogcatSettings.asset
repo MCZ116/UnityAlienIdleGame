@@ -3,69 +3,57 @@
     "m_SelectedPackage": {
         "deviceId": "26EBB18821153566",
         "name": "com.MCZ.UniverseDiscoveryIdle",
-        "processId": 12965,
+        "processId": 15375,
         "exited": false
     },
     "m_SelectedPriority": 0,
     "m_KnownPackagesForSerialization": [
         {
             "deviceId": "26EBB18821153566",
-            "name": "com.huawei.android.launcher",
-            "processId": 2769,
-            "exited": false
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 28536,
-            "exited": true
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 7614,
-            "exited": true
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.google.android.packageinstaller",
-            "processId": 10160,
-            "exited": true
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 11199,
-            "exited": true
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 16471,
-            "exited": true
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 20595,
-            "exited": false
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 7668,
-            "exited": false
-        },
-        {
-            "deviceId": "26EBB18821153566",
             "name": "com.MCZ.UniverseDiscoveryIdle",
             "processId": 10455,
-            "exited": false
+            "exited": true
         },
         {
             "deviceId": "26EBB18821153566",
             "name": "com.MCZ.UniverseDiscoveryIdle",
             "processId": 12965,
+            "exited": true
+        },
+        {
+            "deviceId": "26EBB18821153566",
+            "name": "com.MCZ.UniverseDiscoveryIdle",
+            "processId": 30314,
+            "exited": true
+        },
+        {
+            "deviceId": "26EBB18821153566",
+            "name": "com.MCZ.UniverseDiscoveryIdle",
+            "processId": 5061,
+            "exited": true
+        },
+        {
+            "deviceId": "26EBB18821153566",
+            "name": "com.huawei.android.launcher",
+            "processId": 2779,
+            "exited": false
+        },
+        {
+            "deviceId": "26EBB18821153566",
+            "name": "com.MCZ.UniverseDiscoveryIdle",
+            "processId": 9450,
+            "exited": true
+        },
+        {
+            "deviceId": "26EBB18821153566",
+            "name": "com.MCZ.UniverseDiscoveryIdle",
+            "processId": 13553,
+            "exited": false
+        },
+        {
+            "deviceId": "26EBB18821153566",
+            "name": "com.MCZ.UniverseDiscoveryIdle",
+            "processId": 15375,
             "exited": false
         },
         {

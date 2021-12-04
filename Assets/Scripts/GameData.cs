@@ -20,6 +20,8 @@ public class GameData
     public double mainResetLevelData;
     public double researchLevel1;
     public double researchLevel2;
+    public double researchLevel3;
+    public double researchLevel4;
     public bool upgradeActivated;
     public bool upgradeActivated2;
     public bool upgradeActivated3;
@@ -96,8 +98,14 @@ public class GameData
     public bool planetUnlocked1;
     public bool researchCanBeDone1;
     public bool researchCanBeDone2;
+    public bool researchCanBeDone3;
+    public bool researchCanBeDone4;
     public bool researchUnlocked1;
     public bool researchUnlocked2;
+    public bool researchUnlocked3;
+    public bool researchUnlocked4;
+
+
     public GameData (GameManager gameManager)
     {
         researchPointsData = gameManager.mainCurrency;
@@ -115,6 +123,8 @@ public class GameData
         mainResetLevelData = gameManager.mainResetLevel;
         researchLevel1 = gameManager.Research1Level[0];
         researchLevel2 = gameManager.Research1Level[1];
+        researchLevel3 = gameManager.Research1Level[2];
+        researchLevel4 = gameManager.Research1Level[3];
         upgradeActivated = gameManager.upgradesActivated[0];
         upgradeActivated2 = gameManager.upgradesActivated[1];
         upgradeActivated3 = gameManager.upgradesActivated[2];
@@ -191,8 +201,12 @@ public class GameData
         planetUnlocked1 = gameManager.planetUnlocked[0];
         researchCanBeDone1 = gameManager.researchCanBeDone[0];
         researchCanBeDone2 = gameManager.researchCanBeDone[1];
+        researchCanBeDone3 = gameManager.researchCanBeDone[2];
+        researchCanBeDone4 = gameManager.researchCanBeDone[3];
         researchUnlocked1 = gameManager.researchUnlocked[0];
         researchUnlocked2 = gameManager.researchUnlocked[1];
+        researchUnlocked3 = gameManager.researchUnlocked[2];
+        researchUnlocked4 = gameManager.researchUnlocked[3];
     }
 
 

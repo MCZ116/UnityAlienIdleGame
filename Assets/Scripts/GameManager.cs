@@ -111,11 +111,11 @@ public class GameManager : MonoBehaviour
         progressTimer = new float[10];
         activeTab = false;
         StageLevel = new double[10];
-        Research1Level = new double[2];
+        Research1Level = new double[4];
         astronautsLevel = new int[stageLevel.Length];
         SuitsLevel = new double[2];
         astronautBuyStartID = new int[stageLevel.Length];
-        researchUnlocked = new bool[2];
+        researchUnlocked = new bool[Research1Level.Length];
         unlockingSystem.animationUnlockConfirm = new bool[9];
         upgradesCounts = new double[StageLevel.Length];
         upgradesActivated = new bool[unlockingSystem.unlockCost.Length];
@@ -127,9 +127,12 @@ public class GameManager : MonoBehaviour
         research.upgradeResearchValues = new double[research1Level.Length];
         research.upgradeResearchValues[0] = 0.5;
         research.upgradeResearchValues[1] = 0.8;
+        research.upgradeResearchValues[2] = 2;
+        research.upgradeResearchValues[3] = 2.2;
         planetUnlocked[0] = false;
 
         // Here was AutoObjectAssigning
+
 
         for (int id = 0; id < StageLevel.Length; id++)
         {
@@ -155,8 +158,11 @@ public class GameManager : MonoBehaviour
             researchCanBeDone[id] = false;
         }
 
-        Research1Level[0] = 0;
-        Research1Level[1] = 0;
+        for (int id = 0; id < Research1Level.Length; id++)
+        {
+            Research1Level[id] = 0;
+        }
+
         upgradeLevel1 = 0;
         suitsLevel[0] = 0;
         suitsLevel[1] = 0;
@@ -575,6 +581,8 @@ public class GameManager : MonoBehaviour
         mainResetLevel = gameData.mainResetLevelData;
         Research1Level[0] = gameData.researchLevel1;
         Research1Level[1] = gameData.researchLevel2;
+        Research1Level[2] = gameData.researchLevel3;
+        Research1Level[3] = gameData.researchLevel4;
         upgradesActivated[0] = gameData.upgradeActivated;
         upgradesActivated[1] = gameData.upgradeActivated2;
         upgradesActivated[2] = gameData.upgradeActivated3;
@@ -650,8 +658,12 @@ public class GameManager : MonoBehaviour
         planetUnlocked[0] = gameData.planetUnlocked1;
         researchCanBeDone[0] = gameData.researchCanBeDone1;
         researchCanBeDone[1] = gameData.researchCanBeDone2;
+        researchCanBeDone[2] = gameData.researchCanBeDone3;
+        researchCanBeDone[3] = gameData.researchCanBeDone4;
         researchUnlocked[0] = gameData.researchUnlocked1;
         researchUnlocked[1] = gameData.researchUnlocked2;
+        researchUnlocked[2] = gameData.researchUnlocked3;
+        researchUnlocked[3] = gameData.researchUnlocked4;
     }
 
     public void SaveDate()

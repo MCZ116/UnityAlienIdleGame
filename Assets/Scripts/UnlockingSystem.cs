@@ -110,7 +110,7 @@ public class UnlockingSystem : MonoBehaviour
     // Let's think about that system...
     public void ResearchUnlocking(int id)
     {
-        if (id == 0 || id == 3 && !gameManager.researchCanBeDone[researchID])
+        if (id == 0 || id == 3 || id == 5 || id == 7 && !gameManager.researchCanBeDone[researchID])
         {
             gameManager.researchCanBeDone[researchID] = true; 
             researchID++;
