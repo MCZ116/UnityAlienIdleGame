@@ -22,7 +22,7 @@ public class OfflineProgress : MonoBehaviour
 
         offlineRewards.SetActive(true);
         TimeSpan timeSpan = TimeSpan.FromSeconds(rawTime);
-        offlineTimeText.text = $"{timeSpan:dd\\:hh\\:mm\\:ss}";
+        offlineTimeText.text = $"Time: {timeSpan:dd\\:hh\\:mm\\:ss}";
 
         double totalRewards = gameManager.ResearchPointsCalculator() * offlineTime;
         Debug.Log(totalRewards + "OutcomeOffline");

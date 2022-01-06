@@ -104,6 +104,7 @@ public class GameData
     public bool researchUnlocked2;
     public bool researchUnlocked3;
     public bool researchUnlocked4;
+    public int researchID;
 
 
     public GameData (GameManager gameManager)
@@ -207,6 +208,7 @@ public class GameData
         researchUnlocked2 = gameManager.researchUnlocked[1];
         researchUnlocked3 = gameManager.researchUnlocked[2];
         researchUnlocked4 = gameManager.researchUnlocked[3];
+        researchID = gameManager.researchID;
     }
 
 

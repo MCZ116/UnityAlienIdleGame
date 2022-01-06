@@ -3,7 +3,7 @@
     "m_SelectedPackage": {
         "deviceId": "26EBB18821153566",
         "name": "com.MCZ.UniverseDiscoveryIdle",
-        "processId": 15375,
+        "processId": 29218,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -54,6 +54,12 @@
             "deviceId": "26EBB18821153566",
             "name": "com.MCZ.UniverseDiscoveryIdle",
             "processId": 15375,
+            "exited": false
+        },
+        {
+            "deviceId": "26EBB18821153566",
+            "name": "com.MCZ.UniverseDiscoveryIdle",
+            "processId": 29218,
             "exited": false
         },
         {

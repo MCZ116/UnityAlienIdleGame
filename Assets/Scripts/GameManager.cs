@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -25,12 +27,15 @@ public class GameManager : MonoBehaviour
     public double upgradeLevel1;
     public double mainResetLevel;
     public GameObject[] progressBarObject;
+    public GameObject settingsScreenObject;
     public GameObject[] levelStageTextObject;
     public GameObject[] upgradeButtonObject;
     public GameObject[] buyMaxTextObject;
     public GameObject[] earningStageObject;
     public GameObject[] Stages;
     private GameObject[] unlockUpgradeText;
+    public List<GameObject> allObjects = new List<GameObject>();
+    public static GameManager instance = null;
     public bool[] upgradesActivated;
     private bool[] earnedCrystal;
     public bool[] confirmAstronautBuy;
@@ -87,9 +92,18 @@ public class GameManager : MonoBehaviour
     public float[] upgradeMaxTime = { 5f, 10f, 10f, 20f, 35f, 5f, 10f, 10f, 20f, 35f };
     public float[] progressTimer;
     public bool[] researchCanBeDone;
+    public int researchID;
 
     void Awake()
     {
+
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+            Destroy(gameObject);
+
         Debug.Log("GameManagerStarted!");
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 30;
@@ -130,6 +144,7 @@ public class GameManager : MonoBehaviour
         research.upgradeResearchValues[2] = 2;
         research.upgradeResearchValues[3] = 2.2;
         planetUnlocked[0] = false;
+        researchID = 0;
 
         // Here was AutoObjectAssigning
 
@@ -174,6 +189,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Price for level = " + stageUpgradeCosts[0]);
         Debug.Log("UpgradeCounts = " + upgradesCounts[0]);
         Debug.Log("ProgressBarLenght = " + progressBarObject.Length);
+
     }
 
     void Start()
@@ -250,6 +266,16 @@ public class GameManager : MonoBehaviour
         {
             Application.Quit();
         }
+    }
+
+    public void EnterSettings()
+    {
+        settingsScreenObject.SetActive(true);
+    }
+
+    public void ExitScreenButton()
+    {
+        settingsScreenObject.SetActive(false);
     }
 
     public void SoloEarningCrystals(int id)
@@ -537,8 +563,8 @@ public class GameManager : MonoBehaviour
                 break;
 
             case "marsMenu":
-                    if (planetUnlocked[0])
-                    {
+                if (planetUnlocked[0])
+                {
                         CanvasGroupMenuSwitch(true, canvasMainGame);
                         CanvasGroupMenuSwitch(false, canvasShop);
                         CanvasGroupMenuSwitch(false, canvasRebirthTab);
@@ -548,7 +574,7 @@ public class GameManager : MonoBehaviour
                         CanvasGroupMenuSwitch(false, planetsMenu);
                         CanvasGroupMenuSwitch(true, marsMenu);
                         activeTab = false;
-                    }                    
+                }                    
                 break;
 
         } 
@@ -664,6 +690,7 @@ public class GameManager : MonoBehaviour
         researchUnlocked[1] = gameData.researchUnlocked2;
         researchUnlocked[2] = gameData.researchUnlocked3;
         researchUnlocked[3] = gameData.researchUnlocked4;
+        researchID = gameData.researchID;
     }
 
     public void SaveDate()
@@ -795,7 +822,7 @@ public class GameManager : MonoBehaviour
             stageLevel[0] = 1;
             upgradeLevel1 = 0;
             mainResetLevel++;
-            unlockingSystem.researchID = 0;
+            researchID = 0;
 
             for (int id = 1; id < stageLevel.Length; id++)
             {

@@ -8,7 +8,6 @@ public class AstronautBehaviour : MonoBehaviour
     [SerializeField]
     private GameManager gameManager;
 
-    public GameObject[] upgradeAstronauts;
     public GameObject[] astronautsUpgrades;
 
     private Animator animationIdle;
@@ -76,12 +75,27 @@ public class AstronautBehaviour : MonoBehaviour
     public void AssigningAstronautsOnStart()
     {
         astronautsUpgrades = GameObject.FindGameObjectsWithTag("astronauts");
+        //for (int i = 0; i < length; i++)
+        //{
+        //    astronautsUpgrades = GameManager.instance.allObjects[id].Set
+        //}
+
+
+
+        //for (int id = 0; id < GameManager.instance.allObjects.Count; id++)
+        //{
+        //    GameManager.instance.allObjects[id].SetActive(false);
+
+        //    if (gameManager.confirmAstronautBuy[id] == true)
+        //    {
+        //        GameManager.instance.allObjects[id].SetActive(true);
+        //    }
 
         for (int id = 0; id < astronautsUpgrades.Length; id++)
         {
-            astronautsUpgrades[id].SetActive(false);
+                astronautsUpgrades[id].SetActive(false);
 
-            if(gameManager.confirmAstronautBuy[id] == true)
+            if (gameManager.confirmAstronautBuy[id] == true)
             {
                 astronautsUpgrades[id].SetActive(true);
             }
@@ -99,6 +113,7 @@ public class AstronautBehaviour : MonoBehaviour
         if ( astronautTempCost <= 300 && gameManager.astronautsLevel[id] <= 3 && gameManager.crystalCurrency >= astronautTempCost)
         {  
             gameManager.crystalCurrency -= astronautTempCost;
+            //GameManager.instance.allObjects[gameManager.astronautBuyStartID[id]].SetActive(true);
             astronautsUpgrades[gameManager.astronautBuyStartID[id]].SetActive(true);
             gameManager.confirmAstronautBuy[gameManager.astronautBuyStartID[id]] = true;
             gameManager.astronautBuyStartID[id]++;
@@ -147,6 +162,17 @@ public class AstronautBehaviour : MonoBehaviour
         // NEED TO CHANGE IT A BIT 
         for (int id = 0; id < 40; id++)
         {
+
+            //if (gameManager.confirmAstronautBuy[id] == false)
+            //{
+            //    GameManager.instance.allObjects[id].SetActive(false);
+
+            //}
+            //else if (gameManager.confirmAstronautBuy[id] == true)
+            //{
+            //    GameManager.instance.allObjects[id].SetActive(true);
+            //}
+
             if (gameManager.confirmAstronautBuy[id] == false)
             {
                 astronautsUpgrades[id].SetActive(false);

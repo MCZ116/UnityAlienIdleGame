@@ -8,10 +8,13 @@ public class MainMenu : MonoBehaviour
     public Slider slider;
     public Text progressText;
     public GameObject loadingBar;
+    public GameObject[] menuButtons;
 
     public void PlayGame (int sceneIndex)
     {
         loadingBar.SetActive(true);
+        menuButtons[0].SetActive(false);
+        menuButtons[1].SetActive(false);
         StartCoroutine(LoadAsync(sceneIndex));
     }
 

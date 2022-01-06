@@ -18,6 +18,13 @@ public class Research : MonoBehaviour
     public Image researchWindowIcon;
     public Image[] researchImage;
 
+    public Image[] researchConnDefault;
+
+    [SerializeField]
+    private Sprite researchConnActive;
+    [SerializeField]
+    private Sprite researchConnDisabled;
+
     double[] researchCosts;
     public double[] upgradeResearchValues;
     string[] researchText;
@@ -46,6 +53,7 @@ public class Research : MonoBehaviour
     {
         for (int id = 0; id < gameManager.Research1Level.Length; id++)
         {
+            ResearchConnectorsCheck(id);
             Debug.Log("ResearchLevel = " + gameManager.Research1Level[id] + "of ID" + id);
             if (gameManager.Research1Level[id] >= 1)
             {
@@ -142,6 +150,15 @@ public class Research : MonoBehaviour
             gameManager.researchUnlocked[id] = true;
         }
         ResearchInfoWindowOnClick(id);
+    }
+
+    public void ResearchConnectorsCheck(int id)
+    {
+        if (gameManager.researchUnlocked[id] == true)
+        {
+            researchConnDefault[id].sprite = researchConnActive;
+        } else
+            researchConnDefault[id].sprite = researchConnDisabled;
     }
 
     public double ResearchBoost()
