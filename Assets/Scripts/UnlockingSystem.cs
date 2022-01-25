@@ -70,10 +70,11 @@ public class UnlockingSystem : MonoBehaviour
 
         if ((gameManager.mainCurrency >= unlockCost[id]) && (gameManager.upgradesActivated[id] == false))
         {
-            animationUnlockConfirm[id] = true;
             gameManager.mainCurrency -= unlockCost[id];
             upgradeObjects[id].SetActive(true);
             gameManager.upgradesActivated[id] = true;
+            unlockButtons[id].GetComponent<Button>().interactable = false;
+            animationUnlockConfirm[id] = true;
             //Debug.Log("Upgrade Unlocked!");
             ResearchUnlocking(id);
         }

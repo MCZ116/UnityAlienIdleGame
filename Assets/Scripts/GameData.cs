@@ -74,6 +74,10 @@ public class GameData
     public double rebirthCostData;
     public double suitsLevel1;
     public double suitsLevel2;
+    public double suitsLevel3;
+    public double suitsLevel4;
+    public double suitsLevel5;
+    public double suitsLevel6;
     public double upgradesLoopLenght;
     public int astronautsLevel;
     public int astronautsLevel2;
@@ -138,6 +142,10 @@ public class GameData
         rebirthCostData = gameManager.rebirthCost;
         suitsLevel1 = gameManager.SuitsLevel[0];
         suitsLevel2 = gameManager.SuitsLevel[1];
+        suitsLevel3 = gameManager.SuitsLevel[2];
+        suitsLevel4 = gameManager.SuitsLevel[3];
+        suitsLevel5 = gameManager.SuitsLevel[4];
+        suitsLevel6 = gameManager.SuitsLevel[5];
         crystals = gameManager.crystalCurrency;
         astronautsbuy1 = gameManager.confirmAstronautBuy[0];
         astronautsbuy2 = gameManager.confirmAstronautBuy[1];

@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public OfflineProgress offline;
+    public AudioControler AC;
     public int buyModeID;
     public Text[] StageLevelText;
     public Text[] EarningStage;
@@ -127,7 +128,7 @@ public class GameManager : MonoBehaviour
         StageLevel = new double[10];
         Research1Level = new double[4];
         astronautsLevel = new int[stageLevel.Length];
-        SuitsLevel = new double[2];
+        SuitsLevel = new double[6];
         astronautBuyStartID = new int[stageLevel.Length];
         researchUnlocked = new bool[Research1Level.Length];
         unlockingSystem.animationUnlockConfirm = new bool[9];
@@ -266,6 +267,12 @@ public class GameManager : MonoBehaviour
         {
             Application.Quit();
         }
+    }
+
+    public void QuitGame()
+    {
+        Save();
+        Application.Quit();
     }
 
     public void EnterSettings()
@@ -661,6 +668,10 @@ public class GameManager : MonoBehaviour
         rebirthCost = gameData.rebirthCostData;
         SuitsLevel[0] = gameData.suitsLevel1;
         SuitsLevel[1] = gameData.suitsLevel2;
+        SuitsLevel[2] = gameData.suitsLevel3;
+        SuitsLevel[3] = gameData.suitsLevel4;
+        SuitsLevel[4] = gameData.suitsLevel5;
+        SuitsLevel[5] = gameData.suitsLevel6;
         astronautsLevel[0] = gameData.astronautsLevel;
         astronautsLevel[1] = gameData.astronautsLevel2;
         astronautsLevel[2] = gameData.astronautsLevel3;
@@ -811,7 +822,7 @@ public class GameManager : MonoBehaviour
               upgradeLevel1 += (int)n;
             }
 
-        
+        AC.ButtonClickSound();
     }
 
     public void FullReset()
