@@ -48,20 +48,19 @@ public class SuitsUpgrades : MonoBehaviour
             }
             suitsTextCost[id].text = GameManager.ExponentLetterSystem(SuitsUpgradeCalc(id), "F2");
             Debug.Log(" Suits Upgrade Cost: " + SuitsUpgradeCalc(id));
+            
         }
-        HideIfClickedOutside(suitsObjectInfoWindow);
+        //HideIfClickedOutside(suitsObjectInfoWindow);
     }
 
-    private void HideIfClickedOutside(GameObject panel)
-    {
-        if (Input.GetMouseButton(0) && panel.activeSelf && !RectTransformUtility.RectangleContainsScreenPoint(
-                panel.GetComponent<RectTransform>(),
-                Input.mousePosition,
-                Camera.main))
-        {
-            panel.SetActive(false);
-        }
-    }
+    //private void HideIfClickedOutside(GameObject panel)
+    //{
+    //    if (Input.GetMouseButton(0) && panel.activeSelf && !RectTransformUtility.RectangleContainsScreenPoint(panel.GetComponent<RectTransform>(),
+    //        Input.mousePosition,Camera.main))
+    //    {
+    //        panel.SetActive(false);
+    //    }
+    //}
 
     public void SuitsInfoWindowOnClick(int id)
     {

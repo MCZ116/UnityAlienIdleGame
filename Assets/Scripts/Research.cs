@@ -67,8 +67,7 @@ public class Research : MonoBehaviour
             }
             researchPriceText[id].text = GameManager.ExponentLetterSystem(ResearchCostCalc(id), "F2");
         }
-        HideIfClickedOutside(researchTextWindow);
-
+        //HideIfClickedOutside(researchTextWindow);
         ResearchButtonStatus();
     }
 
@@ -76,11 +75,8 @@ public class Research : MonoBehaviour
     {
         researchTextWindow.SetActive(true);
         researchTextField.text = $"{researchText[id]}";
-
-        //researchImage[id] = researchIcon[id].GetComponent<Image>();
         researchWindowIcon.sprite = researchImage[id].sprite;
-        
-
+       
     }
 
     public void ResearchButtonStatus()
@@ -109,16 +105,14 @@ public class Research : MonoBehaviour
         }
     }
 
-    private void HideIfClickedOutside(GameObject panel)
-    {
-        if (Input.GetMouseButton(0) && panel.activeSelf && !RectTransformUtility.RectangleContainsScreenPoint(
-                panel.GetComponent<RectTransform>(),
-                Input.mousePosition,
-                Camera.main))
-        {
-            panel.SetActive(false);
-        }
-    }
+    //private void HideIfClickedOutside(GameObject panel)
+    //{
+    //    if (Input.GetMouseButton(0) && panel.activeSelf && !RectTransformUtility.RectangleContainsScreenPoint(panel.GetComponent<RectTransform>(),
+    //        Input.mousePosition,Camera.main))
+    //    {
+    //        panel.SetActive(false);
+    //    }
+    //}
 
     public double ResearchCostCalc(int id)
     {

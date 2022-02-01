@@ -245,9 +245,8 @@ public class GameManager : MonoBehaviour
         for (int id = 0; id < stageLevel.Length; id++)
         {
             Debug.Log("AssigningInUpate = " + id + "alienupgradecost = " + stageUpgradeCosts[id] + " upgradeCounts = " + upgradesCounts[id]);
-            AutoValuesAssigning(id, suitsUpgrades.suitsUpgradesCosts, 5, id + 1);
             AutoValuesAssigning(id, upgradesCounts, 0.3, 1.4);
-            AutoValuesAssigning(id, stageUpgradeCosts, 3, 8.3);
+            AutoValuesAssigning(id, stageUpgradeCosts, 20, 2);
             ProgressBarsIncomeTimer();
             StageLevelText[id].text = StageLevel[id].ToString("F0");
             ButtonUpgradeMaxText[id].text = "X" + BuyMaxCount(id) + "\n" + ExponentLetterSystem(BuyCount(id), "F2");
@@ -255,6 +254,11 @@ public class GameManager : MonoBehaviour
             SoloEarningCrystals(id);
             InteractableButtons(id, upgradeButtons);
             Debug.Log("After Loop AssigningInUpate = " + id + "alienupgradecost = " + stageUpgradeCosts[id] + " upgradeCounts = " + upgradesCounts[id]);
+        }
+
+        for (int id = 0; id < suitsLevel.Length; id++)
+        {
+            AutoValuesAssigning(id, suitsUpgrades.suitsUpgradesCosts, 10000, ((id+1) * 150.32));
         }
 
         StartCoroutine("MySave");
@@ -296,17 +300,16 @@ public class GameManager : MonoBehaviour
             earnedCrystal[id] = true;
         }
     }
-    // Working only for two atm
+
     public void AutoValuesAssigning(int id, double[] ArrayToIncrease, double baseValue, double valueMultiplier)
     {
-        Array.Resize(ref ArrayToIncrease, StageLevel.Length);
-        if (ArrayToIncrease[0] == 0)
+
+        if(ArrayToIncrease[0] == 0 && id == 0)
         {
-            ArrayToIncrease[id] = valueMultiplier * baseValue;
-            copyArray[id + 1] = ArrayToIncrease[id];
+            ArrayToIncrease[id] = baseValue;
         }
-        ArrayToIncrease[id] = copyArray[id + 1] * valueMultiplier;
-        copyArray[id + 1] = ArrayToIncrease[id];
+        ArrayToIncrease[id] = baseValue * valueMultiplier * (id+1);
+
     }
 
     //public void AutoObjectsAssigning()
