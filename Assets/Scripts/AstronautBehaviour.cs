@@ -9,6 +9,7 @@ public class AstronautBehaviour : MonoBehaviour
     private GameManager gameManager;
 
     public GameObject[] astronautsUpgrades;
+    public GameObject[] astronautsObjectsContainer;
 
     private Animator animationIdle;
 
@@ -46,6 +47,7 @@ public class AstronautBehaviour : MonoBehaviour
     void Update()
     {
         AstronautButtonTextCheck();
+        Debug.Log(astronautsUpgrades.Length + " " + astronautsObjectsContainer.Length + " Length of up as and containers");
     }
 
     public void AstronautButtonTextCheck()
@@ -74,26 +76,33 @@ public class AstronautBehaviour : MonoBehaviour
     //NEED DEBUG
     public void AssigningAstronautsOnStart()
     {
-        astronautsUpgrades = GameObject.FindGameObjectsWithTag("astronauts");
-        //for (int i = 0; i < length; i++)
-        //{
-        //    astronautsUpgrades = GameManager.instance.allObjects[id].Set
-        //}
-
-
-
-        //for (int id = 0; id < GameManager.instance.allObjects.Count; id++)
-        //{
-        //    GameManager.instance.allObjects[id].SetActive(false);
-
-        //    if (gameManager.confirmAstronautBuy[id] == true)
-        //    {
-        //        GameManager.instance.allObjects[id].SetActive(true);
-        //    }
+        int TempID = 0;
+        for (int id = 0; id < astronautsObjectsContainer.Length; id++)
+        {
+            int i = 0;
+            
+            Debug.Log("MainLoopAstroAs: " + id);
+            for (int n = TempID; n < astronautsUpgrades.Length; n++)
+            {
+                if (astronautsObjectsContainer[id].transform.childCount > i)
+                {
+                    astronautsUpgrades[n] = astronautsObjectsContainer[id].transform.GetChild(i).gameObject;
+                    i++;
+                }
+                else
+                {
+                    break;
+                }
+                    
+            }
+            TempID = TempID + astronautsObjectsContainer[id].transform.childCount;
+            Debug.Log("TempID: " + TempID);
+        }
 
         for (int id = 0; id < astronautsUpgrades.Length; id++)
         {
-                astronautsUpgrades[id].SetActive(false);
+
+            astronautsUpgrades[id].SetActive(false);
 
             if (gameManager.confirmAstronautBuy[id] == true)
             {
