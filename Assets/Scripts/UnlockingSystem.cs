@@ -67,6 +67,10 @@ public class UnlockingSystem : MonoBehaviour
 
     public void UnlockingStages(int id)
     {
+        if((gameManager.upgradesActivated[id] == false))
+        {
+            gameManager.StageLevel[id+1] += 1;
+        }
 
         if ((gameManager.mainCurrency >= unlockCost[id]) && (gameManager.upgradesActivated[id] == false))
         {

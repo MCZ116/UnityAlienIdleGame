@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
 
         Debug.Log("GameManagerStarted!");
         QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 30;
+        Application.targetFrameRate = 60;
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         mainCurrency = 100;
         rebirthCost = 10000;
@@ -236,24 +236,22 @@ public class GameManager : MonoBehaviour
 
         unlockingSystem.PlanetsUnlockCheck();
         CurrencyText.text = ExponentLetterSystem(mainCurrency, "F2");
-        RPointsText.text = ExponentLetterSystem(ResearchPointsCalculator(), "F2") + "RP/s ";
-        RebirthPrice.text = "Price \n" + ExponentLetterSystem(rebirthCost, "F2");
-        RebirthLevel.text = "Rebirth " + ExponentLetterSystem(mainResetLevel, "F0");
+        RPointsText.text = ExponentLetterSystem(ResearchPointsCalculator(), "F2") + "/s ";
+        RebirthPrice.text = ExponentLetterSystem(rebirthCost, "F2");
+        RebirthLevel.text = "Returns: " + ExponentLetterSystem(mainResetLevel, "F0");
         ProfileLevel.text = ExponentLetterSystem(mainResetLevel, "F0");
         CrystalsAmount.text = crystalCurrency.ToString("F0");
 
         for (int id = 0; id < stageLevel.Length; id++)
         {
-            Debug.Log("AssigningInUpate = " + id + "alienupgradecost = " + stageUpgradeCosts[id] + " upgradeCounts = " + upgradesCounts[id]);
             AutoValuesAssigning(id, upgradesCounts, 0.3, 1.4);
             AutoValuesAssigning(id, stageUpgradeCosts, 20, 2);
             ProgressBarsIncomeTimer();
             StageLevelText[id].text = StageLevel[id].ToString("F0");
             ButtonUpgradeMaxText[id].text = "X" + BuyMaxCount(id) + "\n" + ExponentLetterSystem(BuyCount(id), "F2");
-            EarningStage[id].text = ExponentLetterSystem(StageEarningPerSecond(id), "F2") + " " + "RP/s ";
+            EarningStage[id].text = ExponentLetterSystem(StageEarningPerSecond(id), "F2") + " " + "/s ";
             SoloEarningCrystals(id);
             InteractableButtons(id, upgradeButtons);
-            Debug.Log("After Loop AssigningInUpate = " + id + "alienupgradecost = " + stageUpgradeCosts[id] + " upgradeCounts = " + upgradesCounts[id]);
         }
 
         for (int id = 0; id < suitsLevel.Length; id++)
