@@ -16,10 +16,11 @@ public class GameManager : MonoBehaviour
     public Text RPointsText;
     public Text[] ButtonUpgradeMaxText;
     public Text ChangeBuyModeText;
-    public Text RebirthPrice;
+    public Text RebirthPriceText;
     public Text RebirthLevel;
     public Text CrystalsAmount;
     public Text ProfileLevel;
+    public Text rebirthRequirements;
     public double mainCurrency;
     public double crystalCurrency;
     public double rebirthCost;
@@ -237,7 +238,7 @@ public class GameManager : MonoBehaviour
         unlockingSystem.PlanetsUnlockCheck();
         CurrencyText.text = ExponentLetterSystem(mainCurrency, "F2");
         RPointsText.text = ExponentLetterSystem(ResearchPointsCalculator(), "F2") + "/s ";
-        RebirthPrice.text = ExponentLetterSystem(rebirthCost, "F2");
+        RebirthPriceText.text = ExponentLetterSystem(rebirthCost, "F2");
         RebirthLevel.text = "Returns: " + ExponentLetterSystem(mainResetLevel, "F0");
         ProfileLevel.text = ExponentLetterSystem(mainResetLevel, "F0");
         CrystalsAmount.text = crystalCurrency.ToString("F0");
@@ -258,7 +259,8 @@ public class GameManager : MonoBehaviour
         {
             AutoValuesAssigning(id, suitsUpgrades.suitsUpgradesCosts, 10000, ((id+1) * 150.32));
         }
-
+        RebirthButtonStatus();
+        RebirthUnlock();
         StartCoroutine("MySave");
         SaveDate();
     }
@@ -828,7 +830,7 @@ public class GameManager : MonoBehaviour
 
     public void FullReset()
     {
-        if (mainCurrency >= rebirthCost)
+        if (mainCurrency >= rebirthCost && researchUnlocked[0])
         {
             mainCurrency = 100;
             stageLevel[0] = 1;
@@ -900,5 +902,25 @@ public class GameManager : MonoBehaviour
         } 
         return rBoost;
 
+    }
+
+    public void RebirthButtonStatus()
+    {
+        if (mainCurrency >= rebirthCost)
+        {
+            RebirthPriceText.color = Color.green;
+        }
+        else
+            RebirthPriceText.color = Color.red;
+    }
+
+    public void RebirthUnlock()
+    {
+        if (researchUnlocked[1])
+        {
+            rebirthRequirements.color = Color.green;
+        }
+        else
+            rebirthRequirements.color = Color.red;
     }
 }

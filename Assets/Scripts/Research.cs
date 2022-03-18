@@ -33,7 +33,7 @@ public class Research : MonoBehaviour
     {
         researchText = new string[4];
         researchText[0] = "Improve oxgen tanks capacity for about 2%. Better oxygen tanks allow astronauts to stay longer on the surface of the planet";
-        researchText[1] = "Durability of drills improve digging for about 10%";
+        researchText[1] = "Ion engines allow us to travel further and faster by using less energy!";
         researchText[2] = "Finally we can drink some water!";
         researchText[3] = "Yummy we can plant cabbage in space!";
         researchCosts = new double[4];
@@ -84,7 +84,6 @@ public class Research : MonoBehaviour
        
         for (int id = 0; id < researchLevels.Length; id++)
         {
-            //researchButton[id] = researchIcon[id].GetComponent<Button>();
 
             if (!gameManager.researchCanBeDone[id])
             {

@@ -50,6 +50,7 @@ public class SuitsUpgrades : MonoBehaviour
             Debug.Log(" Suits Upgrade Cost: " + SuitsUpgradeCalc(id));
             
         }
+        SuitshButtonStatus();
         //HideIfClickedOutside(suitsObjectInfoWindow);
     }
 
@@ -113,5 +114,21 @@ public class SuitsUpgrades : MonoBehaviour
         }
 
         return suitBoost;
+    }
+
+    public void SuitshButtonStatus()
+    {
+
+        for (int id = 0; id < gameManager.SuitsLevel.Length; id++)
+        {
+
+            if (gameManager.mainCurrency >= SuitsUpgradeCalc(id))
+            {
+                suitsTextCost[id].color = Color.green;
+            }
+            else
+                suitsTextCost[id].color = Color.red;
+
+        }
     }
 }
