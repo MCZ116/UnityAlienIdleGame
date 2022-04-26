@@ -76,6 +76,8 @@ public class GameManager : MonoBehaviour
 
     public CanvasGroup planetsMenu;
 
+    public CanvasGroup phobosMenu;
+
     private double[] stageLevel;
 
     public double[] StageLevel { get => stageLevel; set => stageLevel = value; }
@@ -91,10 +93,11 @@ public class GameManager : MonoBehaviour
     public int[] astronautsLevel;
     public int[] astronautBuyStartID;
     public double[] upgradesCounts;
-    public float[] upgradeMaxTime = { 5f, 10f, 10f, 20f, 35f, 5f, 10f, 10f, 20f, 35f };
+    public float[] upgradeMaxTime = { 5f, 10f, 10f, 20f, 35f, 5f, 10f, 10f, 20f, 35f, 5f, 10f, 10f, 20f, 35f };
     public float[] progressTimer;
     public bool[] researchCanBeDone;
     public int researchID;
+    private int planetID;
 
     void Awake()
     {
@@ -112,7 +115,7 @@ public class GameManager : MonoBehaviour
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         mainCurrency = 100;
         rebirthCost = 10000;
-        unlockingSystem.unlockCost = new double[9];
+        unlockingSystem.unlockCost = new double[14];
         unlockingSystem.unlockCost[0] = 2000;
         unlockingSystem.unlockCost[1] = 4000;
         unlockingSystem.unlockCost[2] = 8000;
@@ -122,17 +125,23 @@ public class GameManager : MonoBehaviour
         unlockingSystem.unlockCost[6] = 160000;
         unlockingSystem.unlockCost[7] = 180000;
         unlockingSystem.unlockCost[8] = 220000;
-        unlockingSystem.planetCost = new double[1];
+        unlockingSystem.unlockCost[9] = 2135000;
+        unlockingSystem.unlockCost[10] = 2160000;
+        unlockingSystem.unlockCost[11] = 2180000;
+        unlockingSystem.unlockCost[12] = 21220000;
+        unlockingSystem.unlockCost[13] = 35000000;
+        unlockingSystem.planetCost = new double[2];
         unlockingSystem.planetCost[0] = 220000;
-        progressTimer = new float[10];
+        unlockingSystem.planetCost[1] = 10000000;
+        progressTimer = new float[15];
         activeTab = false;
-        StageLevel = new double[10];
+        StageLevel = new double[15];
         Research1Level = new double[4];
         astronautsLevel = new int[stageLevel.Length];
         SuitsLevel = new double[6];
         astronautBuyStartID = new int[stageLevel.Length];
         researchUnlocked = new bool[Research1Level.Length];
-        unlockingSystem.animationUnlockConfirm = new bool[9];
+        unlockingSystem.animationUnlockConfirm = new bool[14];
         upgradesCounts = new double[StageLevel.Length];
         upgradesActivated = new bool[unlockingSystem.unlockCost.Length];
         copyArray = new double[StageLevel.Length + 1];
@@ -147,7 +156,7 @@ public class GameManager : MonoBehaviour
         research.upgradeResearchValues[3] = 2.2;
         planetUnlocked[0] = false;
         researchID = 0;
-
+        planetID = 0;
         // Here was AutoObjectAssigning
 
 
@@ -560,7 +569,14 @@ public class GameManager : MonoBehaviour
                 }
                 break;
 
-            case "moonMenu":
+        } 
+    }
+
+    public void ChangePlanetTab(int planetID)
+    {
+        switch (planetID)
+        {
+            case 0:
                 CanvasGroupMenuSwitch(true, canvasMainGame);
                 CanvasGroupMenuSwitch(false, canvasShop);
                 CanvasGroupMenuSwitch(false, canvasRebirthTab);
@@ -569,25 +585,58 @@ public class GameManager : MonoBehaviour
                 CanvasGroupMenuSwitch(true, moonMenu);
                 CanvasGroupMenuSwitch(false, marsMenu);
                 CanvasGroupMenuSwitch(false, planetsMenu);
+                CanvasGroupMenuSwitch(false, phobosMenu);
                 activeTab = false;
                 break;
 
-            case "marsMenu":
+            case 1:
                 if (planetUnlocked[0])
                 {
-                        CanvasGroupMenuSwitch(true, canvasMainGame);
-                        CanvasGroupMenuSwitch(false, canvasShop);
-                        CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                        CanvasGroupMenuSwitch(false, canvasResearchTab);
-                        CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                        CanvasGroupMenuSwitch(false, moonMenu);
-                        CanvasGroupMenuSwitch(false, planetsMenu);
-                        CanvasGroupMenuSwitch(true, marsMenu);
-                        activeTab = false;
-                }                    
+                    CanvasGroupMenuSwitch(true, canvasMainGame);
+                    CanvasGroupMenuSwitch(false, canvasShop);
+                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
+                    CanvasGroupMenuSwitch(false, canvasResearchTab);
+                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
+                    CanvasGroupMenuSwitch(false, moonMenu);
+                    CanvasGroupMenuSwitch(false, planetsMenu);
+                    CanvasGroupMenuSwitch(true, marsMenu);
+                    CanvasGroupMenuSwitch(false, phobosMenu);
+                    activeTab = false;
+                }
                 break;
 
-        } 
+            case 2:
+                if (planetUnlocked[1])
+                {
+                    CanvasGroupMenuSwitch(true, canvasMainGame);
+                    CanvasGroupMenuSwitch(false, canvasShop);
+                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
+                    CanvasGroupMenuSwitch(false, canvasResearchTab);
+                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
+                    CanvasGroupMenuSwitch(false, moonMenu);
+                    CanvasGroupMenuSwitch(false, planetsMenu);
+                    CanvasGroupMenuSwitch(false, marsMenu);
+                    CanvasGroupMenuSwitch(true, phobosMenu);
+                    activeTab = false;
+                }
+                break;
+        }
+    }
+
+    public void SwitchPlanetsButtons(string buttonName)
+    {
+        
+        if(buttonName == "Next" && planetID < planetUnlocked.Length && planetUnlocked[planetID] == true)
+        {
+            planetID += 1;
+            ChangePlanetTab(planetID);
+            Debug.Log(planetID + " " + planetUnlocked.Length);
+        } else if(buttonName == "Prev" && planetID <= planetUnlocked.Length && planetID != 0)
+        {
+            planetID -= 1;
+            ChangePlanetTab(planetID);
+            Debug.Log(planetID);
+        }
     }
 
     public void Save()
@@ -613,6 +662,11 @@ public class GameManager : MonoBehaviour
         StageLevel[7] = gameData.alienLevelData8;
         StageLevel[8] = gameData.alienLevelData9;
         StageLevel[9] = gameData.alienLevelData10;
+        StageLevel[10] = gameData.alienLevelData11;
+        StageLevel[11] = gameData.alienLevelData12;
+        StageLevel[12] = gameData.alienLevelData13;
+        StageLevel[13] = gameData.alienLevelData14;
+        StageLevel[14] = gameData.alienLevelData15;
         upgradeLevel1 = gameData.upgradeLevelData;
         mainResetLevel = gameData.mainResetLevelData;
         Research1Level[0] = gameData.researchLevel1;
@@ -628,6 +682,11 @@ public class GameManager : MonoBehaviour
         upgradesActivated[6] = gameData.upgradeActivated7;
         upgradesActivated[7] = gameData.upgradeActivated8;
         upgradesActivated[8] = gameData.upgradeActivated9;
+        upgradesActivated[9] = gameData.upgradeActivated10;
+        upgradesActivated[10] = gameData.upgradeActivated11;
+        upgradesActivated[11] = gameData.upgradeActivated12;
+        upgradesActivated[12] = gameData.upgradeActivated13;
+        upgradesActivated[13] = gameData.upgradeActivated14;
         confirmAstronautBuy[0] = gameData.astronautsbuy1;
         confirmAstronautBuy[1] = gameData.astronautsbuy2;
         confirmAstronautBuy[2] = gameData.astronautsbuy3;
@@ -668,6 +727,27 @@ public class GameManager : MonoBehaviour
         confirmAstronautBuy[37] = gameData.astronautsbuy38;
         confirmAstronautBuy[38] = gameData.astronautsbuy39;
         confirmAstronautBuy[39] = gameData.astronautsbuy40;
+        confirmAstronautBuy[40] = gameData.astronautsbuy41;
+        confirmAstronautBuy[41] = gameData.astronautsbuy42;
+        confirmAstronautBuy[42] = gameData.astronautsbuy43;
+        confirmAstronautBuy[43] = gameData.astronautsbuy44;
+        confirmAstronautBuy[44] = gameData.astronautsbuy45;
+        confirmAstronautBuy[45] = gameData.astronautsbuy46;
+        confirmAstronautBuy[46] = gameData.astronautsbuy47;
+        confirmAstronautBuy[47] = gameData.astronautsbuy48;
+        confirmAstronautBuy[48] = gameData.astronautsbuy49;
+        confirmAstronautBuy[49] = gameData.astronautsbuy50;
+        confirmAstronautBuy[50] = gameData.astronautsbuy51;
+        confirmAstronautBuy[51] = gameData.astronautsbuy52;
+        confirmAstronautBuy[52] = gameData.astronautsbuy53;
+        confirmAstronautBuy[53] = gameData.astronautsbuy54;
+        confirmAstronautBuy[54] = gameData.astronautsbuy55;
+        confirmAstronautBuy[55] = gameData.astronautsbuy56;
+        confirmAstronautBuy[56] = gameData.astronautsbuy57;
+        confirmAstronautBuy[57] = gameData.astronautsbuy58;
+        confirmAstronautBuy[58] = gameData.astronautsbuy59;
+        confirmAstronautBuy[59] = gameData.astronautsbuy60;
+
         rebirthCost = gameData.rebirthCostData;
         SuitsLevel[0] = gameData.suitsLevel1;
         SuitsLevel[1] = gameData.suitsLevel2;
@@ -685,6 +765,11 @@ public class GameManager : MonoBehaviour
         astronautsLevel[7] = gameData.astronautsLevel8;
         astronautsLevel[8] = gameData.astronautsLevel9;
         astronautsLevel[9] = gameData.astronautsLevel10;
+        astronautsLevel[10] = gameData.astronautsLevel11;
+        astronautsLevel[11] = gameData.astronautsLevel12;
+        astronautsLevel[12] = gameData.astronautsLevel13;
+        astronautsLevel[13] = gameData.astronautsLevel14;
+        astronautsLevel[14] = gameData.astronautsLevel15;
         astronautBuyStartID[0] = gameData.astronautIDStart1;
         astronautBuyStartID[1] = gameData.astronautIDStart2;
         astronautBuyStartID[2] = gameData.astronautIDStart3;
@@ -695,7 +780,13 @@ public class GameManager : MonoBehaviour
         astronautBuyStartID[7] = gameData.astronautIDStart8;
         astronautBuyStartID[8] = gameData.astronautIDStart9;
         astronautBuyStartID[9] = gameData.astronautIDStart10;
+        astronautBuyStartID[10] = gameData.astronautIDStart11;
+        astronautBuyStartID[11] = gameData.astronautIDStart12;
+        astronautBuyStartID[12] = gameData.astronautIDStart13;
+        astronautBuyStartID[13] = gameData.astronautIDStart14;
+        astronautBuyStartID[14] = gameData.astronautIDStart15;
         planetUnlocked[0] = gameData.planetUnlocked1;
+        planetUnlocked[1] = gameData.planetUnlocked2;
         researchCanBeDone[0] = gameData.researchCanBeDone1;
         researchCanBeDone[1] = gameData.researchCanBeDone2;
         researchCanBeDone[2] = gameData.researchCanBeDone3;

@@ -134,13 +134,11 @@ public class UnlockingSystem : MonoBehaviour
             if (gameManager.planetUnlocked[id] == true)
             {
                 planetsPanelsObjects[id].SetActive(true);
-                nextButton.interactable = true;
             }
             else if (!gameManager.planetUnlocked[id])
             {
 
                 planetsPanelsObjects[id].SetActive(false);
-                nextButton.interactable = false;
             }
         }
     }

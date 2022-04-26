@@ -29,7 +29,7 @@ public class AstronautBehaviour : MonoBehaviour
 
     void Start()
     {
-        astronautCost = new double[10];
+        astronautCost = new double[gameManager.StageLevel.Length];
         for (int id = 0; id < astronautCost.Length; id++)
         {
             astronautCost[id] = 50;
