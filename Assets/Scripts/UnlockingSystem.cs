@@ -24,13 +24,23 @@ public class UnlockingSystem : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("UnlockingSystem!");
+        StageUnlockTextControl();
+        PlanetStatusCheck();
+    }
+
+    public void StageUnlockTextControl()
+    {
         for (int id = 0; id < upgradeObjects.Length; id++)
         {
             unlockText[id].text = GameManager.ExponentLetterSystem(unlockCost[id], "F2");
-        }
-        PlanetStatusCheck();
 
+            if (gameManager.mainCurrency >= unlockCost[id])
+            {
+                unlockText[id].color = Color.green;
+            }
+            else
+                unlockText[id].color = Color.red;
+        }
     }
 
     public void PlanetStatusCheck()
