@@ -213,8 +213,10 @@ public class GameManager : MonoBehaviour
 
         ChangeBuyModeText.text = "1";
 
+        Debug.Log(confirmAstronautBuy.Length + "Astronauts amount");
         //Load after assigning variables and before loading unlock status or it won't appear
         Load();
+        Debug.Log("Loaded");
         // Assignign once before update for offline calculations
         for (int id = 0; id < stageLevel.Length; id++)
         {
@@ -230,6 +232,7 @@ public class GameManager : MonoBehaviour
         unlockingSystem.LoadUnlocksStatus();
         offline.OfflineProgressLoad();
         Debug.Log(" AstroLenght: " + StageLevel.Length);
+        
     }
 
     IEnumerator MySave()
@@ -652,149 +655,47 @@ public class GameManager : MonoBehaviour
 
         mainCurrency = gameData.researchPointsData;
         crystalCurrency = gameData.crystals;
-        StageLevel[0] = gameData.alienLevelData;
-        StageLevel[1] = gameData.alienLevelData2;
-        StageLevel[2] = gameData.alienLevelData3;
-        StageLevel[3] = gameData.alienLevelData4;
-        StageLevel[4] = gameData.alienLevelData5;
-        StageLevel[5] = gameData.alienLevelData6;
-        StageLevel[6] = gameData.alienLevelData7;
-        StageLevel[7] = gameData.alienLevelData8;
-        StageLevel[8] = gameData.alienLevelData9;
-        StageLevel[9] = gameData.alienLevelData10;
-        StageLevel[10] = gameData.alienLevelData11;
-        StageLevel[11] = gameData.alienLevelData12;
-        StageLevel[12] = gameData.alienLevelData13;
-        StageLevel[13] = gameData.alienLevelData14;
-        StageLevel[14] = gameData.alienLevelData15;
+
+        for (int id = 0; id < stageLevel.Length; id++)
+        {
+            StageLevel[id] = gameData.stageLevelData[id];
+            astronautsLevel[id] = gameData.astronautsLevel[id];
+            astronautBuyStartID[id] = gameData.astronautIDStartPosition[id];
+        }
+
         upgradeLevel1 = gameData.upgradeLevelData;
         mainResetLevel = gameData.mainResetLevelData;
-        Research1Level[0] = gameData.researchLevel1;
-        Research1Level[1] = gameData.researchLevel2;
-        Research1Level[2] = gameData.researchLevel3;
-        Research1Level[3] = gameData.researchLevel4;
-        upgradesActivated[0] = gameData.upgradeActivated;
-        upgradesActivated[1] = gameData.upgradeActivated2;
-        upgradesActivated[2] = gameData.upgradeActivated3;
-        upgradesActivated[3] = gameData.upgradeActivated4;
-        upgradesActivated[4] = gameData.upgradeActivated5;
-        upgradesActivated[5] = gameData.upgradeActivated6;
-        upgradesActivated[6] = gameData.upgradeActivated7;
-        upgradesActivated[7] = gameData.upgradeActivated8;
-        upgradesActivated[8] = gameData.upgradeActivated9;
-        upgradesActivated[9] = gameData.upgradeActivated10;
-        upgradesActivated[10] = gameData.upgradeActivated11;
-        upgradesActivated[11] = gameData.upgradeActivated12;
-        upgradesActivated[12] = gameData.upgradeActivated13;
-        upgradesActivated[13] = gameData.upgradeActivated14;
-        confirmAstronautBuy[0] = gameData.astronautsbuy1;
-        confirmAstronautBuy[1] = gameData.astronautsbuy2;
-        confirmAstronautBuy[2] = gameData.astronautsbuy3;
-        confirmAstronautBuy[3] = gameData.astronautsbuy4;
-        confirmAstronautBuy[4] = gameData.astronautsbuy5;
-        confirmAstronautBuy[5] = gameData.astronautsbuy6;
-        confirmAstronautBuy[6] = gameData.astronautsbuy7;
-        confirmAstronautBuy[7] = gameData.astronautsbuy8;
-        confirmAstronautBuy[8] = gameData.astronautsbuy9;
-        confirmAstronautBuy[9] = gameData.astronautsbuy10;
-        confirmAstronautBuy[10] = gameData.astronautsbuy11;
-        confirmAstronautBuy[11] = gameData.astronautsbuy12;
-        confirmAstronautBuy[12] = gameData.astronautsbuy13;
-        confirmAstronautBuy[13] = gameData.astronautsbuy14;
-        confirmAstronautBuy[14] = gameData.astronautsbuy15;
-        confirmAstronautBuy[15] = gameData.astronautsbuy16;
-        confirmAstronautBuy[16] = gameData.astronautsbuy17;
-        confirmAstronautBuy[17] = gameData.astronautsbuy18;
-        confirmAstronautBuy[18] = gameData.astronautsbuy19;
-        confirmAstronautBuy[19] = gameData.astronautsbuy20;
-        confirmAstronautBuy[20] = gameData.astronautsbuy21;
-        confirmAstronautBuy[21] = gameData.astronautsbuy22;
-        confirmAstronautBuy[22] = gameData.astronautsbuy23;
-        confirmAstronautBuy[23] = gameData.astronautsbuy24;
-        confirmAstronautBuy[24] = gameData.astronautsbuy25;
-        confirmAstronautBuy[25] = gameData.astronautsbuy26;
-        confirmAstronautBuy[26] = gameData.astronautsbuy27;
-        confirmAstronautBuy[27] = gameData.astronautsbuy28;
-        confirmAstronautBuy[28] = gameData.astronautsbuy29;
-        confirmAstronautBuy[29] = gameData.astronautsbuy30;
-        confirmAstronautBuy[30] = gameData.astronautsbuy31;
-        confirmAstronautBuy[31] = gameData.astronautsbuy32;
-        confirmAstronautBuy[32] = gameData.astronautsbuy33;
-        confirmAstronautBuy[33] = gameData.astronautsbuy34;
-        confirmAstronautBuy[34] = gameData.astronautsbuy35;
-        confirmAstronautBuy[35] = gameData.astronautsbuy36;
-        confirmAstronautBuy[36] = gameData.astronautsbuy37;
-        confirmAstronautBuy[37] = gameData.astronautsbuy38;
-        confirmAstronautBuy[38] = gameData.astronautsbuy39;
-        confirmAstronautBuy[39] = gameData.astronautsbuy40;
-        confirmAstronautBuy[40] = gameData.astronautsbuy41;
-        confirmAstronautBuy[41] = gameData.astronautsbuy42;
-        confirmAstronautBuy[42] = gameData.astronautsbuy43;
-        confirmAstronautBuy[43] = gameData.astronautsbuy44;
-        confirmAstronautBuy[44] = gameData.astronautsbuy45;
-        confirmAstronautBuy[45] = gameData.astronautsbuy46;
-        confirmAstronautBuy[46] = gameData.astronautsbuy47;
-        confirmAstronautBuy[47] = gameData.astronautsbuy48;
-        confirmAstronautBuy[48] = gameData.astronautsbuy49;
-        confirmAstronautBuy[49] = gameData.astronautsbuy50;
-        confirmAstronautBuy[50] = gameData.astronautsbuy51;
-        confirmAstronautBuy[51] = gameData.astronautsbuy52;
-        confirmAstronautBuy[52] = gameData.astronautsbuy53;
-        confirmAstronautBuy[53] = gameData.astronautsbuy54;
-        confirmAstronautBuy[54] = gameData.astronautsbuy55;
-        confirmAstronautBuy[55] = gameData.astronautsbuy56;
-        confirmAstronautBuy[56] = gameData.astronautsbuy57;
-        confirmAstronautBuy[57] = gameData.astronautsbuy58;
-        confirmAstronautBuy[58] = gameData.astronautsbuy59;
-        confirmAstronautBuy[59] = gameData.astronautsbuy60;
+
+        for (int id = 0; id < Research1Level.Length; id++)
+        {
+            Research1Level[id] = gameData.researchLevel[id];
+            researchCanBeDone[id] = gameData.researchCanBeDone[id];
+            researchUnlocked[id] = gameData.researchUnlocked[id];
+        }
+
+        for (int id = 0; id < upgradesActivated.Length; id++)
+        {
+            upgradesActivated[id] = gameData.upgradeActivated[id];
+        }
+
+        for (int id = 0; id < confirmAstronautBuy.Length; id++)
+        {
+            confirmAstronautBuy[id] = gameData.astronautsbuy[id];
+        }
 
         rebirthCost = gameData.rebirthCostData;
-        SuitsLevel[0] = gameData.suitsLevel1;
-        SuitsLevel[1] = gameData.suitsLevel2;
-        SuitsLevel[2] = gameData.suitsLevel3;
-        SuitsLevel[3] = gameData.suitsLevel4;
-        SuitsLevel[4] = gameData.suitsLevel5;
-        SuitsLevel[5] = gameData.suitsLevel6;
-        astronautsLevel[0] = gameData.astronautsLevel;
-        astronautsLevel[1] = gameData.astronautsLevel2;
-        astronautsLevel[2] = gameData.astronautsLevel3;
-        astronautsLevel[3] = gameData.astronautsLevel4;
-        astronautsLevel[4] = gameData.astronautsLevel5;
-        astronautsLevel[5] = gameData.astronautsLevel6;
-        astronautsLevel[6] = gameData.astronautsLevel7;
-        astronautsLevel[7] = gameData.astronautsLevel8;
-        astronautsLevel[8] = gameData.astronautsLevel9;
-        astronautsLevel[9] = gameData.astronautsLevel10;
-        astronautsLevel[10] = gameData.astronautsLevel11;
-        astronautsLevel[11] = gameData.astronautsLevel12;
-        astronautsLevel[12] = gameData.astronautsLevel13;
-        astronautsLevel[13] = gameData.astronautsLevel14;
-        astronautsLevel[14] = gameData.astronautsLevel15;
-        astronautBuyStartID[0] = gameData.astronautIDStart1;
-        astronautBuyStartID[1] = gameData.astronautIDStart2;
-        astronautBuyStartID[2] = gameData.astronautIDStart3;
-        astronautBuyStartID[3] = gameData.astronautIDStart4;
-        astronautBuyStartID[4] = gameData.astronautIDStart5;
-        astronautBuyStartID[5] = gameData.astronautIDStart6;
-        astronautBuyStartID[6] = gameData.astronautIDStart7;
-        astronautBuyStartID[7] = gameData.astronautIDStart8;
-        astronautBuyStartID[8] = gameData.astronautIDStart9;
-        astronautBuyStartID[9] = gameData.astronautIDStart10;
-        astronautBuyStartID[10] = gameData.astronautIDStart11;
-        astronautBuyStartID[11] = gameData.astronautIDStart12;
-        astronautBuyStartID[12] = gameData.astronautIDStart13;
-        astronautBuyStartID[13] = gameData.astronautIDStart14;
-        astronautBuyStartID[14] = gameData.astronautIDStart15;
-        planetUnlocked[0] = gameData.planetUnlocked1;
-        planetUnlocked[1] = gameData.planetUnlocked2;
-        researchCanBeDone[0] = gameData.researchCanBeDone1;
-        researchCanBeDone[1] = gameData.researchCanBeDone2;
-        researchCanBeDone[2] = gameData.researchCanBeDone3;
-        researchCanBeDone[3] = gameData.researchCanBeDone4;
-        researchUnlocked[0] = gameData.researchUnlocked1;
-        researchUnlocked[1] = gameData.researchUnlocked2;
-        researchUnlocked[2] = gameData.researchUnlocked3;
-        researchUnlocked[3] = gameData.researchUnlocked4;
+
+        for (int id = 0; id < SuitsLevel.Length; id++)
+        {
+            SuitsLevel[id] = gameData.suitsLevel[id];
+        }
+
+
+        for (int id = 0; id < planetUnlocked.Length; id++)
+        {
+            planetUnlocked[id] = gameData.planetUnlocked[id];
+        }
+
         researchID = gameData.researchID;
     }
 
