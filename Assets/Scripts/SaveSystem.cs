@@ -1,31 +1,49 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 public static class SaveSystem 
 {
-    public static void SaveGameData(GameManager idleScript)
-    {
-        BinaryFormatter formatter = new BinaryFormatter();
-        string savePath = Application.persistentDataPath + "/savegame.mc";
-        FileStream stream = new FileStream(savePath, FileMode.Create);
 
-        GameData gameData = new GameData(idleScript);
-        formatter.Serialize(stream, gameData);
-        stream.Close();
+    public static string savePath = Application.persistentDataPath;
+    public static string saveName = "/savegame.nbn";
+
+    public static void SaveGameData(GameManager gameManager)
+    {
+
+        using (var writer = new StreamWriter(savePath + saveName))
+        {
+            var formatter = new BinaryFormatter();
+            var memoryStream = new MemoryStream();
+            GameData gameData = new GameData(gameManager);
+            formatter.Serialize(memoryStream, gameData);
+            var dataWriter = Encryption.Encrypts(Convert.ToBase64String(memoryStream.ToArray()));
+            writer.WriteLine(dataWriter);
+
+        }
+
     }
 
     public static GameData LoadData()
     {
-        string savePath = Application.persistentDataPath + "/savegame.mc";
+        string savePath = Application.persistentDataPath + saveName;
         if (File.Exists(savePath))
         {
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream stream = new FileStream(savePath, FileMode.Open);
 
-            GameData gameData = formatter.Deserialize(stream) as GameData;
-            stream.Close();
-            return gameData;
+            using (var reader = new StreamReader(savePath))
+            {
+                var formatter = new BinaryFormatter();
+                var dataToRead = reader.ReadToEnd();
+                var memoryStream = new MemoryStream(Convert.FromBase64String(Encryption.Dencrypts(dataToRead)));
+
+                GameData gameData = formatter.Deserialize(memoryStream) as GameData;
+
+                return gameData;
+
+
+            }
+
         }
         else
         {
