@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     public Text CrystalsAmount;
     public Text ProfileLevel;
     public Text rebirthRequirements;
+    public Text nickName;
     public double mainCurrency;
     public double crystalCurrency;
     public double rebirthCost;
@@ -30,12 +31,6 @@ public class GameManager : MonoBehaviour
     public double mainResetLevel;
     public GameObject[] progressBarObject;
     public GameObject settingsScreenObject;
-    public GameObject[] levelStageTextObject;
-    public GameObject[] upgradeButtonObject;
-    public GameObject[] buyMaxTextObject;
-    public GameObject[] earningStageObject;
-    public GameObject[] Stages;
-    private GameObject[] unlockUpgradeText;
     public List<GameObject> allObjects = new List<GameObject>();
     public static GameManager instance = null;
     public bool[] upgradesActivated;
@@ -199,7 +194,6 @@ public class GameManager : MonoBehaviour
         astronautBehaviour.AssigningAstronautsOnStart();                
         Debug.Log("Price for level = " + stageUpgradeCosts[0]);
         Debug.Log("UpgradeCounts = " + upgradesCounts[0]);
-        Debug.Log("ProgressBarLenght = " + progressBarObject.Length);
 
     }
 
@@ -227,6 +221,7 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("astroLevelAfterLoad = " + astronautsLevel.Length);
         }
+        AutoAssigningObjects();
         astronautBehaviour.AstronautsControl();
         unlockingSystem.PlanetsUnlockCheck();
         unlockingSystem.LoadUnlocksStatus();
@@ -246,7 +241,6 @@ public class GameManager : MonoBehaviour
         QuitButtonAndroid();
         //saving here because of bug which causing not creating save file after deleting it cuz IEnumerator won't have time to work
         Save();
-
         unlockingSystem.PlanetsUnlockCheck();
         CurrencyText.text = ExponentLetterSystem(mainCurrency, "F2");
         RPointsText.text = ExponentLetterSystem(ResearchPointsCalculator(), "F2") + "/s ";
@@ -254,6 +248,7 @@ public class GameManager : MonoBehaviour
         RebirthLevel.text = "Returns: " + ExponentLetterSystem(mainResetLevel, "F0");
         ProfileLevel.text = ExponentLetterSystem(mainResetLevel, "F0");
         CrystalsAmount.text = crystalCurrency.ToString("F0");
+        nickName.text = "Nick: " + PlayerPrefs.GetString("Nick");
 
         for (int id = 0; id < stageLevel.Length; id++)
         {
@@ -323,31 +318,20 @@ public class GameManager : MonoBehaviour
         ArrayToIncrease[id] = baseValue * valueMultiplier * (id+1);
 
     }
+    // New assigning system
 
-    //public void AutoObjectsAssigning()
-    //{
-    //    progressBarObject = GameObject.FindGameObjectsWithTag("progressBars");
-    //    progressBar = new Image[progressBarObject.Length];
-    //    levelStageTextObject = GameObject.FindGameObjectsWithTag("stageLevels");
-    //    AlienLevelText = new Text[levelStageTextObject.Length];
-    //    upgradeButtonObject = GameObject.FindGameObjectsWithTag("upgradeStageButtons");
-    //    upgradeButtons = new Button[upgradeButtonObject.Length];
-    //    buyMaxTextObject = GameObject.FindGameObjectsWithTag("buyMaxStageButtons");
-    //    ButtonUpgradeMaxText = new Text[buyMaxTextObject.Length];
-    //    earningStageObject = GameObject.FindGameObjectsWithTag("barIncomeText");
-    //    EarningStage = new Text[earningStageObject.Length];
-    //    Stages = GameObject.FindGameObjectsWithTag("Stages");
+    public void AutoAssigningObjects()
+    {
+        for (int id = 0; id < stageLevel.Length-1; id++)
+        {
+            progressBarObject[id+1] = unlockingSystem.upgradeObjects[id].transform.Find("ProgressBarBack").GetChild(0).gameObject;
+            progressBar[id+1] = progressBarObject[id+1].GetComponentInChildren<Image>();
+            Debug.Log(progressBarObject.Length + " - " + progressBar.Length + " - " + id);
+        }
 
-    //    for (int id = 0; id < alienLevel.Length; id++)
-    //    {
-    //        progressBar[id] = progressBarObject[id].GetComponent<Image>();
-    //        AlienLevelText[id] = levelStageTextObject[id].GetComponent<Text>();
-    //        upgradeButtons[id] = upgradeButtonObject[id].GetComponent<Button>();
-    //        ButtonUpgradeMaxText[id] = buyMaxTextObject[id].GetComponent<Text>();
-    //        EarningStage[id] = earningStageObject[id].GetComponent<Text>();
-    //    }
-    //}
-    // Important part of code calculating all income and bonuses in game
+
+    }
+
     public double ResearchPointsCalculator()
     {
         double temp = 0;

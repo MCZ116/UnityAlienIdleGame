@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -9,6 +11,24 @@ public class MainMenu : MonoBehaviour
     public Text progressText;
     public GameObject loadingBar;
     public GameObject[] menuButtons;
+    public GameObject namePanel;
+    public TextMeshProUGUI playerNameInput;
+    public string playerName;
+    public Text textError;
+    public GameObject textErrorBox;
+
+    private void Start()
+    {            
+        if (PlayerPrefs.GetString("Nick").Length > 3)
+        {
+            namePanel.SetActive(false);
+        }
+        else
+        {
+            namePanel.SetActive(true);
+        }
+
+    }
 
     public void PlayGame (int sceneIndex)
     {
@@ -16,6 +36,24 @@ public class MainMenu : MonoBehaviour
         menuButtons[0].SetActive(false);
         menuButtons[1].SetActive(false);
         StartCoroutine(LoadAsync(sceneIndex));
+    }
+
+    public void NameCheckInput()
+    {
+        playerName = playerNameInput.text;
+
+        if (playerName.Length > 3)
+        {
+            PlayerPrefs.SetString("Nick",playerName);
+            textErrorBox.SetActive(false);
+            namePanel.SetActive(false);
+        }
+        else {
+            textErrorBox.SetActive(true);
+            playerName = null;
+            textError.text = "Not enough letters!";
+        }
+
     }
 
     IEnumerator LoadAsync(int sceneIndex)

@@ -59,7 +59,7 @@ public class AstronautBehaviour : MonoBehaviour
                 AstronautCostText[id].text = AstronautPriceDisplay(id).ToString("F0");
 
                 astronautsBuyButton[id].GetComponent<Image>().color = Color.white;
-
+                
             }
             else
             {

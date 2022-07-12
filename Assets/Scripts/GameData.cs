@@ -1,5 +1,7 @@
 ﻿
 
+using UnityEngine;
+
 [System.Serializable]
 public class GameData
 {
@@ -21,7 +23,6 @@ public class GameData
     public bool[] researchCanBeDone;
     public bool[] researchUnlocked;
     public int researchID;
-
 
     public GameData (GameManager gameManager)
     {
@@ -56,6 +57,7 @@ public class GameData
         researchUnlocked = gameManager.researchUnlocked;
 
         researchID = gameManager.researchID;
+
     }
 
 
