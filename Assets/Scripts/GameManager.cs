@@ -131,7 +131,7 @@ public class GameManager : MonoBehaviour
         progressTimer = new float[15];
         activeTab = false;
         StageLevel = new double[15];
-        Research1Level = new double[4];
+        Research1Level = new double[8];
         astronautsLevel = new int[stageLevel.Length];
         SuitsLevel = new double[6];
         astronautBuyStartID = new int[stageLevel.Length];
@@ -139,7 +139,6 @@ public class GameManager : MonoBehaviour
         unlockingSystem.animationUnlockConfirm = new bool[14];
         upgradesCounts = new double[StageLevel.Length];
         upgradesActivated = new bool[unlockingSystem.unlockCost.Length];
-        copyArray = new double[StageLevel.Length + 1];
         stageUpgradeCosts = new double[StageLevel.Length];
         earnedCrystal = new bool[StageLevel.Length];
         planetUnlocked = new bool[unlockingSystem.planetsPanelsObjects.Length];
@@ -149,6 +148,10 @@ public class GameManager : MonoBehaviour
         research.upgradeResearchValues[1] = 0.8;
         research.upgradeResearchValues[2] = 2;
         research.upgradeResearchValues[3] = 2.2;
+        research.upgradeResearchValues[4] = 2.5;
+        research.upgradeResearchValues[5] = 2.8;
+        research.upgradeResearchValues[6] = 3;
+        research.upgradeResearchValues[7] = 3.2;
         planetUnlocked[0] = false;
         researchID = 0;
         planetID = 0;
@@ -191,9 +194,16 @@ public class GameManager : MonoBehaviour
 
         //AutoObjectsAssigning();
         //unlockingAnimations.AnimationGateAssigning();
+        AutoAssigningObjects();
         astronautBehaviour.AssigningAstronautsOnStart();                
         Debug.Log("Price for level = " + stageUpgradeCosts[0]);
         Debug.Log("UpgradeCounts = " + upgradesCounts[0]);
+
+        if (PlayerPrefs.GetInt("NeverDone", 0) <= 0)
+        {
+            Save();
+            PlayerPrefs.SetInt("NeverDone", 1);
+        }
 
     }
 
@@ -221,7 +231,6 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("astroLevelAfterLoad = " + astronautsLevel.Length);
         }
-        AutoAssigningObjects();
         astronautBehaviour.AstronautsControl();
         unlockingSystem.PlanetsUnlockCheck();
         unlockingSystem.LoadUnlocksStatus();
@@ -240,7 +249,7 @@ public class GameManager : MonoBehaviour
     {
         QuitButtonAndroid();
         //saving here because of bug which causing not creating save file after deleting it cuz IEnumerator won't have time to work
-        Save();
+        
         unlockingSystem.PlanetsUnlockCheck();
         CurrencyText.text = ExponentLetterSystem(mainCurrency, "F2");
         RPointsText.text = ExponentLetterSystem(ResearchPointsCalculator(), "F2") + "/s ";
@@ -324,9 +333,13 @@ public class GameManager : MonoBehaviour
     {
         for (int id = 0; id < stageLevel.Length-1; id++)
         {
-            progressBarObject[id+1] = unlockingSystem.upgradeObjects[id].transform.Find("ProgressBarBack").GetChild(0).gameObject;
-            progressBar[id+1] = progressBarObject[id+1].GetComponentInChildren<Image>();
-            Debug.Log(progressBarObject.Length + " - " + progressBar.Length + " - " + id);
+            progressBarObject[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("ProgressBarBack").GetChild(0).gameObject;
+            progressBar[id + 1] = progressBarObject[id + 1].GetComponentInChildren<Image>();
+
+            StageLevelText[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("LevelWindowStage").GetComponentInChildren<Text>();
+            EarningStage[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("ProgressBarBack").GetComponentInChildren<Text>();
+            ButtonUpgradeMaxText[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("BuyMaxUpgrade").GetComponentInChildren<Text>();
+            upgradeButtons[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("BuyMaxUpgrade").GetComponent<Button>();
         }
 
 

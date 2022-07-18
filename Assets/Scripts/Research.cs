@@ -31,16 +31,24 @@ public class Research : MonoBehaviour
     
     void Start()
     {
-        researchText = new string[4];
+        researchText = new string[8];
         researchText[0] = "Improve oxgen tanks capacity for about 2%. Better oxygen tanks allow astronauts to stay longer on the surface of the planet";
         researchText[1] = "Ion engines allow us to travel further and faster by using less energy!";
         researchText[2] = "Finally we can drink some water!";
         researchText[3] = "Yummy we can plant cabbage in space!";
-        researchCosts = new double[4];
+        researchText[4] = "Improve oxgen tanks capacity for about 2%. Better oxygen tanks allow astronauts to stay longer on the surface of the planet";
+        researchText[5] = "Ion engines allow us to travel further and faster by using less energy!";
+        researchText[6] = "Finally we can drink some water!";
+        researchText[7] = "Yummy we can plant cabbage in space!";
+        researchCosts = new double[8];
         researchCosts[0] = 10000;
         researchCosts[1] = 18000;
         researchCosts[2] = 50000;
         researchCosts[3] = 200000;
+        researchCosts[4] = 10000000;
+        researchCosts[5] = 18000000;
+        researchCosts[6] = 50000000;
+        researchCosts[7] = 200000000;
         researchTextWindow.SetActive(false);
 
         foreach (GameObject button in GameObject.FindGameObjectsWithTag("researchIcon"))

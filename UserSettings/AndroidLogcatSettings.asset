@@ -145,6 +145,24 @@
             "name": "com.facebook.orca",
             "processId": 11350,
             "exited": false
+        },
+        {
+            "deviceId": "lvkfmbailvd6beey",
+            "name": "com.mi.android.globallauncher",
+            "processId": 14048,
+            "exited": false
+        },
+        {
+            "deviceId": "lvkfmbailvd6beey",
+            "name": "com.MCZ.UniverseDiscoveryIdle",
+            "processId": 25829,
+            "exited": true
+        },
+        {
+            "deviceId": "lvkfmbailvd6beey",
+            "name": "com.android.settings",
+            "processId": 18896,
+            "exited": false
         }
     ],
     "m_Tags": {

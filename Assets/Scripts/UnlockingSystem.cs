@@ -21,6 +21,27 @@ public class UnlockingSystem : MonoBehaviour
     [System.NonSerialized]
     public double[] unlockCost;
     public double[] planetCost;
+    private string[] researchNames;
+
+    private void Start()
+    {
+        researchNames = new string[8];
+        researchNames[0] = "Oxygen Recycle";
+        researchNames[1] = "Ion Engines";
+        researchNames[2] = "Water Filter";
+        researchNames[3] = "Plant Space Growing";
+        researchNames[4] = "Low Gravity Lander";
+        researchNames[5] = "Ion Engines II";
+        researchNames[6] = "Space 3D Printer";
+        researchNames[7] = "Space Drones";
+        int researchID = 1;
+        for (int id = 0; id < planetsPanelsObjects.Length; id++)
+        {
+            planetRequirementResearch[id].text = researchNames[researchID];
+            researchID = researchID + 4;
+        }
+
+    }
 
     void Update()
     {
@@ -52,7 +73,6 @@ public class UnlockingSystem : MonoBehaviour
                 planetPriceText[id].enabled = true;
                 planetRequirementResearch[id].enabled = true;
                 planetPriceText[id].text = GameManager.ExponentLetterSystem(planetCost[id], "F2");
-                planetRequirementResearch[id].text = "Ion Engines";
             }
             else
             {
@@ -77,10 +97,6 @@ public class UnlockingSystem : MonoBehaviour
 
     public void UnlockingStages(int id)
     {
-        if((gameManager.upgradesActivated[id] == false))
-        {
-            gameManager.StageLevel[id+1] += 1;
-        }
 
         if ((gameManager.mainCurrency >= unlockCost[id]) && (gameManager.upgradesActivated[id] == false))
         {
@@ -91,6 +107,7 @@ public class UnlockingSystem : MonoBehaviour
             animationUnlockConfirm[id] = true;
             //Debug.Log("Upgrade Unlocked!");
             ResearchUnlocking(id);
+            gameManager.StageLevel[id + 1] += 1;
         }
         else
             upgradeObjects[id].SetActive(false);
@@ -112,18 +129,22 @@ public class UnlockingSystem : MonoBehaviour
 
                 upgradeObjects[id].SetActive(false);
                 unlockButtons[id].SetActive(true);
+                unlockButtons[id].GetComponent<Button>().interactable = true;
             }
         }
     }
 
-    // Let's think about that system...
     public void ResearchUnlocking(int id)
     {
-        if (id == 0 || id == 3 || id == 5 || id == 7 && !gameManager.researchCanBeDone[gameManager.researchID])
+        for (int researchUnlockID = 0; researchUnlockID < gameManager.StageLevel.Length; researchUnlockID = researchUnlockID + 2)
         {
-            gameManager.researchCanBeDone[gameManager.researchID] = true;
-            gameManager.researchID++;
+            if (id == researchUnlockID && !gameManager.researchCanBeDone[gameManager.researchID])
+            {
+                gameManager.researchCanBeDone[gameManager.researchID] = true;
+                gameManager.researchID++;
+            }
         }
+
     }
 
     public void PlanetsUnlockCheck()
@@ -145,13 +166,18 @@ public class UnlockingSystem : MonoBehaviour
 
     public void PlanetsUnlocking(int id)
     {
-        if (gameManager.researchUnlocked[1] == true && gameManager.mainCurrency >= planetCost[id] && gameManager.planetUnlocked[id] == false)
+        for (int researchID = 0; researchID < gameManager.Research1Level.Length; researchID = researchID + 4)
         {
-            gameManager.mainCurrency -= planetCost[id]; 
-            planetsPanelsObjects[id].SetActive(true);
-            planetsUnlockBtnObj[id].interactable = true;
-            gameManager.planetUnlocked[id] = true;
-        } 
+
+            if (gameManager.researchUnlocked[researchID] == true && gameManager.mainCurrency >= planetCost[id] && gameManager.planetUnlocked[id] == false)
+            {
+                gameManager.mainCurrency -= planetCost[id];
+                planetsPanelsObjects[id].SetActive(true);
+                planetsUnlockBtnObj[id].interactable = true;
+                gameManager.planetUnlocked[id] = true;
+            }
+
+        }
 
     }
 

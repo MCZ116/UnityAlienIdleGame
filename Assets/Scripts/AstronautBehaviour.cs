@@ -7,6 +7,8 @@ public class AstronautBehaviour : MonoBehaviour
 {
     [SerializeField]
     private GameManager gameManager;
+    [SerializeField]
+    private UnlockingSystem unlockingSystem;
 
     public GameObject[] astronautsUpgrades;
     public GameObject[] astronautsObjectsContainer;
@@ -20,28 +22,26 @@ public class AstronautBehaviour : MonoBehaviour
     public Button[] astronautsBuyButton;
 
     public bool[] astronautMaxConfirm;
-   
-
-    //[SerializeField]
-    //public int[] astronautBuyStartID;
-    //public int idButton;
-    //public int idAstro;
 
     void Start()
     {
         astronautCost = new double[gameManager.StageLevel.Length];
+
         for (int id = 0; id < astronautCost.Length; id++)
         {
             astronautCost[id] = 50;
         }
 
-        astronautMaxConfirm = new bool[AstronautCostText.Length];
+        astronautMaxConfirm = new bool[gameManager.StageLevel.Length];
 
         for (int id = 0; id < astronautMaxConfirm.Length; id++)
         {
             astronautMaxConfirm[id] = false;
         }
-       
+
+        AssignAstronautSection();
+        // It's here because first load of game not always check that so all buttons are interactable
+        AstronautButtonTextCheck();
     }
 
     void Update()
@@ -52,11 +52,13 @@ public class AstronautBehaviour : MonoBehaviour
 
     public void AstronautButtonTextCheck()
     {
-        for (int id = 0; id < AstronautCostText.Length; id++)
+        for (int id = 0; id < gameManager.StageLevel.Length; id++)
         {
             if (astronautMaxConfirm[id] == false)
             {
                 AstronautCostText[id].text = AstronautPriceDisplay(id).ToString("F0");
+
+                AstronautCostText[id].color = Color.white;
 
                 astronautsBuyButton[id].GetComponent<Image>().color = Color.white;
                 
@@ -71,6 +73,16 @@ public class AstronautBehaviour : MonoBehaviour
             }
             AstronautsBuyButtonControl(id);
         }
+    }
+
+    public void AssignAstronautSection()
+    {
+        for (int id = 0; id < gameManager.StageLevel.Length - 1; id++)
+        {
+            astronautsBuyButton[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("BuyAstronautsButton").GetComponent<Button>();
+            AstronautCostText[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("BuyAstronautsButton").GetComponentInChildren<Text>();
+        }
+
     }
 
     //NEED DEBUG

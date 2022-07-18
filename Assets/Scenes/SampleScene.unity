@@ -1316,6 +1316,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 1118566147}
+  unlockingSystem: {fileID: 942227565}
   astronautsUpgrades:
   - {fileID: 0}
   - {fileID: 0}
@@ -1401,14 +1402,14 @@ MonoBehaviour:
   - {fileID: 183891888}
   - {fileID: 1575024684}
   - {fileID: 2016602477}
-  - {fileID: 586187109}
-  - {fileID: 277257372}
-  - {fileID: 1101665927}
-  - {fileID: 1364075178}
-  - {fileID: 1277462275}
-  - {fileID: 1703056794}
-  - {fileID: 883881589}
-  - {fileID: 323003952}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   astronautsBuyButton:
   - {fileID: 867522348}
   - {fileID: 1145097452}
@@ -2337,6 +2338,7 @@ GameObject:
   m_Component:
   - component: {fileID: 46840924}
   - component: {fileID: 46840925}
+  - component: {fileID: 46840926}
   m_Layer: 5
   m_Name: HomeSafeZone
   m_TagString: Untagged
@@ -2368,7 +2370,7 @@ RectTransform:
   - {fileID: 1564230826}
   - {fileID: 1528415537}
   m_Father: {fileID: 510266761}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -2390,6 +2392,14 @@ MonoBehaviour:
   ConformX: 1
   ConformY: 1
   Logging: 0
+--- !u!222 &46840926
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46840923}
+  m_CullTransparentMesh: 1
 --- !u!1 &46968458
 GameObject:
   m_ObjectHideFlags: 0
@@ -6240,6 +6250,81 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 133596054}
   m_CullTransparentMesh: 0
+--- !u!1 &134156161
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 134156162}
+  - component: {fileID: 134156164}
+  - component: {fileID: 134156163}
+  m_Layer: 5
+  m_Name: Background
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &134156162
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 134156161}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 510266761}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0.00024414062, y: 0.0034179688}
+  m_SizeDelta: {x: 0.015381, y: 0.02771}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &134156163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 134156161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &134156164
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 134156161}
+  m_CullTransparentMesh: 1
 --- !u!1 &136840197
 GameObject:
   m_ObjectHideFlags: 0
@@ -9280,7 +9365,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
+          m_IntArgument: 6
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -11486,7 +11571,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 628.8227}
+  m_AnchoredPosition: {x: 0, y: 628.82275}
   m_SizeDelta: {x: 720, y: 202.36389}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &256432962
@@ -17195,7 +17280,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 361.09, y: 0.002380371}
+  m_AnchoredPosition: {x: 361.09, y: 0.0056152344}
   m_SizeDelta: {x: 718.5553, y: 0}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &389831452
@@ -18589,7 +18674,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 361.09, y: 0.002380371}
+  m_AnchoredPosition: {x: 361.09, y: 0.0056152344}
   m_SizeDelta: {x: 718.5553, y: 0}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &423121453
@@ -20453,7 +20538,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 458084309}
   m_OnClick:
     m_PersistentCalls:
@@ -22517,6 +22602,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
+  - {fileID: 134156162}
   - {fileID: 46840924}
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -26296,7 +26382,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 2
+          m_IntArgument: 7
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -26721,7 +26807,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 604393165}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28834,7 +28920,7 @@ GameObject:
   - component: {fileID: 649775316}
   - component: {fileID: 649775315}
   m_Layer: 5
-  m_Name: BuyAstronautsButton2
+  m_Name: BuyAstronautsButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31369,7 +31455,7 @@ GameObject:
   - component: {fileID: 701731574}
   - component: {fileID: 701731573}
   m_Layer: 5
-  m_Name: BuyAstronautsButton2
+  m_Name: BuyAstronautsButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32399,7 +32485,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 361.09, y: 0.0018310547}
+  m_AnchoredPosition: {x: 361.09, y: 0.005004883}
   m_SizeDelta: {x: 718.5553, y: 0}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &720398659
@@ -36614,6 +36700,7 @@ RectTransform:
   - {fileID: 1695510711}
   - {fileID: 1326751142}
   - {fileID: 867522347}
+  - {fileID: 1979669021}
   m_Father: {fileID: 939604932}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -42916,7 +43003,7 @@ GameObject:
   - component: {fileID: 916457527}
   - component: {fileID: 916457529}
   - component: {fileID: 916457528}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: rightpart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43520,7 +43607,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 4
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -43743,7 +43830,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 801357817}
-  - {fileID: 1979669021}
   m_Father: {fileID: 720398658}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -46483,17 +46569,29 @@ MonoBehaviour:
   - {fileID: 626043824}
   - {fileID: 35567027}
   - {fileID: 319876193}
+  - {fileID: 2139147617}
+  - {fileID: 883425672}
+  - {fileID: 1370449668}
+  - {fileID: 464117915}
   researchPriceText:
   - {fileID: 15752248}
   - {fileID: 1980007686}
   - {fileID: 626896717}
   - {fileID: 525933197}
+  - {fileID: 253274218}
+  - {fileID: 1907018889}
+  - {fileID: 1227136025}
+  - {fileID: 289689944}
   researchTextWindow: {fileID: 1277863247}
   researchButton:
   - {fileID: 1564532117}
   - {fileID: 1529049912}
   - {fileID: 57942973}
   - {fileID: 296685927}
+  - {fileID: 924000006}
+  - {fileID: 191848708}
+  - {fileID: 585367510}
+  - {fileID: 1238208097}
   researchIcon: []
   researchWindowIcon: {fileID: 1593296282}
   researchImage:
@@ -46501,19 +46599,19 @@ MonoBehaviour:
   - {fileID: 1529049913}
   - {fileID: 57942974}
   - {fileID: 296685928}
+  - {fileID: 296685928}
+  - {fileID: 296685928}
+  - {fileID: 296685928}
+  - {fileID: 296685928}
   researchConnDefault:
-  - {fileID: 1343159359}
   - {fileID: 1343159359}
   - {fileID: 2005242878}
   - {fileID: 889180865}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 547011822}
+  - {fileID: 1746518475}
+  - {fileID: 1247885601}
+  - {fileID: 1132862702}
+  - {fileID: 605275895}
   researchConnActive: {fileID: 21300000, guid: ec1cde085c38b134597f2a537f464f54, type: 3}
   researchConnDisabled: {fileID: 21300000, guid: 643becb7c2f3c75409dae37b207f4ce4, type: 3}
   upgradeResearchValues: []
@@ -51897,7 +51995,7 @@ GameObject:
   - component: {fileID: 1116239496}
   - component: {fileID: 1116239498}
   - component: {fileID: 1116239497}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: leftpart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -52150,20 +52248,20 @@ MonoBehaviour:
   buyModeID: 1
   StageLevelText:
   - {fileID: 804092874}
-  - {fileID: 973568316}
-  - {fileID: 359356254}
-  - {fileID: 1812688464}
-  - {fileID: 1043582057}
-  - {fileID: 1181087164}
-  - {fileID: 1179718235}
-  - {fileID: 790584525}
-  - {fileID: 1365273461}
-  - {fileID: 2065420807}
-  - {fileID: 1280801614}
-  - {fileID: 778005169}
-  - {fileID: 1014193961}
-  - {fileID: 2134916616}
-  - {fileID: 713725023}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   EarningStage:
   - {fileID: 79686621}
   - {fileID: 1629278334}
@@ -52211,21 +52309,21 @@ MonoBehaviour:
   upgradeLevel1: 0
   mainResetLevel: 0
   progressBarObject:
-  - {fileID: 1725780498}
-  - {fileID: 1214274109}
-  - {fileID: 632983281}
-  - {fileID: 1261205307}
-  - {fileID: 1949840438}
-  - {fileID: 849056616}
-  - {fileID: 1133365077}
-  - {fileID: 1109510982}
-  - {fileID: 570494784}
-  - {fileID: 1496660695}
-  - {fileID: 768351900}
-  - {fileID: 1266959407}
-  - {fileID: 1382560652}
-  - {fileID: 57089457}
-  - {fileID: 1315381706}
+  - {fileID: 1263953022}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   settingsScreenObject: {fileID: 1528415536}
   allObjects: []
   upgradesActivated: 0000000000000000000000000000
@@ -52260,10 +52358,10 @@ MonoBehaviour:
   - {fileID: 611167629}
   - {fileID: 61941201}
   - {fileID: 733710550}
-  - {fileID: 1262901333}
-  - {fileID: 436880693}
-  - {fileID: 206629193}
-  - {fileID: 1511889489}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   research: {fileID: 993402617}
   astronautBehaviour: {fileID: 17327184}
   suitsUpgrades: {fileID: 279393645}
@@ -57288,7 +57386,7 @@ GameObject:
   - component: {fileID: 1214471240}
   - component: {fileID: 1214471242}
   - component: {fileID: 1214471241}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: circleone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58552,7 +58650,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
+          m_IntArgument: 8
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -64291,8 +64389,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 219.36, y: 68.91}
-  m_SizeDelta: {x: 538.44, y: 160}
+  m_AnchoredPosition: {x: 216.37, y: 68.91}
+  m_SizeDelta: {x: 514.52, y: 160}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1340997825
 GameObject:
@@ -65927,7 +66025,7 @@ GameObject:
   - component: {fileID: 1369341359}
   - component: {fileID: 1369341358}
   m_Layer: 5
-  m_Name: BuyAstronautsButton2
+  m_Name: BuyAstronautsButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -67051,7 +67149,7 @@ GameObject:
   - component: {fileID: 1393372526}
   - component: {fileID: 1393372525}
   m_Layer: 5
-  m_Name: BuyAstronautsButton2
+  m_Name: BuyAstronautsButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76926,7 +77024,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.6174927, y: -93.79999}
+  m_AnchoredPosition: {x: -0.6174927, y: -93.80005}
   m_SizeDelta: {x: 0.50502247, y: -186.61}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1613757607
@@ -80476,7 +80574,7 @@ GameObject:
   - component: {fileID: 1709747288}
   - component: {fileID: 1709747290}
   - component: {fileID: 1709747289}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: circletwo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91259,17 +91357,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1979669020}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.00036621094}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 804092873}
-  m_Father: {fileID: 939604932}
-  m_RootOrder: 1
+  m_Father: {fileID: 801357817}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -300.43, y: 98.2}
+  m_AnchoredPosition: {x: -299.24933, y: 98.2}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1979669022
@@ -91821,7 +91919,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.05999756, y: -142.91925}
+  m_AnchoredPosition: {x: 0.05999756, y: -142.91931}
   m_SizeDelta: {x: -0.94, y: 285.85}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1991306140
@@ -94824,7 +94922,7 @@ GameObject:
   - component: {fileID: 2064112683}
   - component: {fileID: 2064112684}
   - component: {fileID: 2064112685}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: unlockGate
   m_TagString: unlockAnimation
   m_Icon: {fileID: 0}
