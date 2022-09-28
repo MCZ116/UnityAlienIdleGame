@@ -22,10 +22,14 @@ public class UnlockingSystem : MonoBehaviour
     public double[] unlockCost;
     public double[] planetCost;
     private string[] researchNames;
+    public int researchID = 1;
+    public int[] researchTextGreenAtID = { 0, 4, 9 };
+
+    public bool[] planetCanBeUnlocked;
 
     private void Start()
     {
-        researchNames = new string[8];
+        researchNames = new string[12];
         researchNames[0] = "Oxygen Recycle";
         researchNames[1] = "Ion Engines";
         researchNames[2] = "Water Filter";
@@ -34,12 +38,20 @@ public class UnlockingSystem : MonoBehaviour
         researchNames[5] = "Ion Engines II";
         researchNames[6] = "Space 3D Printer";
         researchNames[7] = "Space Drones";
-        int researchID = 1;
+        researchNames[8] = "Low Gravity Lander";
+        researchNames[9] = "Ion Engines III";
+        researchNames[10]= "Space 3D Printer";
+        researchNames[11] = "Space Drones";
+
+        planetCanBeUnlocked = new bool[4];
+
         for (int id = 0; id < planetsPanelsObjects.Length; id++)
         {
+            planetCanBeUnlocked[id] = false;
             planetRequirementResearch[id].text = researchNames[researchID];
             researchID = researchID + 4;
         }
+        planetCanBeUnlocked[0] = true;
 
     }
 
@@ -87,12 +99,22 @@ public class UnlockingSystem : MonoBehaviour
             } else
                 planetPriceText[id].color = Color.red;
 
-            if (gameManager.researchUnlocked[1])
-            {
-                planetRequirementResearch[id].color = Color.green;
-            } else
-                planetRequirementResearch[id].color = Color.red;
+
         }
+
+
+        for (int researchNr = 0; researchNr < planetsUnlockBtnObj.Length; researchNr++)
+        {
+            Debug.Log(planetsUnlockBtnObj.Length + " HERE");
+            if (gameManager.researchUnlocked[researchTextGreenAtID[researchNr]])
+            {
+                planetRequirementResearch[researchNr].color = Color.green;
+            }
+            else
+                planetRequirementResearch[researchNr].color = Color.red;
+        }
+
+        
     }
 
     public void UnlockingStages(int id)
@@ -106,8 +128,13 @@ public class UnlockingSystem : MonoBehaviour
             unlockButtons[id].GetComponent<Button>().interactable = false;
             animationUnlockConfirm[id] = true;
             //Debug.Log("Upgrade Unlocked!");
-            ResearchUnlocking(id);
             gameManager.StageLevel[id + 1] += 1;
+
+            if (!gameManager.researchCanBeDone[0])
+            {
+                gameManager.researchCanBeDone[0] = true;
+            }
+
         }
         else
             upgradeObjects[id].SetActive(false);
@@ -136,15 +163,10 @@ public class UnlockingSystem : MonoBehaviour
 
     public void ResearchUnlocking(int id)
     {
-        for (int researchUnlockID = 0; researchUnlockID < gameManager.StageLevel.Length; researchUnlockID = researchUnlockID + 2)
+        if(gameManager.researchCanBeDone.Length - 1 > id)
         {
-            if (id == researchUnlockID && !gameManager.researchCanBeDone[gameManager.researchID])
-            {
-                gameManager.researchCanBeDone[gameManager.researchID] = true;
-                gameManager.researchID++;
-            }
+            gameManager.researchCanBeDone[id+1] = true;
         }
-
     }
 
     public void PlanetsUnlockCheck()
@@ -166,19 +188,13 @@ public class UnlockingSystem : MonoBehaviour
 
     public void PlanetsUnlocking(int id)
     {
-        for (int researchID = 0; researchID < gameManager.Research1Level.Length; researchID = researchID + 4)
+        if (gameManager.researchUnlocked[researchTextGreenAtID[id]] == true  && gameManager.mainCurrency >= planetCost[id] && gameManager.planetUnlocked[id] == false)
         {
-
-            if (gameManager.researchUnlocked[researchID] == true && gameManager.mainCurrency >= planetCost[id] && gameManager.planetUnlocked[id] == false)
-            {
-                gameManager.mainCurrency -= planetCost[id];
-                planetsPanelsObjects[id].SetActive(true);
-                planetsUnlockBtnObj[id].interactable = true;
-                gameManager.planetUnlocked[id] = true;
-            }
-
+            gameManager.mainCurrency -= planetCost[id];
+            planetsPanelsObjects[id].SetActive(true);
+            planetsUnlockBtnObj[id].interactable = true;
+            gameManager.planetUnlocked[id] = true;
         }
-
     }
 
 }

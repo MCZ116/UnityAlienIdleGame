@@ -73,6 +73,8 @@ public class GameManager : MonoBehaviour
 
     public CanvasGroup phobosMenu;
 
+    public CanvasGroup venusMenu;
+
     private double[] stageLevel;
 
     public double[] StageLevel { get => stageLevel; set => stageLevel = value; }
@@ -88,10 +90,9 @@ public class GameManager : MonoBehaviour
     public int[] astronautsLevel;
     public int[] astronautBuyStartID;
     public double[] upgradesCounts;
-    public float[] upgradeMaxTime = { 5f, 10f, 10f, 20f, 35f, 5f, 10f, 10f, 20f, 35f, 5f, 10f, 10f, 20f, 35f };
+    public float[] upgradeMaxTime = { 5f, 10f, 10f, 20f, 35f, 5f, 10f, 10f, 20f, 35f, 5f, 10f, 10f, 20f, 35f, 5f, 10f, 10f, 20f, 35f };
     public float[] progressTimer;
     public bool[] researchCanBeDone;
-    public int researchID;
     private int planetID;
 
     void Awake()
@@ -110,7 +111,7 @@ public class GameManager : MonoBehaviour
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         mainCurrency = 100;
         rebirthCost = 10000;
-        unlockingSystem.unlockCost = new double[14];
+        unlockingSystem.unlockCost = new double[19];
         unlockingSystem.unlockCost[0] = 2000;
         unlockingSystem.unlockCost[1] = 4000;
         unlockingSystem.unlockCost[2] = 8000;
@@ -125,18 +126,25 @@ public class GameManager : MonoBehaviour
         unlockingSystem.unlockCost[11] = 2180000;
         unlockingSystem.unlockCost[12] = 21220000;
         unlockingSystem.unlockCost[13] = 35000000;
-        unlockingSystem.planetCost = new double[2];
+        unlockingSystem.unlockCost[14] = 213500000;
+        unlockingSystem.unlockCost[15] = 216000000;
+        unlockingSystem.unlockCost[16] = 218000000;
+        unlockingSystem.unlockCost[17] = 2122000000;
+        unlockingSystem.unlockCost[18] = 3500000000;
+        unlockingSystem.planetCost = new double[3];
         unlockingSystem.planetCost[0] = 220000;
         unlockingSystem.planetCost[1] = 10000000;
-        progressTimer = new float[15];
+        unlockingSystem.planetCost[2] = 20000000;
+
+        progressTimer = new float[20];
         activeTab = false;
-        StageLevel = new double[15];
-        Research1Level = new double[8];
+        StageLevel = new double[20];
+        Research1Level = new double[12];
         astronautsLevel = new int[stageLevel.Length];
         SuitsLevel = new double[6];
         astronautBuyStartID = new int[stageLevel.Length];
         researchUnlocked = new bool[Research1Level.Length];
-        unlockingSystem.animationUnlockConfirm = new bool[14];
+        unlockingSystem.animationUnlockConfirm = new bool[19];
         upgradesCounts = new double[StageLevel.Length];
         upgradesActivated = new bool[unlockingSystem.unlockCost.Length];
         stageUpgradeCosts = new double[StageLevel.Length];
@@ -150,10 +158,13 @@ public class GameManager : MonoBehaviour
         research.upgradeResearchValues[3] = 2.2;
         research.upgradeResearchValues[4] = 2.5;
         research.upgradeResearchValues[5] = 2.8;
-        research.upgradeResearchValues[6] = 3;
-        research.upgradeResearchValues[7] = 3.2;
+        research.upgradeResearchValues[6] = 3.1;
+        research.upgradeResearchValues[7] = 3.4;
+        research.upgradeResearchValues[8] = 3.7;
+        research.upgradeResearchValues[9] = 4;
+        research.upgradeResearchValues[10] = 4.3;
+        research.upgradeResearchValues[11] = 4.5;
         planetUnlocked[0] = false;
-        researchID = 0;
         planetID = 0;
         // Here was AutoObjectAssigning
 
@@ -586,6 +597,7 @@ public class GameManager : MonoBehaviour
                 CanvasGroupMenuSwitch(false, marsMenu);
                 CanvasGroupMenuSwitch(false, planetsMenu);
                 CanvasGroupMenuSwitch(false, phobosMenu);
+                CanvasGroupMenuSwitch(false, venusMenu);
                 activeTab = false;
                 break;
 
@@ -601,6 +613,7 @@ public class GameManager : MonoBehaviour
                     CanvasGroupMenuSwitch(false, planetsMenu);
                     CanvasGroupMenuSwitch(true, marsMenu);
                     CanvasGroupMenuSwitch(false, phobosMenu);
+                    CanvasGroupMenuSwitch(false, venusMenu);
                     activeTab = false;
                 }
                 break;
@@ -617,6 +630,24 @@ public class GameManager : MonoBehaviour
                     CanvasGroupMenuSwitch(false, planetsMenu);
                     CanvasGroupMenuSwitch(false, marsMenu);
                     CanvasGroupMenuSwitch(true, phobosMenu);
+                    CanvasGroupMenuSwitch(false, venusMenu);
+                    activeTab = false;
+                }
+                break;
+
+            case 3:
+                if (planetUnlocked[2])
+                {
+                    CanvasGroupMenuSwitch(true, canvasMainGame);
+                    CanvasGroupMenuSwitch(false, canvasShop);
+                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
+                    CanvasGroupMenuSwitch(false, canvasResearchTab);
+                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
+                    CanvasGroupMenuSwitch(false, moonMenu);
+                    CanvasGroupMenuSwitch(false, planetsMenu);
+                    CanvasGroupMenuSwitch(false, marsMenu);
+                    CanvasGroupMenuSwitch(false, phobosMenu);
+                    CanvasGroupMenuSwitch(true, venusMenu);
                     activeTab = false;
                 }
                 break;
@@ -692,8 +723,6 @@ public class GameManager : MonoBehaviour
         {
             planetUnlocked[id] = gameData.planetUnlocked[id];
         }
-
-        researchID = gameData.researchID;
     }
 
     public void SaveDate()
@@ -825,7 +854,6 @@ public class GameManager : MonoBehaviour
             stageLevel[0] = 1;
             upgradeLevel1 = 0;
             mainResetLevel++;
-            researchID = 0;
 
             for (int id = 1; id < stageLevel.Length; id++)
             {
@@ -875,6 +903,7 @@ public class GameManager : MonoBehaviour
             unlockingSystem.LoadUnlocksStatus();
             unlockingSystem.PlanetsUnlockCheck();
             rebirthCost *= (System.Math.Pow(2, mainResetLevel) * (System.Math.Pow(2, 1) - 1) / (2 - 1));
+            ChangePlanetTab(0);
         }
         
     }

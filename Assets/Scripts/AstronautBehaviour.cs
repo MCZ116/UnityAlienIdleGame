@@ -181,7 +181,7 @@ public class AstronautBehaviour : MonoBehaviour
     public void AstronautsControl()
     {
         // NEED TO CHANGE IT A BIT 
-        for (int id = 0; id < 40; id++)
+        for (int id = 0; id < 80; id++)
         {
 
             //if (gameManager.confirmAstronautBuy[id] == false)

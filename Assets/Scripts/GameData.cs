@@ -56,8 +56,6 @@ public class GameData
 
         researchUnlocked = gameManager.researchUnlocked;
 
-        researchID = gameManager.researchID;
-
     }
 
 

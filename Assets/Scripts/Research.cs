@@ -31,7 +31,7 @@ public class Research : MonoBehaviour
     
     void Start()
     {
-        researchText = new string[8];
+        researchText = new string[12];
         researchText[0] = "Improve oxgen tanks capacity for about 2%. Better oxygen tanks allow astronauts to stay longer on the surface of the planet";
         researchText[1] = "Ion engines allow us to travel further and faster by using less energy!";
         researchText[2] = "Finally we can drink some water!";
@@ -40,7 +40,11 @@ public class Research : MonoBehaviour
         researchText[5] = "Ion engines allow us to travel further and faster by using less energy!";
         researchText[6] = "Finally we can drink some water!";
         researchText[7] = "Yummy we can plant cabbage in space!";
-        researchCosts = new double[8];
+        researchText[8] = "Test text";
+        researchText[9] = "Test text";
+        researchText[10] = "Test text";
+        researchText[11] = "Test text";
+        researchCosts = new double[researchText.Length];
         researchCosts[0] = 10000;
         researchCosts[1] = 18000;
         researchCosts[2] = 50000;
@@ -49,6 +53,10 @@ public class Research : MonoBehaviour
         researchCosts[5] = 18000000;
         researchCosts[6] = 50000000;
         researchCosts[7] = 200000000;
+        researchCosts[8] = 2010000000;
+        researchCosts[9] = 2018000000;
+        researchCosts[10] = 2500000000;
+        researchCosts[11] = 20000000000;
         researchTextWindow.SetActive(false);
 
         foreach (GameObject button in GameObject.FindGameObjectsWithTag("researchIcon"))
@@ -149,6 +157,7 @@ public class Research : MonoBehaviour
             gameManager.Research1Level[id] += (int)n;
             ResearchBoost();
             gameManager.researchUnlocked[id] = true;
+            unlockingSystem.ResearchUnlocking(id);
         }
         ResearchInfoWindowOnClick(id);
     }
