@@ -1,2 +1,2 @@
-# UnityAlienIdleGame
-UniverseIdleGame
+# UniverseIdleGame
+Idle Universe game created by Mateusz Czerwiński
