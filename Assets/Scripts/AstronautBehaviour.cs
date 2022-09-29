@@ -23,6 +23,8 @@ public class AstronautBehaviour : MonoBehaviour
 
     public bool[] astronautMaxConfirm;
 
+    int astronautsTotalAmount;
+
     void Start()
     {
         astronautCost = new double[gameManager.StageLevel.Length];
@@ -93,7 +95,6 @@ public class AstronautBehaviour : MonoBehaviour
         {
             int i = 0;
             
-            Debug.Log("MainLoopAstroAs: " + id);
             for (int n = TempID; n < astronautsUpgrades.Length; n++)
             {
                 if (astronautsObjectsContainer[id].transform.childCount > i)
@@ -107,8 +108,10 @@ public class AstronautBehaviour : MonoBehaviour
                 }
                     
             }
+
             TempID = TempID + astronautsObjectsContainer[id].transform.childCount;
-            Debug.Log("TempID: " + TempID);
+            astronautsTotalAmount = TempID;
+
         }
 
         for (int id = 0; id < astronautsUpgrades.Length; id++)
@@ -127,7 +130,6 @@ public class AstronautBehaviour : MonoBehaviour
     {
         var h = astronautCost[id];
         var astronautTempCost = h * (gameManager.astronautsLevel[id]+1);
-        Debug.Log(" TempCostAstro: " + h * (gameManager.astronautsLevel[id] + 1));
         
         if (astronautTempCost == 200) { astronautTempCost = 300; }
 
@@ -141,9 +143,7 @@ public class AstronautBehaviour : MonoBehaviour
             gameManager.astronautsLevel[id]++;
             AstronautsBoost();
 
-            Debug.Log("AstroPrice: " + astronautTempCost );
         }
-        //Debug.Log("Button Clicked. Received int: " + gameManager.astronautsLevel[id] + " ID: " + id);
     }
 
     // Calculating price for displaying
@@ -181,18 +181,8 @@ public class AstronautBehaviour : MonoBehaviour
     public void AstronautsControl()
     {
         // NEED TO CHANGE IT A BIT 
-        for (int id = 0; id < 80; id++)
+        for (int id = 0; id < astronautsTotalAmount; id++)
         {
-
-            //if (gameManager.confirmAstronautBuy[id] == false)
-            //{
-            //    GameManager.instance.allObjects[id].SetActive(false);
-
-            //}
-            //else if (gameManager.confirmAstronautBuy[id] == true)
-            //{
-            //    GameManager.instance.allObjects[id].SetActive(true);
-            //}
 
             if (gameManager.confirmAstronautBuy[id] == false)
             {
@@ -205,34 +195,19 @@ public class AstronautBehaviour : MonoBehaviour
             }
         }
     }
-    // Function used to increase level of astronauts and calculations
-    //public double AstronautsLvlAssigning()
-    //{
-    //    double AstroLvl = 1;
-    //    for (int id = 0; id < upgradeAstronauts.Length; id++)
-    //    {
-
-    //        AstroLvl += gameManager.astronautsID[id];
-
-    //    }
-
-    //    return AstroLvl;
-    //}
-
-    // A function which calculate an income boost of research points based on level of astronauts
+ 
     public double AstronautsBoost()
     {
         double asBoost = 0;
 
-       
-            for (int id = 0; id < gameManager.astronautsLevel.Length; id++)
-            {
+        for (int id = 0; id < gameManager.astronautsLevel.Length; id++)
+        {
 
-                asBoost += gameManager.astronautsLevel[id] * 0.15;
+            asBoost += gameManager.astronautsLevel[id] * ((gameManager.StageLevel[id] * gameManager.upgradesCounts[id]) * 0.1);
 
-            }
+        }
 
-            return asBoost;
+        return asBoost;
         
     }
 

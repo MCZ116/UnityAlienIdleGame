@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour
     public int[] astronautsLevel;
     public int[] astronautBuyStartID;
     public double[] upgradesCounts;
-    public float[] upgradeMaxTime = { 5f, 10f, 10f, 20f, 35f, 5f, 10f, 10f, 20f, 35f, 5f, 10f, 10f, 20f, 35f, 5f, 10f, 10f, 20f, 35f };
+    public float[] upgradeMaxTime;
     public float[] progressTimer;
     public bool[] researchCanBeDone;
     private int planetID;
@@ -111,40 +111,21 @@ public class GameManager : MonoBehaviour
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         mainCurrency = 100;
         rebirthCost = 10000;
-        unlockingSystem.unlockCost = new double[19];
-        unlockingSystem.unlockCost[0] = 2000;
-        unlockingSystem.unlockCost[1] = 4000;
-        unlockingSystem.unlockCost[2] = 8000;
-        unlockingSystem.unlockCost[3] = 20000;
-        unlockingSystem.unlockCost[4] = 100000;
-        unlockingSystem.unlockCost[5] = 135000;
-        unlockingSystem.unlockCost[6] = 160000;
-        unlockingSystem.unlockCost[7] = 180000;
-        unlockingSystem.unlockCost[8] = 220000;
-        unlockingSystem.unlockCost[9] = 2135000;
-        unlockingSystem.unlockCost[10] = 2160000;
-        unlockingSystem.unlockCost[11] = 2180000;
-        unlockingSystem.unlockCost[12] = 21220000;
-        unlockingSystem.unlockCost[13] = 35000000;
-        unlockingSystem.unlockCost[14] = 213500000;
-        unlockingSystem.unlockCost[15] = 216000000;
-        unlockingSystem.unlockCost[16] = 218000000;
-        unlockingSystem.unlockCost[17] = 2122000000;
-        unlockingSystem.unlockCost[18] = 3500000000;
-        unlockingSystem.planetCost = new double[3];
-        unlockingSystem.planetCost[0] = 220000;
-        unlockingSystem.planetCost[1] = 10000000;
-        unlockingSystem.planetCost[2] = 20000000;
-
-        progressTimer = new float[20];
-        activeTab = false;
         StageLevel = new double[20];
+        StageMaxTimeCalc();
+        unlockingSystem.unlockCost = new double[stageLevel.Length - 1];
+        UpgradeCostCalculator(unlockingSystem.unlockCost,2000,3); // Calculating unlock price for stages  
+        unlockingSystem.planetCost = new double[3];
+        UpgradeCostCalculator(unlockingSystem.planetCost,220000,12.3); // Calculating unlock price for planets
+        progressTimer = new float[stageLevel.Length];
+        activeTab = false;
+        
         Research1Level = new double[12];
         astronautsLevel = new int[stageLevel.Length];
         SuitsLevel = new double[6];
         astronautBuyStartID = new int[stageLevel.Length];
         researchUnlocked = new bool[Research1Level.Length];
-        unlockingSystem.animationUnlockConfirm = new bool[19];
+        unlockingSystem.animationUnlockConfirm = new bool[stageLevel.Length - 1];
         upgradesCounts = new double[StageLevel.Length];
         upgradesActivated = new bool[unlockingSystem.unlockCost.Length];
         stageUpgradeCosts = new double[StageLevel.Length];
@@ -152,18 +133,7 @@ public class GameManager : MonoBehaviour
         planetUnlocked = new bool[unlockingSystem.planetsPanelsObjects.Length];
         researchCanBeDone = new bool[Research1Level.Length];
         research.upgradeResearchValues = new double[research1Level.Length];
-        research.upgradeResearchValues[0] = 0.5;
-        research.upgradeResearchValues[1] = 0.8;
-        research.upgradeResearchValues[2] = 2;
-        research.upgradeResearchValues[3] = 2.2;
-        research.upgradeResearchValues[4] = 2.5;
-        research.upgradeResearchValues[5] = 2.8;
-        research.upgradeResearchValues[6] = 3.1;
-        research.upgradeResearchValues[7] = 3.4;
-        research.upgradeResearchValues[8] = 3.7;
-        research.upgradeResearchValues[9] = 4;
-        research.upgradeResearchValues[10] = 4.3;
-        research.upgradeResearchValues[11] = 4.5;
+        ResearchMultiplierCalculator();
         planetUnlocked[0] = false;
         planetID = 0;
         // Here was AutoObjectAssigning
@@ -175,7 +145,6 @@ public class GameManager : MonoBehaviour
             StageLevel[id] = 0;
             astronautBuyStartID[id] = id * 4;
             astronautsLevel[id] = 0;
-            //alienUpgradeCosts[id] = 50 + id * 0.2;
             Debug.Log("astroLevelBeforeLoad = " + astronautsLevel.Length);
             Debug.Log("alienlevelBeforeLoad = " + StageLevel.Length);
             Debug.Log("Loaded Assignig");
@@ -203,8 +172,6 @@ public class GameManager : MonoBehaviour
         suitsLevel[1] = 0;
         mainResetLevel = 1;
 
-        //AutoObjectsAssigning();
-        //unlockingAnimations.AnimationGateAssigning();
         AutoAssigningObjects();
         astronautBehaviour.AssigningAstronautsOnStart();                
         Debug.Log("Price for level = " + stageUpgradeCosts[0]);
@@ -259,7 +226,6 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         QuitButtonAndroid();
-        //saving here because of bug which causing not creating save file after deleting it cuz IEnumerator won't have time to work
         
         unlockingSystem.PlanetsUnlockCheck();
         CurrencyText.text = ExponentLetterSystem(mainCurrency, "F2");
@@ -356,6 +322,52 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void UpgradeCostCalculator(double[] costArray, double basePrice, double multiplier)
+    {
+        for (int id = 0; id < costArray.Length; id++)
+        {
+            costArray[id] = basePrice;
+            basePrice *= multiplier;
+        }
+    }
+
+    public void ResearchMultiplierCalculator()
+    {
+        double baseValue = 0.2;
+        double increment = 0.3;
+
+        for (int id = 0; id < research.upgradeResearchValues.Length; id++)
+        {
+            research.upgradeResearchValues[id] = baseValue;
+            baseValue += increment;
+        }
+    }
+
+    public void StageMaxTimeCalc()
+    {
+        float baseValue = 5;
+        float changeValue = 5;
+        int multiplier = 0;
+        for (int id = 0; id < stageLevel.Length; id++)
+        {
+            upgradeMaxTime[id] = baseValue;
+
+            if (upgradeMaxTime[id] % (15 + multiplier) == 0)
+            {
+                changeValue = 10;
+            }
+
+            baseValue = baseValue + changeValue;
+
+            if (upgradeMaxTime[id] % (35 + multiplier) == 0)
+            {
+                multiplier++;
+                baseValue = 5 + multiplier;
+                changeValue = 5;       
+            }
+        }
+    }
+
     public double ResearchPointsCalculator()
     {
         double temp = 0;
@@ -363,8 +375,7 @@ public class GameManager : MonoBehaviour
         for (int id = 0; id < stageLevel.Length; id++)
         {
             temp += (stageLevel[id] * upgradesCounts[id]);
-            Debug.Log("ID: " + stageLevel[id] + " UpgradeCount: " + upgradesCounts[id]);
-            Debug.Log(" Astronaut Earning temp: " + temp);
+
         }
 
         temp += research.ResearchBoost();
@@ -372,7 +383,7 @@ public class GameManager : MonoBehaviour
         temp += suitsUpgrades.SuitsBoost();
         temp += RebirthBoost();
 
-        Debug.Log(temp + "Outcome");
+        Debug.Log(temp + "Research Outcome");
         return temp;
     }
 
@@ -453,14 +464,12 @@ public class GameManager : MonoBehaviour
             choosenGroup.alpha = 1;
             choosenGroup.interactable = true;
             choosenGroup.blocksRaycasts = true;
-            Debug.Log(activeTab + "ON" + choosenGroup);
         }
         else
         {
             choosenGroup.alpha = 0;
             choosenGroup.interactable = false;
             choosenGroup.blocksRaycasts = false;
-            Debug.Log(activeTab + "OFF" + choosenGroup);
         }
 
     }
@@ -661,12 +670,12 @@ public class GameManager : MonoBehaviour
         {
             planetID += 1;
             ChangePlanetTab(planetID);
-            Debug.Log(planetID + " " + planetUnlocked.Length);
+
         } else if(buttonName == "Prev" && planetID <= planetUnlocked.Length && planetID != 0)
         {
             planetID -= 1;
             ChangePlanetTab(planetID);
-            Debug.Log(planetID);
+
         }
     }
 

@@ -45,18 +45,7 @@ public class Research : MonoBehaviour
         researchText[10] = "Test text";
         researchText[11] = "Test text";
         researchCosts = new double[researchText.Length];
-        researchCosts[0] = 10000;
-        researchCosts[1] = 18000;
-        researchCosts[2] = 50000;
-        researchCosts[3] = 200000;
-        researchCosts[4] = 10000000;
-        researchCosts[5] = 18000000;
-        researchCosts[6] = 50000000;
-        researchCosts[7] = 200000000;
-        researchCosts[8] = 2010000000;
-        researchCosts[9] = 2018000000;
-        researchCosts[10] = 2500000000;
-        researchCosts[11] = 20000000000;
+        ResearchCostMultiplier();
         researchTextWindow.SetActive(false);
 
         foreach (GameObject button in GameObject.FindGameObjectsWithTag("researchIcon"))
@@ -85,6 +74,17 @@ public class Research : MonoBehaviour
         }
         //HideIfClickedOutside(researchTextWindow);
         ResearchButtonStatus();
+    }
+
+    public void ResearchCostMultiplier()
+    {
+        double basePrice = 10000;
+        double multiplier = 3.2;
+        for (int id = 0; id < researchCosts.Length; id++)
+        {
+            researchCosts[id] = basePrice;
+            basePrice *= multiplier;
+        }
     }
 
     public void ResearchInfoWindowOnClick(int id)

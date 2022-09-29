@@ -29,7 +29,7 @@ public class UnlockingSystem : MonoBehaviour
 
     private void Start()
     {
-        researchNames = new string[12];
+        researchNames = new string[research.researchLevels.Length];
         researchNames[0] = "Oxygen Recycle";
         researchNames[1] = "Ion Engines";
         researchNames[2] = "Water Filter";
@@ -105,7 +105,6 @@ public class UnlockingSystem : MonoBehaviour
 
         for (int researchNr = 0; researchNr < planetsUnlockBtnObj.Length; researchNr++)
         {
-            Debug.Log(planetsUnlockBtnObj.Length + " HERE");
             if (gameManager.researchUnlocked[researchTextGreenAtID[researchNr]])
             {
                 planetRequirementResearch[researchNr].color = Color.green;
@@ -127,7 +126,6 @@ public class UnlockingSystem : MonoBehaviour
             gameManager.upgradesActivated[id] = true;
             unlockButtons[id].GetComponent<Button>().interactable = false;
             animationUnlockConfirm[id] = true;
-            //Debug.Log("Upgrade Unlocked!");
             gameManager.StageLevel[id + 1] += 1;
 
             if (!gameManager.researchCanBeDone[0])
