@@ -2373,7 +2373,7 @@ GameObject:
   - component: {fileID: 35567028}
   - component: {fileID: 35567027}
   m_Layer: 5
-  m_Name: Research3Lvl
+  m_Name: ResearchLvl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5213,8 +5213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d7a956c5bdbc747a9a5758c23acc2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlocking: {fileID: 942227565}
-  unlockingAnimations: {fileID: 864230817}
+  animationUnlockSys: {fileID: 0}
 --- !u!95 &84354280
 Animator:
   serializedVersion: 3
@@ -9780,7 +9779,7 @@ GameObject:
   - component: {fileID: 158231338}
   - component: {fileID: 158231337}
   m_Layer: 5
-  m_Name: Research2Lvl
+  m_Name: ResearchLvl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19271,7 +19270,7 @@ GameObject:
   - component: {fileID: 319876194}
   - component: {fileID: 319876193}
   m_Layer: 5
-  m_Name: Research4Lvl
+  m_Name: ResearchLvl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20431,8 +20430,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d7a956c5bdbc747a9a5758c23acc2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlocking: {fileID: 942227565}
-  unlockingAnimations: {fileID: 864230817}
+  animationUnlockSys: {fileID: 0}
 --- !u!95 &333462300
 Animator:
   serializedVersion: 3
@@ -27005,7 +27003,7 @@ GameObject:
   - component: {fileID: 464117916}
   - component: {fileID: 464117915}
   m_Layer: 5
-  m_Name: Research4Lvl
+  m_Name: ResearchLvl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30979,8 +30977,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d7a956c5bdbc747a9a5758c23acc2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlocking: {fileID: 942227565}
-  unlockingAnimations: {fileID: 864230817}
+  animationUnlockSys: {fileID: 0}
 --- !u!95 &540640362
 Animator:
   serializedVersion: 3
@@ -31805,8 +31802,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d7a956c5bdbc747a9a5758c23acc2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlocking: {fileID: 942227565}
-  unlockingAnimations: {fileID: 864230817}
+  animationUnlockSys: {fileID: 0}
 --- !u!95 &552759800
 Animator:
   serializedVersion: 3
@@ -35335,7 +35331,7 @@ GameObject:
   - component: {fileID: 626043825}
   - component: {fileID: 626043824}
   m_Layer: 5
-  m_Name: Research2Lvl
+  m_Name: ResearchLvl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36873,7 +36869,7 @@ GameObject:
   - component: {fileID: 653223302}
   - component: {fileID: 653223301}
   m_Layer: 5
-  m_Name: Research4Lvl
+  m_Name: ResearchLvl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49726,8 +49722,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d7a956c5bdbc747a9a5758c23acc2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlocking: {fileID: 942227565}
-  unlockingAnimations: {fileID: 864230817}
+  animationUnlockSys: {fileID: 0}
 --- !u!95 &850303071
 Animator:
   serializedVersion: 3
@@ -50024,8 +50019,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d7a956c5bdbc747a9a5758c23acc2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlocking: {fileID: 942227565}
-  unlockingAnimations: {fileID: 864230817}
+  animationUnlockSys: {fileID: 0}
 --- !u!95 &853579368
 Animator:
   serializedVersion: 3
@@ -50565,8 +50559,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unlockingSystem: {fileID: 942227565}
-  gameManager: {fileID: 0}
-  unlockAnimation:
+  gameManager: {fileID: 1118566147}
+  gateOpeningAnimation:
   - {fileID: 2064112684}
   - {fileID: 1895165962}
   - {fileID: 1962762924}
@@ -50584,28 +50578,8 @@ MonoBehaviour:
   - {fileID: 1512199086}
   - {fileID: 1825425952}
   - {fileID: 979437496}
-  - {fileID: 1933356902}
-  - {fileID: 2087653360}
-  animationUnlockObject:
-  - {fileID: 755441624}
-  - {fileID: 1049339122}
-  - {fileID: 293978432}
-  - {fileID: 370883987}
-  - {fileID: 430497474}
-  - {fileID: 1960144280}
-  - {fileID: 1035800834}
-  - {fileID: 1310899776}
-  - {fileID: 161858345}
-  - {fileID: 1252395151}
-  - {fileID: 461252108}
-  - {fileID: 1267480307}
-  - {fileID: 1829913593}
-  - {fileID: 862628018}
-  - {fileID: 328439529}
-  - {fileID: 846355300}
-  - {fileID: 339607547}
-  - {fileID: 1255132352}
-  - {fileID: 2034636639}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &867522346
 GameObject:
   m_ObjectHideFlags: 0
@@ -51431,7 +51405,7 @@ GameObject:
   - component: {fileID: 883425673}
   - component: {fileID: 883425672}
   m_Layer: 5
-  m_Name: Research2Lvl
+  m_Name: ResearchLvl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54604,7 +54578,7 @@ MonoBehaviour:
   - {fileID: 458084308}
   - {fileID: 1291543288}
   nextButton: {fileID: 10178993}
-  unlockButtons:
+  gateUnlockButtonObject:
   - {fileID: 755441624}
   - {fileID: 1049339122}
   - {fileID: 293978432}
@@ -54642,8 +54616,8 @@ MonoBehaviour:
   - {fileID: 281047134}
   - {fileID: 493917848}
   - {fileID: 2058808448}
-  - {fileID: 1704771384}
-  - {fileID: 1847240718}
+  - {fileID: 0}
+  - {fileID: 0}
   planetPriceText:
   - {fileID: 1911386077}
   - {fileID: 984458382}
@@ -54657,6 +54631,7 @@ MonoBehaviour:
   - 10000000
   - 20000000
   researchID: 1
+  researchTextGreenAtID: 000000000400000009000000
   planetCanBeUnlocked: 
 --- !u!1 &943087625
 GameObject:
@@ -56770,8 +56745,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d7a956c5bdbc747a9a5758c23acc2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlocking: {fileID: 942227565}
-  unlockingAnimations: {fileID: 864230817}
+  animationUnlockSys: {fileID: 0}
 --- !u!95 &977113600
 Animator:
   serializedVersion: 3
@@ -56913,8 +56887,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d7a956c5bdbc747a9a5758c23acc2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlocking: {fileID: 942227565}
-  unlockingAnimations: {fileID: 864230817}
+  animationUnlockSys: {fileID: 0}
 --- !u!95 &979437496
 Animator:
   serializedVersion: 3
@@ -57870,20 +57843,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameManager: {fileID: 1118566147}
   unlockingSystem: {fileID: 942227565}
+  researchSectionObject:
+  - {fileID: 1884056625}
+  - {fileID: 552275674}
+  - {fileID: 1227003984}
   researchTextField: {fileID: 146679893}
   researchLevels:
-  - {fileID: 1311177482}
-  - {fileID: 626043824}
-  - {fileID: 35567027}
-  - {fileID: 319876193}
-  - {fileID: 2139147617}
-  - {fileID: 883425672}
-  - {fileID: 1370449668}
-  - {fileID: 464117915}
-  - {fileID: 1776436924}
-  - {fileID: 158231337}
-  - {fileID: 1868523986}
-  - {fileID: 653223301}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   researchPriceText:
   - {fileID: 15752248}
   - {fileID: 1980007686}
@@ -65374,7 +65351,6 @@ MonoBehaviour:
   - 0
   - 0
   researchCanBeDone: 00000000
-  researchID: 0
 --- !u!224 &1118566148
 RectTransform:
   m_ObjectHideFlags: 0
@@ -78664,7 +78640,7 @@ GameObject:
   - component: {fileID: 1311177483}
   - component: {fileID: 1311177482}
   m_Layer: 5
-  m_Name: Research1Lvl
+  m_Name: ResearchLvl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -82499,7 +82475,7 @@ GameObject:
   - component: {fileID: 1370449669}
   - component: {fileID: 1370449668}
   m_Layer: 5
-  m_Name: Research3Lvl
+  m_Name: ResearchLvl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -90535,8 +90511,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d7a956c5bdbc747a9a5758c23acc2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlocking: {fileID: 942227565}
-  unlockingAnimations: {fileID: 864230817}
+  animationUnlockSys: {fileID: 0}
 --- !u!95 &1512199086
 Animator:
   serializedVersion: 3
@@ -103475,8 +103450,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d7a956c5bdbc747a9a5758c23acc2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlocking: {fileID: 942227565}
-  unlockingAnimations: {fileID: 864230817}
+  animationUnlockSys: {fileID: 0}
 --- !u!95 &1764590266
 Animator:
   serializedVersion: 3
@@ -103887,7 +103861,7 @@ GameObject:
   - component: {fileID: 1776436925}
   - component: {fileID: 1776436924}
   m_Layer: 5
-  m_Name: Research1Lvl
+  m_Name: ResearchLvl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -104460,8 +104434,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d7a956c5bdbc747a9a5758c23acc2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlocking: {fileID: 942227565}
-  unlockingAnimations: {fileID: 864230817}
+  animationUnlockSys: {fileID: 0}
 --- !u!95 &1784681615
 Animator:
   serializedVersion: 3
@@ -106364,8 +106337,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d7a956c5bdbc747a9a5758c23acc2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlocking: {fileID: 942227565}
-  unlockingAnimations: {fileID: 864230817}
+  animationUnlockSys: {fileID: 0}
 --- !u!95 &1825425952
 Animator:
   serializedVersion: 3
@@ -108308,7 +108280,7 @@ GameObject:
   - component: {fileID: 1868523987}
   - component: {fileID: 1868523986}
   m_Layer: 5
-  m_Name: Research3Lvl
+  m_Name: ResearchLvl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -109553,8 +109525,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d7a956c5bdbc747a9a5758c23acc2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlocking: {fileID: 942227565}
-  unlockingAnimations: {fileID: 864230817}
+  animationUnlockSys: {fileID: 0}
 --- !u!95 &1895165962
 Animator:
   serializedVersion: 3
@@ -110710,8 +110681,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d7a956c5bdbc747a9a5758c23acc2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlocking: {fileID: 942227565}
-  unlockingAnimations: {fileID: 864230817}
+  animationUnlockSys: {fileID: 0}
 --- !u!95 &1905995549
 Animator:
   serializedVersion: 3
@@ -112059,8 +112029,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d7a956c5bdbc747a9a5758c23acc2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlocking: {fileID: 942227565}
-  unlockingAnimations: {fileID: 864230817}
+  animationUnlockSys: {fileID: 0}
 --- !u!95 &1933356902
 Animator:
   serializedVersion: 3
@@ -112847,8 +112816,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d7a956c5bdbc747a9a5758c23acc2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlocking: {fileID: 942227565}
-  unlockingAnimations: {fileID: 864230817}
+  animationUnlockSys: {fileID: 0}
 --- !u!95 &1953552512
 Animator:
   serializedVersion: 3
@@ -113582,8 +113550,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d7a956c5bdbc747a9a5758c23acc2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlocking: {fileID: 942227565}
-  unlockingAnimations: {fileID: 864230817}
+  animationUnlockSys: {fileID: 0}
 --- !u!95 &1962762924
 Animator:
   serializedVersion: 3
@@ -119268,8 +119235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d7a956c5bdbc747a9a5758c23acc2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlocking: {fileID: 942227565}
-  unlockingAnimations: {fileID: 864230817}
+  animationUnlockSys: {fileID: 0}
 --- !u!1 &2065420805
 GameObject:
   m_ObjectHideFlags: 0
@@ -120422,8 +120388,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d7a956c5bdbc747a9a5758c23acc2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlocking: {fileID: 942227565}
-  unlockingAnimations: {fileID: 864230817}
+  animationUnlockSys: {fileID: 0}
 --- !u!95 &2087653360
 Animator:
   serializedVersion: 3
@@ -123345,7 +123310,7 @@ GameObject:
   - component: {fileID: 2139147618}
   - component: {fileID: 2139147617}
   m_Layer: 5
-  m_Name: Research1Lvl
+  m_Name: ResearchLvl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

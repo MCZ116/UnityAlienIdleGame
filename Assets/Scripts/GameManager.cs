@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
 
     public UnlockingSystem unlockingSystem;
 
-    public UnlockingAnimations unlockingAnimations;
+    public AnimationUnlockSystem unlockingAnimations;
 
     public CanvasGroup canvasShop;
 
@@ -114,7 +114,7 @@ public class GameManager : MonoBehaviour
         StageLevel = new double[20];
         StageMaxTimeCalc();
         unlockingSystem.unlockCost = new double[stageLevel.Length - 1];
-        UpgradeCostCalculator(unlockingSystem.unlockCost,2000,3); // Calculating unlock price for stages  
+        UpgradeCostCalculator(unlockingSystem.unlockCost,250,3.2); // Calculating unlock price for stages  
         unlockingSystem.planetCost = new double[3];
         UpgradeCostCalculator(unlockingSystem.planetCost,220000,12.3); // Calculating unlock price for planets
         progressTimer = new float[stageLevel.Length];
@@ -173,6 +173,7 @@ public class GameManager : MonoBehaviour
         mainResetLevel = 1;
 
         AutoAssigningObjects();
+        research.AssigningResearchObjects();
         astronautBehaviour.AssigningAstronautsOnStart();                
         Debug.Log("Price for level = " + stageUpgradeCosts[0]);
         Debug.Log("UpgradeCounts = " + upgradesCounts[0]);
@@ -317,6 +318,8 @@ public class GameManager : MonoBehaviour
             EarningStage[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("ProgressBarBack").GetComponentInChildren<Text>();
             ButtonUpgradeMaxText[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("BuyMaxUpgrade").GetComponentInChildren<Text>();
             upgradeButtons[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("BuyMaxUpgrade").GetComponent<Button>();
+            unlockingSystem.unlockText[id] = unlockingSystem.gateUnlockButtonObject[id].transform.Find("Text").GetComponent<Text>();
+            unlockingAnimations.gateOpeningAnimation[id] = unlockingSystem.gateUnlockButtonObject[id].transform.Find("unlockGate").GetComponent<Animator>();
         }
 
 

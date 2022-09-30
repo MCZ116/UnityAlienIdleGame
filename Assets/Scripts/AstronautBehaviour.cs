@@ -203,7 +203,7 @@ public class AstronautBehaviour : MonoBehaviour
         for (int id = 0; id < gameManager.astronautsLevel.Length; id++)
         {
 
-            asBoost += gameManager.astronautsLevel[id] * ((gameManager.StageLevel[id] * gameManager.upgradesCounts[id]) * 0.1);
+            asBoost += (gameManager.astronautsLevel[id] * 2) * ((gameManager.StageLevel[id] * gameManager.upgradesCounts[id]));
 
         }
 

@@ -2,16 +2,20 @@
 
 public class GateAnimationDisabling : MonoBehaviour
 {
-    public UnlockingSystem unlocking;
-    public UnlockingAnimations unlockingAnimations;
+    public AnimationUnlockSystem animationUnlockSys;
+
+    private void Start()
+    {
+        animationUnlockSys = GameObject.Find("GateAnimationManager").GetComponent<AnimationUnlockSystem>();
+    }
 
     public void DisableUpgradeButtons()
     {
-        for (int id = 0; id < unlockingAnimations.animationUnlockObject.Length; id++)
+        for (int id = 0; id < animationUnlockSys.unlockingSystem.gateUnlockButtonObject.Length; id++)
         {
-            if (unlockingAnimations.unlockingSystem.animationUnlockConfirm[id] == true)
+            if (animationUnlockSys.unlockingSystem.animationUnlockConfirm[id] == true)
             {
-                unlockingAnimations.unlockingSystem.unlockButtons[id].SetActive(false);
+                animationUnlockSys.unlockingSystem.gateUnlockButtonObject[id].SetActive(false);
             }
         }
 

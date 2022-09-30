@@ -8,6 +8,7 @@ public class Research : MonoBehaviour
     public GameManager gameManager;
     public UnlockingSystem unlockingSystem;
 
+    public GameObject[] researchSectionObject;
     public Text researchTextField;
     public Text[] researchLevels;
     public Text[] researchPriceText;
@@ -48,10 +49,6 @@ public class Research : MonoBehaviour
         ResearchCostMultiplier();
         researchTextWindow.SetActive(false);
 
-        foreach (GameObject button in GameObject.FindGameObjectsWithTag("researchIcon"))
-        {
-            researchIcon.Add(button);
-        }
     }
 
     void Update()
@@ -74,6 +71,24 @@ public class Research : MonoBehaviour
         }
         //HideIfClickedOutside(researchTextWindow);
         ResearchButtonStatus();
+    }
+    // Need debug
+    public void AssigningResearchObjects()
+    {
+        int idR = 0;
+        int idIcon = 1;
+        for (int id = 0; id < researchLevels.Length; id++)
+        {
+            researchLevels[id] = researchSectionObject[idR].transform.Find("ResearchIcon" + idIcon).transform.Find("ResearchLvl").GetComponent<Text>();
+            idIcon++;
+            Debug.Log(id + " HERE " + idR);
+            if((id+1) % 4 == 0)
+            {
+                idR++;
+                idIcon = 1;
+                Debug.Log(idR + " After If HERE");
+            }
+        }    
     }
 
     public void ResearchCostMultiplier()

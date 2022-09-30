@@ -11,7 +11,7 @@ public class UnlockingSystem : MonoBehaviour
     public GameObject[] planetsPanelsObjects;
     public Button[] planetsUnlockBtnObj;
     public Button nextButton;
-    public GameObject[] unlockButtons;
+    public GameObject[] gateUnlockButtonObject;
     public Text[] unlockText;
     public Text[] planetPriceText;
     public Text[] planetRequirementResearch;
@@ -124,7 +124,7 @@ public class UnlockingSystem : MonoBehaviour
             gameManager.mainCurrency -= unlockCost[id];
             upgradeObjects[id].SetActive(true);
             gameManager.upgradesActivated[id] = true;
-            unlockButtons[id].GetComponent<Button>().interactable = false;
+            gateUnlockButtonObject[id].GetComponent<Button>().interactable = false;
             animationUnlockConfirm[id] = true;
             gameManager.StageLevel[id + 1] += 1;
 
@@ -147,14 +147,14 @@ public class UnlockingSystem : MonoBehaviour
             if (gameManager.upgradesActivated[id] == true)
             {
                 upgradeObjects[id].SetActive(true);
-                unlockButtons[id].SetActive(false);
+                gateUnlockButtonObject[id].SetActive(false);
             }
             else if (gameManager.upgradesActivated[id] == false)
             {
 
                 upgradeObjects[id].SetActive(false);
-                unlockButtons[id].SetActive(true);
-                unlockButtons[id].GetComponent<Button>().interactable = true;
+                gateUnlockButtonObject[id].SetActive(true);
+                gateUnlockButtonObject[id].GetComponent<Button>().interactable = true;
             }
         }
     }
