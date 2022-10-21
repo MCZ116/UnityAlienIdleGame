@@ -23,7 +23,7 @@ public class UnlockingSystem : MonoBehaviour
     public double[] planetCost;
     private string[] researchNames;
     public int researchID = 1;
-    public int[] researchTextGreenAtID = { 0, 4, 9 };
+    private int[] researchTextGreenAtID = { 0, 4, 9, 14 };
 
     public bool[] planetCanBeUnlocked;
 
@@ -42,6 +42,10 @@ public class UnlockingSystem : MonoBehaviour
         researchNames[9] = "Ion Engines III";
         researchNames[10]= "Space 3D Printer";
         researchNames[11] = "Space Drones";
+        researchNames[12] = "Low Gravity Lander";
+        researchNames[13] = "Ion Engines IV";
+        researchNames[14] = "Space 3D Printer";
+        researchNames[15] = "Space Drones";
 
         planetCanBeUnlocked = new bool[4];
 

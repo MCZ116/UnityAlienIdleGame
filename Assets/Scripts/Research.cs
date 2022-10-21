@@ -32,7 +32,7 @@ public class Research : MonoBehaviour
     
     void Start()
     {
-        researchText = new string[12];
+        researchText = new string[16];
         researchText[0] = "Improve oxgen tanks capacity for about 2%. Better oxygen tanks allow astronauts to stay longer on the surface of the planet";
         researchText[1] = "Ion engines allow us to travel further and faster by using less energy!";
         researchText[2] = "Finally we can drink some water!";
@@ -45,10 +45,13 @@ public class Research : MonoBehaviour
         researchText[9] = "Test text";
         researchText[10] = "Test text";
         researchText[11] = "Test text";
+        researchText[12] = "Test text";
+        researchText[13] = "Test text";
+        researchText[14] = "Test text";
+        researchText[15] = "Test text";
         researchCosts = new double[researchText.Length];
         ResearchCostMultiplier();
         researchTextWindow.SetActive(false);
-
     }
 
     void Update()

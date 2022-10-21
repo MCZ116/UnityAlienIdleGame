@@ -75,17 +75,19 @@ public class GameManager : MonoBehaviour
 
     public CanvasGroup venusMenu;
 
+    public CanvasGroup mercuryMenu;
+
     private double[] stageLevel;
 
-    public double[] StageLevel { get => stageLevel; set => stageLevel = value; }
+    public double[] StageLevel { get => stageLevel; private set => stageLevel = value; }
 
     private double[] research1Level;
 
-    public double[] Research1Level { get => research1Level; set => research1Level = value; }
+    public double[] Research1Level { get => research1Level; private set => research1Level = value; }
 
     private double[] suitsLevel;
 
-    public double[] SuitsLevel { get => suitsLevel; set => suitsLevel = value; }
+    public double[] SuitsLevel { get => suitsLevel; private set => suitsLevel = value; }
 
     public int[] astronautsLevel;
     public int[] astronautBuyStartID;
@@ -111,16 +113,16 @@ public class GameManager : MonoBehaviour
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         mainCurrency = 100;
         rebirthCost = 10000;
-        StageLevel = new double[20];
+        StageLevel = new double[25];
         StageMaxTimeCalc();
         unlockingSystem.unlockCost = new double[stageLevel.Length - 1];
         UpgradeCostCalculator(unlockingSystem.unlockCost,250,3.2); // Calculating unlock price for stages  
-        unlockingSystem.planetCost = new double[3];
+        unlockingSystem.planetCost = new double[4];
         UpgradeCostCalculator(unlockingSystem.planetCost,220000,12.3); // Calculating unlock price for planets
         progressTimer = new float[stageLevel.Length];
         activeTab = false;
         
-        Research1Level = new double[12];
+        Research1Level = new double[16];
         astronautsLevel = new int[stageLevel.Length];
         SuitsLevel = new double[6];
         astronautBuyStartID = new int[stageLevel.Length];
@@ -433,10 +435,11 @@ public class GameManager : MonoBehaviour
         double temp = 0;
 
         temp += stageLevel[id] * upgradesCounts[id];
+        temp += astronautBehaviour.AstronautsBoost();
         return temp;
     }
 
-    public static String ExponentLetterSystem(double value, string numberToString)
+    public static string ExponentLetterSystem(double value, string numberToString)
     {
 
         if (value <= 1000) return value.ToString(numberToString);
@@ -610,6 +613,7 @@ public class GameManager : MonoBehaviour
                 CanvasGroupMenuSwitch(false, planetsMenu);
                 CanvasGroupMenuSwitch(false, phobosMenu);
                 CanvasGroupMenuSwitch(false, venusMenu);
+                CanvasGroupMenuSwitch(false, mercuryMenu);
                 activeTab = false;
                 break;
 
@@ -626,6 +630,7 @@ public class GameManager : MonoBehaviour
                     CanvasGroupMenuSwitch(true, marsMenu);
                     CanvasGroupMenuSwitch(false, phobosMenu);
                     CanvasGroupMenuSwitch(false, venusMenu);
+                    CanvasGroupMenuSwitch(false, mercuryMenu);
                     activeTab = false;
                 }
                 break;
@@ -643,6 +648,7 @@ public class GameManager : MonoBehaviour
                     CanvasGroupMenuSwitch(false, marsMenu);
                     CanvasGroupMenuSwitch(true, phobosMenu);
                     CanvasGroupMenuSwitch(false, venusMenu);
+                    CanvasGroupMenuSwitch(false, mercuryMenu);
                     activeTab = false;
                 }
                 break;
@@ -660,6 +666,25 @@ public class GameManager : MonoBehaviour
                     CanvasGroupMenuSwitch(false, marsMenu);
                     CanvasGroupMenuSwitch(false, phobosMenu);
                     CanvasGroupMenuSwitch(true, venusMenu);
+                    CanvasGroupMenuSwitch(false, mercuryMenu);
+                    activeTab = false;
+                }
+                break;
+
+            case 4:
+                if (planetUnlocked[3])
+                {
+                    CanvasGroupMenuSwitch(true, canvasMainGame);
+                    CanvasGroupMenuSwitch(false, canvasShop);
+                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
+                    CanvasGroupMenuSwitch(false, canvasResearchTab);
+                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
+                    CanvasGroupMenuSwitch(false, moonMenu);
+                    CanvasGroupMenuSwitch(false, planetsMenu);
+                    CanvasGroupMenuSwitch(false, marsMenu);
+                    CanvasGroupMenuSwitch(false, phobosMenu);
+                    CanvasGroupMenuSwitch(false, venusMenu);
+                    CanvasGroupMenuSwitch(true, mercuryMenu);
                     activeTab = false;
                 }
                 break;
@@ -927,7 +952,7 @@ public class GameManager : MonoBehaviour
         // secure to not give bonus before going higher than 1 lvl of rebirth
         if (mainResetLevel != 1)
         {
-            rBoost += 0.05 * mainResetLevel * 1.7;
+            rBoost += 0.5 * mainResetLevel * 1.7;
             return rBoost;
         } 
         return rBoost;

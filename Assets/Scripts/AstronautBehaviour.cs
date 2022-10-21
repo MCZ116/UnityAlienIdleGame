@@ -204,9 +204,9 @@ public class AstronautBehaviour : MonoBehaviour
         {
 
             asBoost += (gameManager.astronautsLevel[id] * 2) * ((gameManager.StageLevel[id] * gameManager.upgradesCounts[id]));
-
+            
         }
-
+        Debug.Log(asBoost + " Outcome AstroBoost");
         return asBoost;
         
     }
