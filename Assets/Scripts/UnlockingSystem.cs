@@ -29,7 +29,7 @@ public class UnlockingSystem : MonoBehaviour
 
     private void Start()
     {
-        researchNames = new string[research.researchLevels.Length];
+        researchNames = new string[gameManager.Research1Level.Length];
         researchNames[0] = "Oxygen Recycle";
         researchNames[1] = "Ion Engines";
         researchNames[2] = "Water Filter";

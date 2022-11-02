@@ -6,11 +6,11 @@ public class AutoAddObject : MonoBehaviour
 {
     void Awake()
     {
-        GameManager.instance.allObjects.Add(gameObject);
+      //  GameManager.instance.allObjects.Add(gameObject);
     }
 
     void OnDestroy()
     {
-        GameManager.instance.allObjects.Remove(gameObject);
+      //  GameManager.instance.allObjects.Remove(gameObject);
     }
 }

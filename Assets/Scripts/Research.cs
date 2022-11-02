@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Research : MonoBehaviour
+public class Research : CostCalculator
 {
     public GameManager gameManager;
     public UnlockingSystem unlockingSystem;
@@ -13,7 +13,6 @@ public class Research : MonoBehaviour
     public Text[] researchLevels;
     public Text[] researchPriceText;
     public GameObject researchTextWindow;
-    //public GameObject[] researchIcon;
     public Button[] researchButton;
     public List<GameObject> researchIcon = new List<GameObject>();
     public Image researchWindowIcon;
@@ -32,7 +31,7 @@ public class Research : MonoBehaviour
     
     void Start()
     {
-        researchText = new string[16];
+        researchText = new string[gameManager.Research1Level.Length];
         researchText[0] = "Improve oxgen tanks capacity for about 2%. Better oxygen tanks allow astronauts to stay longer on the surface of the planet";
         researchText[1] = "Ion engines allow us to travel further and faster by using less energy!";
         researchText[2] = "Finally we can drink some water!";
@@ -70,7 +69,8 @@ public class Research : MonoBehaviour
             {
                 researchLevels[id].enabled = false;
             }
-            researchPriceText[id].text = GameManager.ExponentLetterSystem(ResearchCostCalc(id), "F2");
+            // Using abstract class for test
+           researchPriceText[id].text = GameManager.ExponentLetterSystem(CostCalc(id, researchCosts[id],gameManager.Research1Level[id],gameManager.mainCurrency), "F2");
         }
         //HideIfClickedOutside(researchTextWindow);
         ResearchButtonStatus();
@@ -83,6 +83,9 @@ public class Research : MonoBehaviour
         for (int id = 0; id < researchLevels.Length; id++)
         {
             researchLevels[id] = researchSectionObject[idR].transform.Find("ResearchIcon" + idIcon).transform.Find("ResearchLvl").GetComponent<Text>();
+            researchPriceText[id] = researchSectionObject[idR].transform.Find("ResearchIcon" + idIcon).transform.Find("ResearchPrice").GetComponent<Text>();
+            researchButton[id] = researchSectionObject[idR].transform.Find("ResearchIcon" + idIcon).transform.Find("ResearchUpgrade1").GetComponent<Button>();
+            researchImage[id] = researchSectionObject[idR].transform.Find("ResearchIcon" + idIcon).transform.Find("ResearchUpgrade1").GetComponent<Image>();
             idIcon++;
             Debug.Log(id + " HERE " + idR);
             if((id+1) % 4 == 0)
@@ -128,7 +131,7 @@ public class Research : MonoBehaviour
                 researchButton[id].interactable = true;
             }
 
-            if (gameManager.mainCurrency >= ResearchCostCalc(id))
+            if (gameManager.mainCurrency >= CostCalc(id, researchCosts[id], gameManager.Research1Level[id],gameManager.mainCurrency))
             {
                 researchPriceText[id].color = Color.green;
             }
@@ -147,28 +150,13 @@ public class Research : MonoBehaviour
     //    }
     //}
 
-    public double ResearchCostCalc(int id)
-    {
-        var h = researchCosts[id];
-        var c = gameManager.mainCurrency;
-        var r = 1.07;
-        var u = gameManager.Research1Level[id];
-        double n = 1;
-        var costResearchUpgrade = h * (System.Math.Pow(r, u) * (System.Math.Pow(r, n) - 1) / (r - 1));
-
-        return costResearchUpgrade;
-    }
 
     public void ResearchUpgradeButton(int id)
     {
-        
-        var h = researchCosts[id];
-        var c = gameManager.mainCurrency;
-        var r = 1.07;
-        var u = gameManager.Research1Level[id];
         double n = 1;
-        var costResearchUpgrade = h * (System.Math.Pow(r, u) * (System.Math.Pow(r, n) - 1) / (r - 1));
-        
+ 
+        var costResearchUpgrade = CostCalc(id, researchCosts[id], gameManager.Research1Level[id],gameManager.mainCurrency);
+
         if (gameManager.mainCurrency >= costResearchUpgrade && gameManager.researchCanBeDone[id] == true)
         {
             gameManager.mainCurrency -= costResearchUpgrade;

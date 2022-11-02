@@ -31,7 +31,6 @@ public class GameManager : MonoBehaviour
     public double mainResetLevel;
     public GameObject[] progressBarObject;
     public GameObject settingsScreenObject;
-    public List<GameObject> allObjects = new List<GameObject>();
     public static GameManager instance = null;
     public bool[] upgradesActivated;
     private bool[] earnedCrystal;
@@ -114,6 +113,8 @@ public class GameManager : MonoBehaviour
         mainCurrency = 100;
         rebirthCost = 10000;
         StageLevel = new double[25];
+       // unlockingSystem.upgradeObjects = new GameObject[StageLevel.Length - 1];
+        upgradeMaxTime = new float[StageLevel.Length];
         StageMaxTimeCalc();
         unlockingSystem.unlockCost = new double[stageLevel.Length - 1];
         UpgradeCostCalculator(unlockingSystem.unlockCost,250,3.2); // Calculating unlock price for stages  
@@ -121,7 +122,7 @@ public class GameManager : MonoBehaviour
         UpgradeCostCalculator(unlockingSystem.planetCost,220000,12.3); // Calculating unlock price for planets
         progressTimer = new float[stageLevel.Length];
         activeTab = false;
-        
+        confirmAstronautBuy = new bool[StageLevel.Length * 4];
         Research1Level = new double[16];
         astronautsLevel = new int[stageLevel.Length];
         SuitsLevel = new double[6];
@@ -135,6 +136,7 @@ public class GameManager : MonoBehaviour
         planetUnlocked = new bool[unlockingSystem.planetsPanelsObjects.Length];
         researchCanBeDone = new bool[Research1Level.Length];
         research.upgradeResearchValues = new double[research1Level.Length];
+        unlockingSystem.unlockText = new Text[unlockingSystem.upgradeObjects.Length];
         ResearchMultiplierCalculator();
         planetUnlocked[0] = false;
         planetID = 0;
@@ -173,6 +175,16 @@ public class GameManager : MonoBehaviour
         suitsLevel[0] = 0;
         suitsLevel[1] = 0;
         mainResetLevel = 1;
+
+        //StageLevelText = new Text[stageLevel.Length];
+        //EarningStage = new Text[stageLevel.Length];
+        //ButtonUpgradeMaxText = new Text[stageLevel.Length];
+        //progressBarObject = new GameObject[stageLevel.Length];
+
+        research.researchLevels = new Text[Research1Level.Length];
+        research.researchPriceText = new Text[Research1Level.Length];
+        research.researchButton = new Button[Research1Level.Length];
+        research.researchImage = new Image[Research1Level.Length];
 
         AutoAssigningObjects();
         research.AssigningResearchObjects();
