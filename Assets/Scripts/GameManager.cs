@@ -606,7 +606,6 @@ public class GameManager : MonoBehaviour
                     activeTab = false;
                 }
                 break;
-
         } 
     }
 
