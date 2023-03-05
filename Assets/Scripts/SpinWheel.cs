@@ -14,13 +14,16 @@ public class SpinWheel : MonoBehaviour
     public float spinStartAngle = 0;
     public float spinEndAngle;
     public Text awardDisplay;
+
+    //changes
     public GameManager gameManager;
+
     public float currentLerpRotation;
     public float maxLerpRotationTime;
 
-
     void Update()
     {
+
         HideIfClickedOutside(spinArea);
         if (!spinStarted)
             return;
@@ -63,54 +66,59 @@ public class SpinWheel : MonoBehaviour
 
     private void GiveAwardByAngle()
     {
-
         switch ((int)spinStartAngle)
         {
             case 0:
-                Rewards(100000);
+                Rewards(300, "crystal");
                 break;
             case -330:
-                Rewards(2000);
+                Rewards(1000000, "points");
                 break;
             case -300:
-                Rewards(1000);
+                Rewards(150, "crystal");
                 break;
             case -270:
-                Rewards(5000);
+                Rewards(500000, "points");
                 break;
             case -240:
-                Rewards(300);
+                Rewards(100, "crystal");
                 break;
             case -210:
-                Rewards(10000);
+                Rewards(250000, "points");
                 break;
             case -180:
-                Rewards(900);
+                Rewards(50, "crystal");
                 break;
             case -150:
-                Rewards(200);
+                Rewards(100000, "points");
                 break;
             case -120:
-                Rewards(100);
+                Rewards(25, "crystal");
                 break;
             case -90:
-                Rewards(700);
+                Rewards(50000, "points");
                 break;
             case -60:
-                Rewards(500);
+                Rewards(10, "crystal");
                 break;
             case -30:
-                Rewards(100);
-                break;
-            default:
-                Rewards(3000);
+                Rewards(25000, "points");
                 break;
         }
     }
 
-    private void Rewards(int award)
+    private void Rewards(double award, string currency)
     {
-        gameManager.mainCurrency += award;
+        switch (currency)
+        {
+            case "crystal":
+                gameManager.crystalCurrency += award;
+                break;
+            case "points":
+                gameManager.mainCurrency += award;
+                break;
+        }
+
         awardDisplay.text = award.ToString("F2");
         awardDisplay.gameObject.SetActive(true);
     }
