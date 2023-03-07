@@ -447,7 +447,7 @@ public class GameManager : MonoBehaviour
         double temp = 0;
 
         temp += stageLevel[id] * upgradesCounts[id];
-        temp += astronautBehaviour.AstronautsBoost();
+        temp += astronautBehaviour.AstronautsBoostStage(id);
         return temp;
     }
 
@@ -463,11 +463,11 @@ public class GameManager : MonoBehaviour
         if ((double)exponentEng / 3 >= 27)
         {
             var letterTwo = ((char)(Math.Floor(((double)exponentEng - 3 * 26) / (3 * 26)) % 26 + 97)).ToString();
-            return (value / Math.Pow(10, exponentEng)).ToString("F2") + letterTwo + letterOne;
+            return (value / Math.Pow(10, exponentEng)).ToString(numberToString) + letterTwo + letterOne;
         }
         if (value > 1000)
         {
-            return (value / Math.Pow(10, exponentEng)).ToString("F2") + letterOne;
+            return (value / Math.Pow(10, exponentEng)).ToString(numberToString) + letterOne;
 
         }
         return value.ToString("F2");
@@ -935,17 +935,19 @@ public class GameManager : MonoBehaviour
                 planetUnlocked[id] = false;
             }
 
-            for (int id = 0; id < confirmAstronautBuy.Length; id++)
-            {
-                confirmAstronautBuy[id] = false;
-            }
+            // No reset for that
 
-            for (int id = 0; id < astronautsLevel.Length; id++)
-            {
-                astronautsLevel[id] = 0;
-                astronautBehaviour.astronautMaxConfirm[id] = false;
-                astronautBuyStartID[id] = id * 4;
-            }
+            //for (int id = 0; id < confirmAstronautBuy.Length; id++)
+            //{
+            //    confirmAstronautBuy[id] = false;
+            //}
+
+            //for (int id = 0; id < astronautsLevel.Length; id++)
+            //{
+            //    astronautsLevel[id] = 0;
+            //    astronautBehaviour.astronautMaxConfirm[id] = false;
+            //    astronautBuyStartID[id] = id * 4;
+            //}
 
             astronautBehaviour.AstronautsControl();
             unlockingSystem.LoadUnlocksStatus();

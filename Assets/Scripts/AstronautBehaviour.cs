@@ -211,4 +211,14 @@ public class AstronautBehaviour : MonoBehaviour
         
     }
 
+    public double AstronautsBoostStage(int id)
+    {
+        double[] asBoost = new double[gameManager.astronautsLevel.Length];
+
+        asBoost[id] += (gameManager.astronautsLevel[id] * 2) * ((gameManager.StageLevel[id] * gameManager.upgradesCounts[id]));
+        
+        return asBoost[id];
+
+    }
+
 }
