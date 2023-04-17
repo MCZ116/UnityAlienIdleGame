@@ -58,7 +58,6 @@ public class Research : CostCalculator
         for (int id = 0; id < gameManager.Research1Level.Length; id++)
         {
             ResearchConnectorsCheck(id);
-            Debug.Log("ResearchLevel = " + gameManager.Research1Level[id] + "of ID" + id);
             if (gameManager.Research1Level[id] >= 1)
             {
                 researchLevels[id].enabled = true;
@@ -87,12 +86,10 @@ public class Research : CostCalculator
             researchButton[id] = researchSectionObject[idR].transform.Find("ResearchIcon" + idIcon).transform.Find("ResearchUpgrade1").GetComponent<Button>();
             researchImage[id] = researchSectionObject[idR].transform.Find("ResearchIcon" + idIcon).transform.Find("ResearchUpgrade1").GetComponent<Image>();
             idIcon++;
-            Debug.Log(id + " HERE " + idR);
             if((id+1) % 4 == 0)
             {
                 idR++;
                 idIcon = 1;
-                Debug.Log(idR + " After If HERE");
             }
         }    
     }

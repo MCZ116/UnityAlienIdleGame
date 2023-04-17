@@ -72,6 +72,15 @@
       "source": "builtin",
       "dependencies": {}
     },
+    "com.unity.ads": {
+      "version": "4.2.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.collab-proxy": {
       "version": "1.13.5",
       "depth": 0,
@@ -83,7 +92,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.device-simulator": {
-      "version": "3.0.3-preview",
+      "version": "3.1.0-preview",
       "depth": 0,
       "source": "registry",
       "dependencies": {},

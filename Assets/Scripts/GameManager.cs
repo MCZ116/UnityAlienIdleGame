@@ -149,9 +149,6 @@ public class GameManager : MonoBehaviour
             StageLevel[id] = 0;
             astronautBuyStartID[id] = id * 4;
             astronautsLevel[id] = 0;
-            Debug.Log("astroLevelBeforeLoad = " + astronautsLevel.Length);
-            Debug.Log("alienlevelBeforeLoad = " + StageLevel.Length);
-            Debug.Log("Loaded Assignig");
         }
 
         for (int id = 0; id < unlockingSystem.animationUnlockConfirm.Length; id++)
@@ -271,6 +268,7 @@ public class GameManager : MonoBehaviour
         RebirthUnlock();
         StartCoroutine("MySave");
         SaveDate();
+
     }
 
     public void QuitButtonAndroid()
