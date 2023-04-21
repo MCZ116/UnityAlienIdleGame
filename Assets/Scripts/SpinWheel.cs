@@ -126,10 +126,12 @@ public class SpinWheel : MonoBehaviour
             case "crystal":
                 gameManager.crystalCurrency += award;
                 awardDisplay.text = award.ToString("F0");
+                Debug.Log(award + " Crystals");
                 break;
             case "points":
                 gameManager.mainCurrency += award;
                 awardDisplay.text = GameManager.ExponentLetterSystem(award, "F0");
+                Debug.Log(award + " Points");
                 break;
         }
         awardDisplay.gameObject.SetActive(true);

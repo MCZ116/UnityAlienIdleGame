@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Advertisements;
+using UnityEngine.EventSystems;
 
 public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowListener
 {
@@ -10,8 +11,12 @@ public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
     string _adUnitId = null; // This will remain null for unsupported platforms
     public GameManager gameManager;
     public OfflineProgress offlineProgress;
+    public SpinWheel spinWheel;
+    public BonusTime bonusTime;
     [SerializeField] Button spinBtn;
-    [SerializeField] Button offlineBoostBtn;
+    [SerializeField] Button doubleTime;
+    bool allowSpinAd = false;
+    string buttonName;
 
     void Awake()
     {
@@ -24,7 +29,8 @@ public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
 
         //Disable the button until the ad is ready to show:
         _showAdButton.interactable = false;
-
+        spinBtn.interactable = false;
+        doubleTime.interactable = false;
     }
 
     // Load content to the Ad Unit:
@@ -44,8 +50,12 @@ public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
         {
             // Configure the button to call the ShowAd() method when clicked:
             _showAdButton.onClick.AddListener(ShowAd);
+            spinBtn.onClick.AddListener(ShowAd);
+            doubleTime.onClick.AddListener(ShowAd);
             // Enable the button for users to click:
             _showAdButton.interactable = true;
+            spinBtn.interactable = true;
+            doubleTime.interactable = true;
         }
     }
 
@@ -54,8 +64,15 @@ public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
     {
         // Disable the button:
         _showAdButton.interactable = false;
+        spinBtn.interactable = false;
+        doubleTime.interactable = false;
         // Then show the ad:
         Advertisement.Show(_adUnitId, this);
+    }
+
+    public void ButtonHandler(string buttonName)
+    {
+        this.buttonName = buttonName;
     }
 
     // Implement the Show Listener's OnUnityAdsShowComplete callback method to determine if the user gets a reward:
@@ -64,16 +81,25 @@ public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
         if (adUnitId.Equals(_adUnitId) && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
         {
             // Grant a reward.
-            if (offlineBoostBtn)
+            switch(buttonName)
             {
-                gameManager.mainCurrency += offlineProgress.totalRewards;
-                Debug.Log("Unity Ads Rewarded Ad Completed " + offlineProgress.totalRewards);
-            } else if (spinBtn)
-            {
-                Debug.Log("Spin start after ad");
+                case "DoubleReward":
+                    gameManager.mainCurrency += offlineProgress.totalRewards;
+                    allowSpinAd = true;
+                    break;
+
+                case"SpinButton":
+                    spinWheel.SpinWheelMenu();
+                    spinWheel.SpinWheelButton();
+                    spinBtn.onClick.RemoveAllListeners();
+                    break;
+
+                case "DoubleTime":
+                    bonusTime.ClickedBonusBtn();
+                    doubleTime.onClick.RemoveAllListeners();
+                    break;
             }
             
-           
             // Load another ad:
             Advertisement.Load(_adUnitId, this);
         }
