@@ -24,8 +24,14 @@ public class UnlockingSystem : MonoBehaviour
     private string[] researchNames;
     public int researchID = 1;
     private int[] researchTextGreenAtID = { 0, 4, 9, 14 };
-
     public bool[] planetCanBeUnlocked;
+
+    private void Awake()
+    {
+        planetsPanelsObjects = GameObject.FindGameObjectsWithTag("unlockPlanets");
+        Debug.Log(planetsPanelsObjects.Length + "Planet panels");
+        planetCanBeUnlocked = new bool[planetsPanelsObjects.Length];
+    }
 
     private void Start()
     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -31,6 +32,7 @@ public class GameManager : MonoBehaviour
     public double mainResetLevel;
     public GameObject[] progressBarObject;
     public GameObject settingsScreenObject;
+    public GameObject[] planets;
     public static GameManager instance = null;
     public bool[] upgradesActivated;
     private bool[] earnedCrystal;
@@ -53,6 +55,8 @@ public class GameManager : MonoBehaviour
     public UnlockingSystem unlockingSystem;
 
     public AnimationUnlockSystem unlockingAnimations;
+
+    public CanvasGroup[] canvasGroupTabs;
 
     public CanvasGroup canvasShop;
 
@@ -113,7 +117,7 @@ public class GameManager : MonoBehaviour
         mainCurrency = 100;
         rebirthCost = 10000;
         StageLevel = new double[25];
-       // unlockingSystem.upgradeObjects = new GameObject[StageLevel.Length - 1];
+
         upgradeMaxTime = new float[StageLevel.Length];
         StageMaxTimeCalc();
         unlockingSystem.unlockCost = new double[stageLevel.Length - 1];
@@ -140,8 +144,9 @@ public class GameManager : MonoBehaviour
         ResearchMultiplierCalculator();
         planetUnlocked[0] = false;
         planetID = 0;
-        // Here was AutoObjectAssigning
-
+   
+        planets = GameObject.FindGameObjectsWithTag("planetTab");
+        canvasGroupTabs = new CanvasGroup[planets.Length];
 
         for (int id = 0; id < StageLevel.Length; id++)
         {
@@ -166,6 +171,11 @@ public class GameManager : MonoBehaviour
         for (int id = 0; id < Research1Level.Length; id++)
         {
             Research1Level[id] = 0;
+        }
+
+        for (int id = 0; id < canvasGroupTabs.Length; id++)
+        {
+            canvasGroupTabs[id] = planets[id].GetComponent<CanvasGroup>();
         }
 
         upgradeLevel1 = 0;
@@ -609,110 +619,34 @@ public class GameManager : MonoBehaviour
 
     public void ChangePlanetTab(int planetID)
     {
-        switch (planetID)
-        {
-            case 0:
-                CanvasGroupMenuSwitch(true, canvasMainGame);
-                CanvasGroupMenuSwitch(false, canvasShop);
-                CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                CanvasGroupMenuSwitch(false, canvasResearchTab);
-                CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                CanvasGroupMenuSwitch(true, moonMenu);
-                CanvasGroupMenuSwitch(false, marsMenu);
-                CanvasGroupMenuSwitch(false, planetsMenu);
-                CanvasGroupMenuSwitch(false, phobosMenu);
-                CanvasGroupMenuSwitch(false, venusMenu);
-                CanvasGroupMenuSwitch(false, mercuryMenu);
-                activeTab = false;
-                break;
+            Enumerable.Range(0, canvasGroupTabs.Length)
+            .Where(id => id != planetID && planetUnlocked[planetID])
+            .ToList()
+            .ForEach(id => CanvasGroupMenuSwitch(false, canvasGroupTabs[id]));
 
-            case 1:
-                if (planetUnlocked[0])
-                {
-                    CanvasGroupMenuSwitch(true, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(false, canvasResearchTab);
-                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(false, moonMenu);
-                    CanvasGroupMenuSwitch(false, planetsMenu);
-                    CanvasGroupMenuSwitch(true, marsMenu);
-                    CanvasGroupMenuSwitch(false, phobosMenu);
-                    CanvasGroupMenuSwitch(false, venusMenu);
-                    CanvasGroupMenuSwitch(false, mercuryMenu);
-                    activeTab = false;
-                }
-                break;
-
-            case 2:
-                if (planetUnlocked[1])
-                {
-                    CanvasGroupMenuSwitch(true, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(false, canvasResearchTab);
-                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(false, moonMenu);
-                    CanvasGroupMenuSwitch(false, planetsMenu);
-                    CanvasGroupMenuSwitch(false, marsMenu);
-                    CanvasGroupMenuSwitch(true, phobosMenu);
-                    CanvasGroupMenuSwitch(false, venusMenu);
-                    CanvasGroupMenuSwitch(false, mercuryMenu);
-                    activeTab = false;
-                }
-                break;
-
-            case 3:
-                if (planetUnlocked[2])
-                {
-                    CanvasGroupMenuSwitch(true, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(false, canvasResearchTab);
-                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(false, moonMenu);
-                    CanvasGroupMenuSwitch(false, planetsMenu);
-                    CanvasGroupMenuSwitch(false, marsMenu);
-                    CanvasGroupMenuSwitch(false, phobosMenu);
-                    CanvasGroupMenuSwitch(true, venusMenu);
-                    CanvasGroupMenuSwitch(false, mercuryMenu);
-                    activeTab = false;
-                }
-                break;
-
-            case 4:
-                if (planetUnlocked[3])
-                {
-                    CanvasGroupMenuSwitch(true, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(false, canvasResearchTab);
-                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(false, moonMenu);
-                    CanvasGroupMenuSwitch(false, planetsMenu);
-                    CanvasGroupMenuSwitch(false, marsMenu);
-                    CanvasGroupMenuSwitch(false, phobosMenu);
-                    CanvasGroupMenuSwitch(false, venusMenu);
-                    CanvasGroupMenuSwitch(true, mercuryMenu);
-                    activeTab = false;
-                }
-                break;
-        }
+            CanvasGroupMenuSwitch(true, canvasGroupTabs[planetID]);
+            CanvasGroupMenuSwitch(false, planetsMenu);
+            CanvasGroupMenuSwitch(true, canvasMainGame);
+            CanvasGroupMenuSwitch(false, canvasShop);
+            CanvasGroupMenuSwitch(false, canvasRebirthTab);
+            CanvasGroupMenuSwitch(false, canvasResearchTab);
+            CanvasGroupMenuSwitch(false, canvasSuitsTab);
+            activeTab = false;
+            this.planetID = planetID;
     }
 
     public void SwitchPlanetsButtons(string buttonName)
     {
-        
-        if(buttonName == "Next" && planetID < planetUnlocked.Length && planetUnlocked[planetID] == true)
+        if (buttonName == "Next" && planetID < planetUnlocked.Length && planetUnlocked[planetID] == true)
         {
             planetID += 1;
             ChangePlanetTab(planetID);
 
-        } else if(buttonName == "Prev" && planetID <= planetUnlocked.Length && planetID != 0)
+        } else if(buttonName == "Prev" && planetID < planetUnlocked.Length && planetID != 0)
         {
-            planetID -= 1;
-            ChangePlanetTab(planetID);
 
+            planetID -= 1;
+            ChangePlanetTab(planetID); 
         }
     }
 
