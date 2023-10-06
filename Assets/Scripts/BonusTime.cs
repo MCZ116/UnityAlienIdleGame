@@ -19,14 +19,13 @@ public class BonusTime : MonoBehaviour
             timeLeft -= Time.deltaTime;
             BonusAdded();
         }
-        Debug.Log("Time added: " + timeLeft + " and " + timeAdded);
+
         HideIfClickedOutside(boostArea);
     }
 
     public void ClickedBonusBtn()
     {
         timeLeft += timeAdded;
-        Debug.Log("Time added: " + timeLeft + " and " + timeAdded);
     }
 
     public void BonusAdded()
@@ -34,7 +33,6 @@ public class BonusTime : MonoBehaviour
         if (timeLeft > 0)
         {
             gameManager.mainCurrency += gameManager.ResearchPointsCalculator();
-            Debug.Log("Adding bonus: " + gameManager.ResearchPointsCalculator());
         }
     }
 

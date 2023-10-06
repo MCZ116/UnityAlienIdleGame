@@ -72,7 +72,6 @@ public class SpinWheel : MonoBehaviour
 
         float randomAngle = sectorAngles[Random.Range(0,sectorAngles.Length)];
         spinEndAngle = -(fullspins * 360 + randomAngle);
-        Debug.Log(spinEndAngle + "endangle");
         spinStarted = true;
     }
 
@@ -126,12 +125,13 @@ public class SpinWheel : MonoBehaviour
             case "crystal":
                 gameManager.crystalCurrency += award;
                 awardDisplay.text = award.ToString("F0");
-                Debug.Log(award + " Crystals");
+
                 break;
+
             case "points":
                 gameManager.mainCurrency += award;
                 awardDisplay.text = GameManager.ExponentLetterSystem(award, "F0");
-                Debug.Log(award + " Points");
+
                 break;
         }
         awardDisplay.gameObject.SetActive(true);

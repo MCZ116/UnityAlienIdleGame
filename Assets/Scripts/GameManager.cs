@@ -33,13 +33,14 @@ public class GameManager : MonoBehaviour
     public GameObject[] progressBarObject;
     public GameObject settingsScreenObject;
     public GameObject[] planets;
+    public GameObject homeSafeZone;
     public static GameManager instance = null;
     public bool[] upgradesActivated;
     private bool[] earnedCrystal;
     public bool[] confirmAstronautBuy;
     public bool[] planetUnlocked;
     public bool[] researchUnlocked;
-    private bool activeTab;
+    private bool[] activeTab;
     double[] copyArray;
     //bool activateRB = false;
     public Image[] progressBar;
@@ -56,29 +57,13 @@ public class GameManager : MonoBehaviour
 
     public AnimationUnlockSystem unlockingAnimations;
 
-    public CanvasGroup[] canvasGroupTabs;
+    public CanvasGroup[] canvasPlanetsTabs;
 
-    public CanvasGroup canvasShop;
+    public CanvasGroup[] canvasTabs;
+
+    public string[] tabsNames = {"gameMenu","shopMenu","researchMenu","rebirth","suitsMenu", "planetsMenu" };
 
     public CanvasGroup canvasMainGame;
-
-    public CanvasGroup canvasRebirthTab;
-
-    public CanvasGroup canvasResearchTab;
-
-    public CanvasGroup canvasSuitsTab;
-
-    public CanvasGroup moonMenu;
-
-    public CanvasGroup marsMenu;
-
-    public CanvasGroup planetsMenu;
-
-    public CanvasGroup phobosMenu;
-
-    public CanvasGroup venusMenu;
-
-    public CanvasGroup mercuryMenu;
 
     private double[] stageLevel;
 
@@ -110,14 +95,12 @@ public class GameManager : MonoBehaviour
         else if (instance != this)
             Destroy(gameObject);
 
-        Debug.Log("GameManagerStarted!");
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         mainCurrency = 100;
         rebirthCost = 10000;
         StageLevel = new double[25];
-
         upgradeMaxTime = new float[StageLevel.Length];
         StageMaxTimeCalc();
         unlockingSystem.unlockCost = new double[stageLevel.Length - 1];
@@ -125,7 +108,6 @@ public class GameManager : MonoBehaviour
         unlockingSystem.planetCost = new double[4];
         UpgradeCostCalculator(unlockingSystem.planetCost,220000,12.3); // Calculating unlock price for planets
         progressTimer = new float[stageLevel.Length];
-        activeTab = false;
         confirmAstronautBuy = new bool[StageLevel.Length * 4];
         Research1Level = new double[16];
         astronautsLevel = new int[stageLevel.Length];
@@ -146,7 +128,7 @@ public class GameManager : MonoBehaviour
         planetID = 0;
    
         planets = GameObject.FindGameObjectsWithTag("planetTab");
-        canvasGroupTabs = new CanvasGroup[planets.Length];
+        canvasPlanetsTabs = new CanvasGroup[planets.Length];
 
         for (int id = 0; id < StageLevel.Length; id++)
         {
@@ -173,10 +155,20 @@ public class GameManager : MonoBehaviour
             Research1Level[id] = 0;
         }
 
-        for (int id = 0; id < canvasGroupTabs.Length; id++)
+        for (int id = 0; id < canvasPlanetsTabs.Length; id++)
         {
-            canvasGroupTabs[id] = planets[id].GetComponent<CanvasGroup>();
+            canvasPlanetsTabs[id] = planets[id].GetComponent<CanvasGroup>();
         }
+
+        canvasTabs = homeSafeZone.GetComponentsInChildren<CanvasGroup>()
+            .Where(child => child.name.Contains("Menu")).ToArray();
+
+        activeTab = new bool[canvasTabs.Length];
+        for (int id = 0; id < canvasTabs.Length; id++)
+        {
+            activeTab[id] = false;
+        }
+
 
         upgradeLevel1 = 0;
         suitsLevel[0] = 0;
@@ -196,8 +188,6 @@ public class GameManager : MonoBehaviour
         AutoAssigningObjects();
         research.AssigningResearchObjects();
         astronautBehaviour.AssigningAstronautsOnStart();                
-        Debug.Log("Price for level = " + stageUpgradeCosts[0]);
-        Debug.Log("UpgradeCounts = " + upgradesCounts[0]);
 
         if (PlayerPrefs.GetInt("NeverDone", 0) <= 0)
         {
@@ -217,25 +207,18 @@ public class GameManager : MonoBehaviour
 
         ChangeBuyModeText.text = "1";
 
-        Debug.Log(confirmAstronautBuy.Length + "Astronauts amount");
         //Load after assigning variables and before loading unlock status or it won't appear
         Load();
-        Debug.Log("Loaded");
         // Assignign once before update for offline calculations
         for (int id = 0; id < stageLevel.Length; id++)
         {
             AutoValuesAssigning(id, upgradesCounts, 0.3, 1.4);
         }
 
-        for (int id = 0; id < astronautsLevel.Length; id++)
-        {
-            Debug.Log("astroLevelAfterLoad = " + astronautsLevel.Length);
-        }
         astronautBehaviour.AstronautsControl();
         unlockingSystem.PlanetsUnlockCheck();
         unlockingSystem.LoadUnlocksStatus();
         offline.OfflineProgressLoad();
-        Debug.Log(" AstroLenght: " + StageLevel.Length);
         
     }
 
@@ -408,7 +391,6 @@ public class GameManager : MonoBehaviour
         temp += suitsUpgrades.SuitsBoost();
         temp += RebirthBoost();
 
-        Debug.Log(temp + "Research Outcome");
         return temp;
     }
 
@@ -502,137 +484,44 @@ public class GameManager : MonoBehaviour
     
     public void ChangeTab(string tabName)
     {
-        switch (tabName)
+
+        for (int id = 0; id < canvasTabs.Length; id++)
         {
-            case "gameMenu":
+            if (tabName.Equals(tabsNames[id]) && !activeTab[id])
+            {
+                CanvasGroupMenuSwitch(true, canvasTabs[id]);
+                activeTab[id] = true;
+            }
+            else if(!tabName.Equals(tabsNames[id]))
+            {
+                CanvasGroupMenuSwitch(false, canvasTabs[id]);
+                activeTab[id] = false;
+            }
+            else if (tabName.Equals(tabsNames[id]) && activeTab[id])
+            {
+                CanvasGroupMenuSwitch(false, canvasTabs[id]);
+                activeTab[id] = false;
                 CanvasGroupMenuSwitch(true, canvasMainGame);
-                CanvasGroupMenuSwitch(false, canvasShop);
-                CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                CanvasGroupMenuSwitch(false, canvasResearchTab);
-                CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                CanvasGroupMenuSwitch(false, planetsMenu);
-                break;
-
-            case "shopMenu":
-                CanvasGroupMenuSwitch(false, canvasMainGame);
-                CanvasGroupMenuSwitch(true, canvasShop);
-                CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                CanvasGroupMenuSwitch(false, canvasResearchTab);
-                CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                CanvasGroupMenuSwitch(false, planetsMenu);
-
-                break;
-
-            case "rebirth":
-                if (!activeTab)
-                {
-                    CanvasGroupMenuSwitch(false, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(true, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(false, canvasResearchTab);
-                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(false, planetsMenu);
-                    activeTab = true;
-                }
-                else
-                {
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(false, canvasResearchTab);
-                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(true, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(false, planetsMenu);
-                    activeTab = false;
-                }
-                break;
-
-            case "researchMenu":
-                if (!activeTab)
-                {
-                    CanvasGroupMenuSwitch(false, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(true, canvasResearchTab);
-                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(false, planetsMenu);
-                    activeTab = true;
-                }
-                else
-                {
-                    CanvasGroupMenuSwitch(false, canvasResearchTab);
-                    CanvasGroupMenuSwitch(true, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(false, planetsMenu);
-                    activeTab = false;
-                }
-                break;
-
-            case "suitsMenu":
-                if (!activeTab)
-                {
-                    CanvasGroupMenuSwitch(false, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(false, canvasResearchTab);
-                    CanvasGroupMenuSwitch(true, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(false, planetsMenu);
-                    activeTab = true;
-                } else
-                {
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(false, canvasResearchTab);
-                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(true, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, planetsMenu);
-                    activeTab = false;
-                }
-
-                break;
-
-            case "planetsMenu":
-                if (!activeTab)
-                {
-                    CanvasGroupMenuSwitch(false, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(false, canvasResearchTab);
-                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(true, planetsMenu);
-                    activeTab = true;
-                }
-                else
-                {
-                    CanvasGroupMenuSwitch(true, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(false, canvasResearchTab);
-                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(false, planetsMenu);
-                    activeTab = false;
-                }
-                break;
-        } 
+            }
+        }
     }
 
     public void ChangePlanetTab(int planetID)
     {
-            Enumerable.Range(0, canvasGroupTabs.Length)
+        Enumerable.Range(0, canvasPlanetsTabs.Length)
             .Where(id => id != planetID && planetUnlocked[planetID])
             .ToList()
-            .ForEach(id => CanvasGroupMenuSwitch(false, canvasGroupTabs[id]));
+            .ForEach(id => CanvasGroupMenuSwitch(false, canvasPlanetsTabs[id]));
 
-            CanvasGroupMenuSwitch(true, canvasGroupTabs[planetID]);
-            CanvasGroupMenuSwitch(false, planetsMenu);
-            CanvasGroupMenuSwitch(true, canvasMainGame);
-            CanvasGroupMenuSwitch(false, canvasShop);
-            CanvasGroupMenuSwitch(false, canvasRebirthTab);
-            CanvasGroupMenuSwitch(false, canvasResearchTab);
-            CanvasGroupMenuSwitch(false, canvasSuitsTab);
-            activeTab = false;
-            this.planetID = planetID;
+        for (int id = 0; id < canvasTabs.Length; id++)
+        {
+            CanvasGroupMenuSwitch(false, canvasTabs[id]);
+            activeTab[id] = false;
+        }
+
+        CanvasGroupMenuSwitch(true, canvasPlanetsTabs[planetID]);
+        CanvasGroupMenuSwitch(true, canvasMainGame);
+        this.planetID = planetID;
     }
 
     public void SwitchPlanetsButtons(string buttonName)
@@ -797,12 +686,10 @@ public class GameManager : MonoBehaviour
             case 0:
                 n = System.Math.Floor(System.Math.Log(c * (r - 1) / (h * System.Math.Pow(r, u)) + 1, r));
                 crystalsInMax = (int)n / 10;
-                Debug.Log(crystalsInMax);
                 crystalCurrency += crystalsInMax;
                 break;
             case 1:
                 n = 1;
-                Debug.Log("Bought 1 of ID = " + id);
                 break;
             case 2:
                 n = 10;

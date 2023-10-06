@@ -27,7 +27,7 @@ public class OfflineProgress : MonoBehaviour
             offlineTimeText.text = $"Time: {timeSpan:dd\\:hh\\:mm\\:ss}";
 
             totalRewards = gameManager.ResearchPointsCalculator() * offlineTime;
-            Debug.Log(totalRewards + "OutcomeOffline");
+
             gameManager.mainCurrency += totalRewards;
             offlineRewardText.text = GameManager.ExponentLetterSystem(totalRewards, "F2");
         }

@@ -47,7 +47,6 @@ public class SuitsUpgrades : MonoBehaviour
                 suitsTextLevels[id].enabled = false;
             }
             suitsTextCost[id].text = GameManager.ExponentLetterSystem(SuitsUpgradeCalc(id), "F2");
-            Debug.Log(" Suits Upgrade Cost: " + SuitsUpgradeCalc(id));
             
         }
         SuitshButtonStatus();

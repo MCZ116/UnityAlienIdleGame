@@ -19,6 +19,7 @@ TagManager:
   - researchIcon
   - unlockPlanets
   - planetTab
+  - menuTab
   layers:
   - Default
   - TransparentFX

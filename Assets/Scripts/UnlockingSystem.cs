@@ -29,7 +29,6 @@ public class UnlockingSystem : MonoBehaviour
     private void Awake()
     {
         planetsPanelsObjects = GameObject.FindGameObjectsWithTag("unlockPlanets");
-        Debug.Log(planetsPanelsObjects.Length + "Planet panels");
         planetCanBeUnlocked = new bool[planetsPanelsObjects.Length];
     }
 

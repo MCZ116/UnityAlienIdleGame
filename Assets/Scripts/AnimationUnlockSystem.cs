@@ -13,9 +13,6 @@ public class AnimationUnlockSystem : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("Unlocking objects Update" + unlockingSystem.upgradeObjects.Length);
-        Debug.Log("Unlocking objects" + unlockingSystem.upgradeObjects.Length);
-        Debug.Log("UnlockText " + unlockingSystem.unlockText.Length);
         for (int id = 0; id < unlockingSystem.upgradeObjects.Length; id++)
         {
             AnimationUnlock(id);
