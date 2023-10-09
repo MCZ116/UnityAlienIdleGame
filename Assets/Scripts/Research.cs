@@ -8,15 +8,20 @@ public class Research : CostCalculator
     public GameManager gameManager;
     public UnlockingSystem unlockingSystem;
 
+    private double[] researchLevel;
+    public double[] ResearchLevel { get => researchLevel; private set => researchLevel = value; }
     public GameObject[] researchSectionObject;
     public Text researchTextField;
     public Text[] researchLevels;
     public Text[] researchPriceText;
     public GameObject researchTextWindow;
+    public GameObject[] researches;
     public Button[] researchButton;
     public List<GameObject> researchIcon = new List<GameObject>();
     public Image researchWindowIcon;
     public Image[] researchImage;
+    public bool[] researchUnlocked;
+    public bool[] researchCanBeDone;
 
     public Image[] researchConnDefault;
 
@@ -28,10 +33,34 @@ public class Research : CostCalculator
     double[] researchCosts;
     public double[] upgradeResearchValues;
     string[] researchText;
-    
+
+    private void Awake()
+    {
+        researches = GameObject.FindGameObjectsWithTag("researchIcon");
+
+        ResearchLevel = new double[researches.Length];
+        researchUnlocked = new bool[ResearchLevel.Length];
+        researchCanBeDone = new bool[ResearchLevel.Length];
+        upgradeResearchValues = new double[researchLevel.Length];
+
+        for (int id = 0; id < ResearchLevel.Length; id++)
+        {
+            researchUnlocked[id] = false;
+            researchCanBeDone[id] = false;
+            ResearchLevel[id] = 0;
+        }
+
+        gameManager.ResearchMultiplierCalculator();
+        researchLevels = new Text[ResearchLevel.Length];
+        researchPriceText = new Text[ResearchLevel.Length];
+        researchButton = new Button[ResearchLevel.Length];
+        researchImage = new Image[ResearchLevel.Length];
+        AssigningResearchObjects();
+    }
+
     void Start()
     {
-        researchText = new string[gameManager.Research1Level.Length];
+        researchText = new string[ResearchLevel.Length];
         researchText[0] = "Improve oxgen tanks capacity for about 2%. Better oxygen tanks allow astronauts to stay longer on the surface of the planet";
         researchText[1] = "Ion engines allow us to travel further and faster by using less energy!";
         researchText[2] = "Finally we can drink some water!";
@@ -55,13 +84,13 @@ public class Research : CostCalculator
 
     void Update()
     {
-        for (int id = 0; id < gameManager.Research1Level.Length; id++)
+        for (int id = 0; id < ResearchLevel.Length; id++)
         {
             ResearchConnectorsCheck(id);
-            if (gameManager.Research1Level[id] >= 1)
+            if (ResearchLevel[id] >= 1)
             {
                 researchLevels[id].enabled = true;
-                researchLevels[id].text = gameManager.Research1Level[id].ToString("F0");
+                researchLevels[id].text = ResearchLevel[id].ToString("F0");
                 
             }
             else
@@ -69,7 +98,7 @@ public class Research : CostCalculator
                 researchLevels[id].enabled = false;
             }
             // Using abstract class for test
-           researchPriceText[id].text = GameManager.ExponentLetterSystem(CostCalc(id, researchCosts[id],gameManager.Research1Level[id],gameManager.mainCurrency), "F2");
+           researchPriceText[id].text = GameManager.ExponentLetterSystem(CostCalc(id, researchCosts[id],ResearchLevel[id],gameManager.mainCurrency), "F2");
         }
         //HideIfClickedOutside(researchTextWindow);
         ResearchButtonStatus();
@@ -119,7 +148,7 @@ public class Research : CostCalculator
         for (int id = 0; id < researchLevels.Length; id++)
         {
 
-            if (!gameManager.researchCanBeDone[id])
+            if (!researchCanBeDone[id])
             {
                 researchButton[id].interactable = false;
             }
@@ -128,7 +157,7 @@ public class Research : CostCalculator
                 researchButton[id].interactable = true;
             }
 
-            if (gameManager.mainCurrency >= CostCalc(id, researchCosts[id], gameManager.Research1Level[id],gameManager.mainCurrency))
+            if (gameManager.mainCurrency >= CostCalc(id, researchCosts[id], ResearchLevel[id],gameManager.mainCurrency))
             {
                 researchPriceText[id].color = Color.green;
             }
@@ -152,14 +181,14 @@ public class Research : CostCalculator
     {
         double n = 1;
  
-        var costResearchUpgrade = CostCalc(id, researchCosts[id], gameManager.Research1Level[id],gameManager.mainCurrency);
+        var costResearchUpgrade = CostCalc(id, researchCosts[id], ResearchLevel[id],gameManager.mainCurrency);
 
-        if (gameManager.mainCurrency >= costResearchUpgrade && gameManager.researchCanBeDone[id] == true)
+        if (gameManager.mainCurrency >= costResearchUpgrade && researchCanBeDone[id] == true)
         {
             gameManager.mainCurrency -= costResearchUpgrade;
-            gameManager.Research1Level[id] += (int)n;
+            ResearchLevel[id] += (int)n;
             ResearchBoost();
-            gameManager.researchUnlocked[id] = true;
+            researchUnlocked[id] = true;
             unlockingSystem.ResearchUnlocking(id);
         }
         ResearchInfoWindowOnClick(id);
@@ -167,7 +196,7 @@ public class Research : CostCalculator
 
     public void ResearchConnectorsCheck(int id)
     {
-        if (gameManager.researchUnlocked[id] == true)
+        if (researchUnlocked[id] == true)
         {
             researchConnDefault[id].sprite = researchConnActive;
         } else
@@ -178,8 +207,8 @@ public class Research : CostCalculator
     {
         double resBoost = 0;
 
-        for (int id = 0; id < gameManager.Research1Level.Length; id++) {
-            resBoost += gameManager.Research1Level[id] * upgradeResearchValues[id];
+        for (int id = 0; id < ResearchLevel.Length; id++) {
+            resBoost += ResearchLevel[id] * upgradeResearchValues[id];
         }
 
         return resBoost;

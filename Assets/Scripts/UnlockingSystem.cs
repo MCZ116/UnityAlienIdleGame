@@ -34,7 +34,7 @@ public class UnlockingSystem : MonoBehaviour
 
     private void Start()
     {
-        researchNames = new string[gameManager.Research1Level.Length];
+        researchNames = new string[research.ResearchLevel.Length];
         researchNames[0] = "Oxygen Recycle";
         researchNames[1] = "Ion Engines";
         researchNames[2] = "Water Filter";
@@ -114,7 +114,7 @@ public class UnlockingSystem : MonoBehaviour
 
         for (int researchNr = 0; researchNr < planetsUnlockBtnObj.Length; researchNr++)
         {
-            if (gameManager.researchUnlocked[researchTextGreenAtID[researchNr]])
+            if (research.researchUnlocked[researchTextGreenAtID[researchNr]])
             {
                 planetRequirementResearch[researchNr].color = Color.green;
             }
@@ -137,9 +137,9 @@ public class UnlockingSystem : MonoBehaviour
             animationUnlockConfirm[id] = true;
             gameManager.StageLevel[id + 1] += 1;
 
-            if (!gameManager.researchCanBeDone[0])
+            if (!research.researchCanBeDone[0])
             {
-                gameManager.researchCanBeDone[0] = true;
+                research.researchCanBeDone[0] = true;
             }
 
         }
@@ -170,9 +170,9 @@ public class UnlockingSystem : MonoBehaviour
 
     public void ResearchUnlocking(int id)
     {
-        if(gameManager.researchCanBeDone.Length - 1 > id)
+        if(research.researchCanBeDone.Length - 1 > id)
         {
-            gameManager.researchCanBeDone[id+1] = true;
+            research.researchCanBeDone[id+1] = true;
         }
     }
 
@@ -195,7 +195,7 @@ public class UnlockingSystem : MonoBehaviour
 
     public void PlanetsUnlocking(int id)
     {
-        if (gameManager.researchUnlocked[researchTextGreenAtID[id]] == true  && gameManager.mainCurrency >= planetCost[id] && gameManager.planetUnlocked[id] == false)
+        if (research.researchUnlocked[researchTextGreenAtID[id]] == true  && gameManager.mainCurrency >= planetCost[id] && gameManager.planetUnlocked[id] == false)
         {
             gameManager.mainCurrency -= planetCost[id];
             planetsPanelsObjects[id].SetActive(true);

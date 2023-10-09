@@ -5,7 +5,6 @@ using UnityEngine;
 [System.Serializable]
 public class GameData
 {
-
     public double researchPointsData;
     public double crystals;
     public double[] stageLevelData;
@@ -24,7 +23,7 @@ public class GameData
     public bool[] researchUnlocked;
     public int researchID;
 
-    public GameData (GameManager gameManager)
+    public GameData (GameManager gameManager, Research research)
     {
         researchPointsData = gameManager.mainCurrency;
 
@@ -34,7 +33,11 @@ public class GameData
 
         mainResetLevelData = gameManager.mainResetLevel;
 
-        researchLevel = gameManager.Research1Level;
+        researchLevel = research.ResearchLevel;
+
+        researchCanBeDone = research.researchCanBeDone;
+
+        researchUnlocked = research.researchUnlocked;
 
         upgradeActivated = gameManager.upgradesActivated;
 
@@ -51,10 +54,6 @@ public class GameData
         astronautIDStartPosition = gameManager.astronautBuyStartID;
 
         planetUnlocked = gameManager.planetUnlocked;
-
-        researchCanBeDone = gameManager.researchCanBeDone;
-
-        researchUnlocked = gameManager.researchUnlocked;
 
     }
 
