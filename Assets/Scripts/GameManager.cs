@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance = null;
     public bool[] upgradesActivated;
     private bool[] earnedCrystal;
+    [System.NonSerialized]
     public bool[] confirmAstronautBuy;
     public bool[] planetUnlocked;
     
@@ -101,23 +102,16 @@ public class GameManager : MonoBehaviour
         StageLevel = new double[stages.Length];
         upgradeMaxTime = new float[StageLevel.Length];
         StageMaxTimeCalc();
-        unlockingSystem.unlockCost = new double[stageLevel.Length - 1];
-        UpgradeCostCalculator(unlockingSystem.unlockCost,250,3.2); // Calculating unlock price for stages  
-        unlockingSystem.planetCost = new double[4];
-        UpgradeCostCalculator(unlockingSystem.planetCost,220000,12.3); // Calculating unlock price for planets
         progressTimer = new float[stageLevel.Length];
         confirmAstronautBuy = new bool[StageLevel.Length * 4];
         astronautsLevel = new int[stageLevel.Length];
         SuitsLevel = new double[6];
-        astronautBuyStartID = new int[stageLevel.Length];
-        unlockingSystem.animationUnlockConfirm = new bool[stageLevel.Length - 1];
+        astronautBuyStartID = new int[stageLevel.Length];       
         upgradesCounts = new double[StageLevel.Length];
-        upgradesActivated = new bool[unlockingSystem.unlockCost.Length];
+        upgradesActivated = new bool[unlockingSystem.upgradeObjects.Length];
         stageUpgradeCosts = new double[StageLevel.Length];
         earnedCrystal = new bool[StageLevel.Length];
         planetUnlocked = new bool[unlockingSystem.planetsPanelsObjects.Length];
-
-        unlockingSystem.unlockText = new Text[unlockingSystem.upgradeObjects.Length];
         
         planetUnlocked[0] = false;
         planetID = 0;
@@ -133,9 +127,8 @@ public class GameManager : MonoBehaviour
             astronautsLevel[id] = 0;
         }
 
-        for (int id = 0; id < unlockingSystem.animationUnlockConfirm.Length; id++)
-        {
-            unlockingSystem.animationUnlockConfirm[id] = false;
+        for (int id = 0; id < unlockingSystem.upgradeObjects.Length; id++)
+        {      
             upgradesActivated[id] = false;
         }
 
@@ -153,19 +146,21 @@ public class GameManager : MonoBehaviour
             activeTab[id] = false;
         }
 
+        for (int id = 0; id < astronautBehaviour.astronautsUpgrades.Length; id++) // add unlockingSystem.unlockCost.Length*4
+        {
+            confirmAstronautBuy[id] = false;
+        }
+
 
         upgradeLevel1 = 0;
         suitsLevel[0] = 0;
         suitsLevel[1] = 0;
         mainResetLevel = 1;
 
-
         //StageLevelText = new Text[stageLevel.Length];
         //EarningStage = new Text[stageLevel.Length];
         //ButtonUpgradeMaxText = new Text[stageLevel.Length];
         //progressBarObject = new GameObject[stageLevel.Length];
-
-
 
         AutoAssigningObjects();
         
@@ -182,15 +177,11 @@ public class GameManager : MonoBehaviour
     void Start()
     {
 
-        for (int id = 0; id < astronautBehaviour.astronautsUpgrades.Length; id++) // add unlockingSystem.unlockCost.Length*4
-        {
-            confirmAstronautBuy[id] = false;
-        }
-
         ChangeBuyModeText.text = "1";
 
         //Load after assigning variables and before loading unlock status or it won't appear
         Load();
+
         // Assignign once before update for offline calculations
         for (int id = 0; id < stageLevel.Length; id++)
         {
@@ -198,8 +189,6 @@ public class GameManager : MonoBehaviour
         }
 
         astronautBehaviour.AstronautsControl();
-        unlockingSystem.PlanetsUnlockCheck();
-        unlockingSystem.LoadUnlocksStatus();
         offline.OfflineProgressLoad();
         
     }
@@ -298,6 +287,7 @@ public class GameManager : MonoBehaviour
     {
         for (int id = 0; id < stageLevel.Length-1; id++)
         {
+
             progressBarObject[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("ProgressBarBack").GetChild(0).gameObject;
             progressBar[id + 1] = progressBarObject[id + 1].GetComponentInChildren<Image>();
 
@@ -305,20 +295,9 @@ public class GameManager : MonoBehaviour
             EarningStage[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("ProgressBarBack").GetComponentInChildren<Text>();
             ButtonUpgradeMaxText[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("BuyMaxUpgrade").GetComponentInChildren<Text>();
             upgradeButtons[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("BuyMaxUpgrade").GetComponent<Button>();
-            unlockingSystem.unlockText[id] = unlockingSystem.gateUnlockButtonObject[id].transform.Find("Text").GetComponent<Text>();
-            unlockingAnimations.gateOpeningAnimation[id] = unlockingSystem.gateUnlockButtonObject[id].transform.Find("unlockGate").GetComponent<Animator>();
         }
 
 
-    }
-
-    public void UpgradeCostCalculator(double[] costArray, double basePrice, double multiplier)
-    {
-        for (int id = 0; id < costArray.Length; id++)
-        {
-            costArray[id] = basePrice;
-            basePrice *= multiplier;
-        }
     }
 
     public void ResearchMultiplierCalculator()
@@ -722,7 +701,6 @@ public class GameManager : MonoBehaviour
             for (int id = 0; id < upgradesActivated.Length; id++)
             {
                 upgradesActivated[id] = false;
-                unlockingSystem.animationUnlockConfirm[id] = false;
             }
 
             for (int id = 0; id < research.researchCanBeDone.Length; id++)

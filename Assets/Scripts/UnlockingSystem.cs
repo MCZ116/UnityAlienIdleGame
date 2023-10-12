@@ -17,8 +17,6 @@ public class UnlockingSystem : MonoBehaviour
     public Text[] planetRequirementResearch;
 
     [System.NonSerialized]
-    public bool[] animationUnlockConfirm;
-    [System.NonSerialized]
     public double[] unlockCost;
     public double[] planetCost;
     private string[] researchNames;
@@ -30,10 +28,13 @@ public class UnlockingSystem : MonoBehaviour
     {
         planetsPanelsObjects = GameObject.FindGameObjectsWithTag("unlockPlanets");
         planetCanBeUnlocked = new bool[planetsPanelsObjects.Length];
-    }
+        planetCost = new double[planetsPanelsObjects.Length];
+        UpgradeCostCalculator(planetCost, 220000, 12.3);
 
-    private void Start()
-    {
+        unlockText = new Text[upgradeObjects.Length];
+        unlockCost = new double[upgradeObjects.Length];
+        UpgradeCostCalculator(unlockCost, 250, 3.2); // Calculating unlock price for stages  
+
         researchNames = new string[research.ResearchLevel.Length];
         researchNames[0] = "Oxygen Recycle";
         researchNames[1] = "Ion Engines";
@@ -45,7 +46,7 @@ public class UnlockingSystem : MonoBehaviour
         researchNames[7] = "Space Drones";
         researchNames[8] = "Low Gravity Lander";
         researchNames[9] = "Ion Engines III";
-        researchNames[10]= "Space 3D Printer";
+        researchNames[10] = "Space 3D Printer";
         researchNames[11] = "Space Drones";
         researchNames[12] = "Low Gravity Lander";
         researchNames[13] = "Ion Engines IV";
@@ -62,6 +63,17 @@ public class UnlockingSystem : MonoBehaviour
         }
         planetCanBeUnlocked[0] = true;
 
+        for (int id = 0; id < unlockText.Length; id++)
+        {
+            unlockText[id] = gateUnlockButtonObject[id].transform.Find("Text").GetComponent<Text>();
+        }
+      
+    }
+
+    private void Start()
+    {
+        PlanetsUnlockCheck();
+        LoadUnlocksStatus();
     }
 
     void Update()
@@ -134,7 +146,6 @@ public class UnlockingSystem : MonoBehaviour
             upgradeObjects[id].SetActive(true);
             gameManager.upgradesActivated[id] = true;
             gateUnlockButtonObject[id].GetComponent<Button>().interactable = false;
-            animationUnlockConfirm[id] = true;
             gameManager.StageLevel[id + 1] += 1;
 
             if (!research.researchCanBeDone[0])
@@ -146,6 +157,15 @@ public class UnlockingSystem : MonoBehaviour
         else
             upgradeObjects[id].SetActive(false);
 
+    }
+
+    public void UpgradeCostCalculator(double[] costArray, double basePrice, double multiplier)
+    {
+        for (int id = 0; id < costArray.Length; id++)
+        {
+            costArray[id] = basePrice;
+            basePrice *= multiplier;
+        }
     }
 
     public void LoadUnlocksStatus()

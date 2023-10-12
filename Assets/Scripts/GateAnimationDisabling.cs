@@ -13,7 +13,7 @@ public class GateAnimationDisabling : MonoBehaviour
     {
         for (int id = 0; id < animationUnlockSys.unlockingSystem.gateUnlockButtonObject.Length; id++)
         {
-            if (animationUnlockSys.unlockingSystem.animationUnlockConfirm[id] == true)
+            if (animationUnlockSys.gameManager.upgradesActivated[id] == true)
             {
                 animationUnlockSys.unlockingSystem.gateUnlockButtonObject[id].SetActive(false);
             }
