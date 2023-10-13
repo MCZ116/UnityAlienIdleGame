@@ -78,10 +78,13 @@ public class AstronautBehaviour : MonoBehaviour
 
     public void AssignAstronautSection()
     {
-        for (int id = 0; id < gameManager.StageLevel.Length - 1; id++)
+        astronautsBuyButton = new Button[gameManager.stageObjects.Length];
+        AstronautCostText = new Text[gameManager.stageObjects.Length];
+
+        for (int id = 0; id < gameManager.stageObjects.Length; id++)
         {
-            astronautsBuyButton[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("BuyAstronautsButton").GetComponent<Button>();
-            AstronautCostText[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("BuyAstronautsButton").GetComponentInChildren<Text>();
+            astronautsBuyButton[id] = gameManager.stageObjects[id].transform.Find("BuyAstronautsButton").GetComponent<Button>();
+            AstronautCostText[id] = gameManager.stageObjects[id].transform.Find("BuyAstronautsButton").GetComponentInChildren<Text>();
         }
 
     }

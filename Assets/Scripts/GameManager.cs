@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     public GameObject settingsScreenObject;
     public GameObject[] planets;
     public GameObject[] stages;
+    public GameObject[] stageObjects;
     public GameObject homeSafeZone;
     public static GameManager instance = null;
     public bool[] upgradesActivated;
@@ -99,6 +100,7 @@ public class GameManager : MonoBehaviour
         mainCurrency = 100;
         rebirthCost = 10000;
         stages = GameObject.FindGameObjectsWithTag("Stages");
+        stageObjects = GameObject.FindGameObjectsWithTag("stageObjects");
         StageLevel = new double[stages.Length];
         upgradeMaxTime = new float[StageLevel.Length];
         StageMaxTimeCalc();
@@ -156,11 +158,6 @@ public class GameManager : MonoBehaviour
         suitsLevel[0] = 0;
         suitsLevel[1] = 0;
         mainResetLevel = 1;
-
-        //StageLevelText = new Text[stageLevel.Length];
-        //EarningStage = new Text[stageLevel.Length];
-        //ButtonUpgradeMaxText = new Text[stageLevel.Length];
-        //progressBarObject = new GameObject[stageLevel.Length];
 
         AutoAssigningObjects();
         
@@ -285,16 +282,20 @@ public class GameManager : MonoBehaviour
 
     public void AutoAssigningObjects()
     {
-        for (int id = 0; id < stageLevel.Length-1; id++)
+        StageLevelText = new Text[stageLevel.Length];
+        EarningStage = new Text[stageLevel.Length];
+        ButtonUpgradeMaxText = new Text[stageLevel.Length];
+        progressBarObject = new GameObject[stageLevel.Length];
+
+        for (int id = 0; id < stageObjects.Length; id++)
         {
+            progressBarObject[id] = stageObjects[id].transform.Find("ProgressBarBack").GetChild(0).gameObject;
+            progressBar[id] = progressBarObject[id].GetComponentInChildren<Image>();
 
-            progressBarObject[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("ProgressBarBack").GetChild(0).gameObject;
-            progressBar[id + 1] = progressBarObject[id + 1].GetComponentInChildren<Image>();
-
-            StageLevelText[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("LevelWindowStage").GetComponentInChildren<Text>();
-            EarningStage[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("ProgressBarBack").GetComponentInChildren<Text>();
-            ButtonUpgradeMaxText[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("BuyMaxUpgrade").GetComponentInChildren<Text>();
-            upgradeButtons[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("BuyMaxUpgrade").GetComponent<Button>();
+            StageLevelText[id] = stageObjects[id].transform.Find("LevelWindowStage").GetComponentInChildren<Text>();
+            EarningStage[id] = stageObjects[id].transform.Find("ProgressBarBack").GetComponentInChildren<Text>();
+            ButtonUpgradeMaxText[id] = stageObjects[id].transform.Find("BuyMaxUpgrade").GetComponentInChildren<Text>();
+            upgradeButtons[id] = stageObjects[id].transform.Find("BuyMaxUpgrade").GetComponent<Button>();
         }
 
 

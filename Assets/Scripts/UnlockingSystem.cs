@@ -63,6 +63,8 @@ public class UnlockingSystem : MonoBehaviour
         }
         planetCanBeUnlocked[0] = true;
 
+        gateUnlockButtonObject = GameObject.FindGameObjectsWithTag("unlockButtons");
+
         for (int id = 0; id < unlockText.Length; id++)
         {
             unlockText[id] = gateUnlockButtonObject[id].transform.Find("Text").GetComponent<Text>();
