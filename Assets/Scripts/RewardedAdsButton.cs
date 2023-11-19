@@ -15,7 +15,6 @@ public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
     public BonusTime bonusTime;
     [SerializeField] Button spinBtn;
     [SerializeField] Button doubleTime;
-    bool allowSpinAd = false;
     string buttonName;
 
     void Awake()
@@ -85,10 +84,10 @@ public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
             {
                 case "DoubleReward":
                     gameManager.mainCurrency += offlineProgress.totalRewards;
-                    allowSpinAd = true;
                     break;
 
                 case"SpinButton":
+                    Debug.Log("SPIN!!!!");
                     spinWheel.SpinWheelMenu();
                     spinWheel.SpinWheelButton();
                     spinBtn.onClick.RemoveAllListeners();

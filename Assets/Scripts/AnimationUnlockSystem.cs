@@ -33,6 +33,7 @@ public class AnimationUnlockSystem : MonoBehaviour
 
             if (gameManager.upgradesActivated[id] == true)
             {
+                unlockingSystem.unlockText[id].text = "";
                 gateOpeningAnimation[id].SetBool("unlockAnimation", true);
             }
             else if (gameManager.upgradesActivated[id] == false)

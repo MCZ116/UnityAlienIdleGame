@@ -32,7 +32,7 @@ public class BonusTime : MonoBehaviour
     {
         if (timeLeft > 0)
         {
-            gameManager.mainCurrency += gameManager.ResearchPointsCalculator();
+            gameManager.mainCurrency += gameManager.TotalIncome();
         }
     }
 

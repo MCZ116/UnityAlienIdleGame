@@ -13,7 +13,7 @@ public class OfflineProgress : MonoBehaviour
 
     public void OfflineProgressLoad()
     {
-        if (gameManager.ResearchPointsCalculator() != 0)
+        if (gameManager.TotalIncome() != 0)
         {
             var tempOfflineTime = Convert.ToInt64(PlayerPrefs.GetString("OfflineTime"));
             var oldTime = DateTime.FromBinary(tempOfflineTime);
@@ -26,7 +26,7 @@ public class OfflineProgress : MonoBehaviour
             TimeSpan timeSpan = TimeSpan.FromSeconds(rawTime);
             offlineTimeText.text = $"Time: {timeSpan:dd\\:hh\\:mm\\:ss}";
 
-            totalRewards = gameManager.ResearchPointsCalculator() * offlineTime;
+            totalRewards = gameManager.TotalIncome() * offlineTime;
 
             gameManager.mainCurrency += totalRewards;
             offlineRewardText.text = GameManager.ExponentLetterSystem(totalRewards, "F2");

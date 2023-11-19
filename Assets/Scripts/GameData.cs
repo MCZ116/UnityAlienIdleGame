@@ -33,8 +33,6 @@ public class GameData
 
         mainResetLevelData = gameManager.mainResetLevel;
 
-        researchLevel = research.ResearchLevel;
-
         researchCanBeDone = research.researchCanBeDone;
 
         researchUnlocked = research.researchUnlocked;

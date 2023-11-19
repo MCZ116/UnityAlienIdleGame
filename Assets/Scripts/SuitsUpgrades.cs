@@ -12,18 +12,23 @@ public class SuitsUpgrades : MonoBehaviour
     public Text[] suitsTextCost;
     public GameObject suitsObjectInfoWindow;
     public double[] suitsUpgradesCosts;
-    double[] suitsUpgradesValues = { 0.4, 0.5, 0.6, 0.8, 0.85, 0.90 };
+    public double[] suitsUpgradesValues;
     string[] suitsUpgradeText;
+
+    private void Awake()
+    {
+        suitsUpgradesCosts = new double[6];
+        suitsUpgradesValues = new double[suitsUpgradesCosts.Length];
+
+        for (int id = 0; id < suitsUpgradesCosts.Length; id++)
+        {
+            gameManager.AutoValuesAssigning(id, suitsUpgradesCosts, 10000000, 1000*id+1);
+            gameManager.AutoValuesAssigning(id, suitsUpgradesValues, 1, 0.4);
+        }   
+    }
 
     void Start()
     {
-        suitsUpgradesCosts = new double[6];
-        //suitsUpgradesCosts[0] = 10000;
-        //suitsUpgradesCosts[1] = 20000;
-        //suitsUpgradesCosts[2] = 30000;
-        //suitsUpgradesCosts[3] = 40000;
-        //suitsUpgradesCosts[4] = 50000;
-        //suitsUpgradesCosts[5] = 60000;
         suitsUpgradeText = new string[6];
         suitsUpgradeText[0] = "Oxygen tank efficiency";
         suitsUpgradeText[1] = "Helmet durability";
@@ -85,7 +90,6 @@ public class SuitsUpgrades : MonoBehaviour
         {
             gameManager.mainCurrency -= costSuitsUpgrade;
             gameManager.SuitsLevel[id] += (int)n;
-            SuitsBoost();
 
         }
         SuitsInfoWindowOnClick(id);
@@ -105,7 +109,7 @@ public class SuitsUpgrades : MonoBehaviour
 
     public double SuitsBoost()
     {
-        double suitBoost = 0;
+        double suitBoost = 1;
 
         for (int id = 0; id < gameManager.SuitsLevel.Length; id++)
         {

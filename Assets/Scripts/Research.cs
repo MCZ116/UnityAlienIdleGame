@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,11 +7,8 @@ public class Research : CostCalculator
     public GameManager gameManager;
     public UnlockingSystem unlockingSystem;
 
-    private double[] researchLevel;
-    public double[] ResearchLevel { get => researchLevel; private set => researchLevel = value; }
     public GameObject[] researchSectionObject;
     public Text researchTextField;
-    public Text[] researchLevels;
     public Text[] researchPriceText;
     public GameObject researchTextWindow;
     public GameObject[] researches;
@@ -36,31 +32,27 @@ public class Research : CostCalculator
 
     private void Awake()
     {
-        researches = GameObject.FindGameObjectsWithTag("researchIcon");
+        researches = gameManager.FindObsWithTag("researchIcon");
+        researchUnlocked = new bool[researches.Length];
+        researchCanBeDone = new bool[researches.Length];
+        upgradeResearchValues = new double[researches.Length];
 
-        ResearchLevel = new double[researches.Length];
-        researchUnlocked = new bool[ResearchLevel.Length];
-        researchCanBeDone = new bool[ResearchLevel.Length];
-        upgradeResearchValues = new double[researchLevel.Length];
-
-        for (int id = 0; id < ResearchLevel.Length; id++)
+        for (int id = 0; id < researches.Length; id++)
         {
             researchUnlocked[id] = false;
             researchCanBeDone[id] = false;
-            ResearchLevel[id] = 0;
         }
 
         gameManager.ResearchMultiplierCalculator();
-        researchLevels = new Text[ResearchLevel.Length];
-        researchPriceText = new Text[ResearchLevel.Length];
-        researchButton = new Button[ResearchLevel.Length];
-        researchImage = new Image[ResearchLevel.Length];
+        researchPriceText = new Text[researches.Length];
+        researchButton = new Button[researches.Length];
+        researchImage = new Image[researches.Length];
         AssigningResearchObjects();
     }
 
     void Start()
     {
-        researchText = new string[ResearchLevel.Length];
+        researchText = new string[researches.Length];
         researchText[0] = "Improve oxgen tanks capacity for about 2%. Better oxygen tanks allow astronauts to stay longer on the surface of the planet";
         researchText[1] = "Ion engines allow us to travel further and faster by using less energy!";
         researchText[2] = "Finally we can drink some water!";
@@ -80,37 +72,27 @@ public class Research : CostCalculator
         researchCosts = new double[researchText.Length];
         ResearchCostMultiplier();
         researchTextWindow.SetActive(false);
+
+        ResearchActiveStatusAssign();
     }
 
     void Update()
     {
-        for (int id = 0; id < ResearchLevel.Length; id++)
+        for (int id = 0; id < researchUnlocked.Length; id++)
         {
             ResearchConnectorsCheck(id);
-            if (ResearchLevel[id] >= 1)
-            {
-                researchLevels[id].enabled = true;
-                researchLevels[id].text = ResearchLevel[id].ToString("F0");
-                
-            }
-            else
-            {
-                researchLevels[id].enabled = false;
-            }
-            // Using abstract class for test
-           researchPriceText[id].text = GameManager.ExponentLetterSystem(CostCalc(id, researchCosts[id],ResearchLevel[id],gameManager.mainCurrency), "F2");
         }
-        //HideIfClickedOutside(researchTextWindow);
+
+        HideIfClickedOutside(researchTextWindow);
         ResearchButtonStatus();
     }
-    // Need debug
+
     public void AssigningResearchObjects()
     {
         int idR = 0;
         int idIcon = 1;
-        for (int id = 0; id < researchLevels.Length; id++)
+        for (int id = 0; id < researchUnlocked.Length; id++)
         {
-            researchLevels[id] = researchSectionObject[idR].transform.Find("ResearchIcon" + idIcon).transform.Find("ResearchLvl").GetComponent<Text>();
             researchPriceText[id] = researchSectionObject[idR].transform.Find("ResearchIcon" + idIcon).transform.Find("ResearchPrice").GetComponent<Text>();
             researchButton[id] = researchSectionObject[idR].transform.Find("ResearchIcon" + idIcon).transform.Find("ResearchUpgrade1").GetComponent<Button>();
             researchImage[id] = researchSectionObject[idR].transform.Find("ResearchIcon" + idIcon).transform.Find("ResearchUpgrade1").GetComponent<Image>();
@@ -126,7 +108,7 @@ public class Research : CostCalculator
     public void ResearchCostMultiplier()
     {
         double basePrice = 10000;
-        double multiplier = 3.2;
+        double multiplier = 8.3;
         for (int id = 0; id < researchCosts.Length; id++)
         {
             researchCosts[id] = basePrice;
@@ -144,51 +126,37 @@ public class Research : CostCalculator
 
     public void ResearchButtonStatus()
     {
-       
-        for (int id = 0; id < researchLevels.Length; id++)
+
+        for (int id = 0; id < researchUnlocked.Length; id++)
         {
 
-            if (!researchCanBeDone[id])
-            {
-                researchButton[id].interactable = false;
-            }
-            else
-            {
-                researchButton[id].interactable = true;
-            }
+            researchButton[id].interactable = researchCanBeDone[id];
 
-            if (gameManager.mainCurrency >= CostCalc(id, researchCosts[id], ResearchLevel[id],gameManager.mainCurrency))
-            {
-                researchPriceText[id].color = Color.green;
-            }
-            else
-                 researchPriceText[id].color = Color.red;
+            researchPriceText[id].color = !researchUnlocked[id] ? (gameManager.mainCurrency >= researchCosts[id] ? Color.green : Color.red) : Color.green;
 
         }
     }
 
-    //private void HideIfClickedOutside(GameObject panel)
-    //{
-    //    if (Input.GetMouseButton(0) && panel.activeSelf && !RectTransformUtility.RectangleContainsScreenPoint(panel.GetComponent<RectTransform>(),
-    //        Input.mousePosition,Camera.main))
-    //    {
-    //        panel.SetActive(false);
-    //    }
-    //}
+    private void HideIfClickedOutside(GameObject panel)
+    {
+        if (Input.GetMouseButton(0) && panel.activeSelf && !RectTransformUtility.RectangleContainsScreenPoint(panel.GetComponent<RectTransform>(),
+            Input.mousePosition, Camera.main))
+        {
+            panel.SetActive(false);
+        }
+    }
 
 
     public void ResearchUpgradeButton(int id)
     {
-        double n = 1;
  
-        var costResearchUpgrade = CostCalc(id, researchCosts[id], ResearchLevel[id],gameManager.mainCurrency);
+        var costResearchUpgrade = researchCosts[id];
 
-        if (gameManager.mainCurrency >= costResearchUpgrade && researchCanBeDone[id] == true)
+        if (gameManager.mainCurrency >= costResearchUpgrade && researchCanBeDone[id] == true && !researchUnlocked[id])
         {
             gameManager.mainCurrency -= costResearchUpgrade;
-            ResearchLevel[id] += (int)n;
-            ResearchBoost();
             researchUnlocked[id] = true;
+            researchPriceText[id].text = "Activated";
             unlockingSystem.ResearchUnlocking(id);
         }
         ResearchInfoWindowOnClick(id);
@@ -205,13 +173,33 @@ public class Research : CostCalculator
 
     public double ResearchBoost()
     {
-        double resBoost = 0;
+        double resBoost = 1;
 
-        for (int id = 0; id < ResearchLevel.Length; id++) {
-            resBoost += ResearchLevel[id] * upgradeResearchValues[id];
+        for (int id = 0; id < researchUnlocked.Length; id++)
+        {
+            if (researchUnlocked[id])
+            {
+                resBoost += upgradeResearchValues[id];
+            }
         }
-
+ 
         return resBoost;
+    }
+
+    public void ResearchActiveStatusAssign()
+    {
+        for (int id = 0; id < researchUnlocked.Length; id++)
+        {
+            if (!researchUnlocked[id])
+            {
+                researchPriceText[id].text = GameManager.ExponentLetterSystem(researchCosts[id], "F2");
+            }
+            else
+            {
+                researchPriceText[id].text = "Activated";
+                researchPriceText[id].color = Color.green;
+            }
+        }
     }
 
 }

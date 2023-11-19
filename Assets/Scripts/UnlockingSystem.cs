@@ -23,19 +23,21 @@ public class UnlockingSystem : MonoBehaviour
     public int researchID = 1;
     private int[] researchTextGreenAtID = { 0, 4, 9, 14 };
     public bool[] planetCanBeUnlocked;
+    public int planetsForUnlockAmount;
 
     private void Awake()
     {
-        planetsPanelsObjects = GameObject.FindGameObjectsWithTag("unlockPlanets");
-        planetCanBeUnlocked = new bool[planetsPanelsObjects.Length];
-        planetCost = new double[planetsPanelsObjects.Length];
-        UpgradeCostCalculator(planetCost, 220000, 12.3);
+
+        planetsForUnlockAmount = GameObject.FindGameObjectsWithTag("unlockPlanets").Length;
+        planetCanBeUnlocked = new bool[planetsForUnlockAmount];
+        planetCost = new double[planetsForUnlockAmount];
+        UpgradeCostCalculator(planetCost, 200000, 2200.7);
 
         unlockText = new Text[upgradeObjects.Length];
         unlockCost = new double[upgradeObjects.Length];
-        UpgradeCostCalculator(unlockCost, 250, 3.2); // Calculating unlock price for stages  
+        UpgradeCostCalculator(unlockCost, 550, 4.5); // Calculating unlock price for stages  
 
-        researchNames = new string[research.ResearchLevel.Length];
+        researchNames = new string[research.researchUnlocked.Length];
         researchNames[0] = "Oxygen Recycle";
         researchNames[1] = "Ion Engines";
         researchNames[2] = "Water Filter";
@@ -55,7 +57,7 @@ public class UnlockingSystem : MonoBehaviour
 
         planetCanBeUnlocked = new bool[4];
 
-        for (int id = 0; id < planetsPanelsObjects.Length; id++)
+        for (int id = 0; id < planetsForUnlockAmount; id++)
         {
             planetCanBeUnlocked[id] = false;
             planetRequirementResearch[id].text = researchNames[researchID];
@@ -64,6 +66,7 @@ public class UnlockingSystem : MonoBehaviour
         planetCanBeUnlocked[0] = true;
 
 
+        AssignUnlockObjects();
         for (int id = 0; id < unlockText.Length; id++)
         {
             unlockText[id] = gateUnlockButtonObject[id].transform.Find("Text").GetComponent<Text>();
@@ -81,6 +84,20 @@ public class UnlockingSystem : MonoBehaviour
     {
         StageUnlockTextControl();
         PlanetStatusCheck();
+    }
+
+    public void AssignUnlockObjects()
+    {
+        for (int id = 0; id < planetsForUnlockAmount; id++)
+        {
+            planetsPanelsObjects[id] = gameManager.planets[id + 1].transform.GetChild(0).gameObject;
+        }
+
+        int unlockObjectIdPosition = gameManager.stages.Length - upgradeObjects.Length;
+        for (int id = 0; id < upgradeObjects.Length; id++)
+        {
+            gateUnlockButtonObject[id] = gameManager.stages[id+unlockObjectIdPosition].transform.Find("LockedStage").gameObject;
+        }
     }
 
     public void StageUnlockTextControl()

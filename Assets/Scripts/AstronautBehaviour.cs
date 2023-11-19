@@ -205,7 +205,7 @@ public class AstronautBehaviour : MonoBehaviour
         for (int id = 0; id < gameManager.astronautsLevel.Length; id++)
         {
 
-            asBoost += (gameManager.astronautsLevel[id] * 2) * ((gameManager.StageLevel[id] * gameManager.upgradesCounts[id]));
+            asBoost += (gameManager.astronautsLevel[id] * 2) * ((gameManager.StageLevel[id] * gameManager.stageIncome[id]));
             
         }
         return asBoost;
@@ -216,7 +216,7 @@ public class AstronautBehaviour : MonoBehaviour
     {
         double[] asBoost = new double[gameManager.astronautsLevel.Length];
 
-        asBoost[id] += (gameManager.astronautsLevel[id] * 2) * ((gameManager.StageLevel[id] * gameManager.upgradesCounts[id]));
+        asBoost[id] += (gameManager.astronautsLevel[id] * 2) * ((gameManager.StageLevel[id] * gameManager.stageIncome[id]));
         
         return asBoost[id];
 

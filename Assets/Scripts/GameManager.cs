@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.AnimatedValues;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -78,7 +79,7 @@ public class GameManager : MonoBehaviour
 
     public int[] astronautsLevel;
     public int[] astronautBuyStartID;
-    public double[] upgradesCounts;
+    public double[] stageIncome;
     public float[] upgradeMaxTime;
     public float[] progressTimer;
 
@@ -97,10 +98,11 @@ public class GameManager : MonoBehaviour
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
-        mainCurrency = 100;
-        rebirthCost = 10000;
-        stages = GameObject.FindGameObjectsWithTag("Stages");
-        stageObjects = GameObject.FindGameObjectsWithTag("stageObjects");
+        mainCurrency = 200;
+        rebirthCost = 50000;
+        planets = FindObsWithTagAndSortByNumber("planetTab");
+        stages = FindObsWithTagAndSortByNumber("Stages");
+        
         StageLevel = new double[stages.Length];
         upgradeMaxTime = new float[StageLevel.Length];
         StageMaxTimeCalc();
@@ -109,7 +111,7 @@ public class GameManager : MonoBehaviour
         astronautsLevel = new int[stageLevel.Length];
         SuitsLevel = new double[6];
         astronautBuyStartID = new int[stageLevel.Length];       
-        upgradesCounts = new double[StageLevel.Length];
+        stageIncome = new double[StageLevel.Length];
         upgradesActivated = new bool[unlockingSystem.upgradeObjects.Length];
         stageUpgradeCosts = new double[StageLevel.Length];
         earnedCrystal = new bool[StageLevel.Length];
@@ -118,7 +120,6 @@ public class GameManager : MonoBehaviour
         planetUnlocked[0] = false;
         planetID = 0;
    
-        planets = GameObject.FindGameObjectsWithTag("planetTab");
         canvasPlanetsTabs = new CanvasGroup[planets.Length];
 
         for (int id = 0; id < StageLevel.Length; id++)
@@ -161,28 +162,28 @@ public class GameManager : MonoBehaviour
 
         AutoAssigningObjects();
         
-        astronautBehaviour.AssigningAstronautsOnStart();                
+        astronautBehaviour.AssigningAstronautsOnStart();
+        offline.offlineRewards.SetActive(true);
+    }
 
+    void Start()
+    {
         if (PlayerPrefs.GetInt("NeverDone", 0) <= 0)
         {
             Save();
             PlayerPrefs.SetInt("NeverDone", 1);
         }
-
-    }
-
-    void Start()
-    {
-
+        offline.offlineRewards.SetActive(false);
         ChangeBuyModeText.text = "1";
 
         //Load after assigning variables and before loading unlock status or it won't appear
         Load();
-
+        
         // Assignign once before update for offline calculations
         for (int id = 0; id < stageLevel.Length; id++)
         {
-            AutoValuesAssigning(id, upgradesCounts, 0.3, 1.4);
+            AutoValuesAssigning(id, stageUpgradeCosts, 50, 2.07 * id + 1);
+            AutoValuesAssigning(id, stageIncome, 5, 1.37);
         }
 
         astronautBehaviour.AstronautsControl();
@@ -202,7 +203,7 @@ public class GameManager : MonoBehaviour
         
         unlockingSystem.PlanetsUnlockCheck();
         CurrencyText.text = ExponentLetterSystem(mainCurrency, "F2");
-        RPointsText.text = ExponentLetterSystem(ResearchPointsCalculator(), "F2") + "/s ";
+        RPointsText.text = ExponentLetterSystem(TotalIncome(), "F2") + "/s ";
         RebirthPriceText.text = ExponentLetterSystem(rebirthCost, "F2");
         RebirthLevel.text = "Returns: " + ExponentLetterSystem(mainResetLevel, "F0");
         ProfileLevel.text = ExponentLetterSystem(mainResetLevel, "F0");
@@ -211,20 +212,14 @@ public class GameManager : MonoBehaviour
 
         for (int id = 0; id < stageLevel.Length; id++)
         {
-            AutoValuesAssigning(id, upgradesCounts, 0.3, 1.4);
-            AutoValuesAssigning(id, stageUpgradeCosts, 20, 2);
             ProgressBarsIncomeTimer();
             StageLevelText[id].text = StageLevel[id].ToString("F0");
             ButtonUpgradeMaxText[id].text = "X" + BuyMaxCount(id) + "\n" + ExponentLetterSystem(BuyCount(id), "F2");
-            EarningStage[id].text = ExponentLetterSystem(StageEarningPerSecond(id), "F2") + " " + "/s ";
+            EarningStage[id].text = ExponentLetterSystem(StageIncomePerSecond(id), "F2") + " " + "/s ";
             SoloEarningCrystals(id);
             InteractableButtons(id, upgradeButtons);
         }
 
-        for (int id = 0; id < suitsLevel.Length; id++)
-        {
-            AutoValuesAssigning(id, suitsUpgrades.suitsUpgradesCosts, 10000, ((id+1) * 150.32));
-        }
         RebirthButtonStatus();
         RebirthUnlock();
         StartCoroutine("MySave");
@@ -232,18 +227,56 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void QuitButtonAndroid()
+    public GameObject[] FindObsWithTagAndSortByNumber(string tag)
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
+        GameObject[] foundObs = GameObject.FindGameObjectsWithTag(tag).OrderBy(go => GetStageNumber(go.name)).ToArray();
+        return foundObs;
     }
 
-    public void QuitGame()
+    public GameObject[] FindObsWithTag(string tag)
     {
-        Save();
-        Application.Quit();
+        GameObject[] foundObs = GameObject.FindGameObjectsWithTag(tag);
+        return foundObs;
+    }
+
+    int GetStageNumber(string name)
+    {
+        int startIndex = name.IndexOf('.') - 1;
+        while (startIndex >= 0 && char.IsDigit(name[startIndex]))
+        {
+            startIndex--;
+        }
+        startIndex++;
+        if (int.TryParse(name.Substring(startIndex, name.IndexOf('.') - startIndex), out int result))
+        {
+            return result;
+        }
+        return int.MaxValue; 
+    }
+
+    public void AutoAssigningObjects()
+    {
+        StageLevelText = new Text[stageLevel.Length];
+        EarningStage = new Text[stageLevel.Length];
+        ButtonUpgradeMaxText = new Text[stageLevel.Length];
+        upgradeButtons = new Button[stageLevel.Length];
+        progressBarObject = new GameObject[stageLevel.Length];
+        progressBar = new Image[stageLevel.Length];
+        stageObjects = new GameObject[stageLevel.Length];
+
+        for (int id = 0; id < stages.Length; id++)
+        {
+            stageObjects[id] = stages[id].transform.GetChild(0).Find("StageElements").gameObject;
+            progressBarObject[id] = stageObjects[id].transform.Find("ProgressBarBack").GetChild(0).gameObject;
+            progressBar[id] = progressBarObject[id].GetComponentInChildren<Image>();
+
+            StageLevelText[id] = stageObjects[id].transform.Find("LevelWindowStage").GetComponentInChildren<Text>();
+            EarningStage[id] = stageObjects[id].transform.Find("ProgressBarBack").GetComponentInChildren<Text>();
+            ButtonUpgradeMaxText[id] = stageObjects[id].transform.Find("BuyMaxUpgrade").GetComponentInChildren<Text>();
+            upgradeButtons[id] = stageObjects[id].transform.Find("BuyMaxUpgrade").GetComponent<Button>();
+        }
+
+
     }
 
     public void EnterSettings()
@@ -268,90 +301,71 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void AutoValuesAssigning(int id, double[] ArrayToIncrease, double baseValue, double valueMultiplier)
+    public double AutoValuesAssigning(int id, double[] ArrayToIncrease, double baseValue, double valueMultiplier)
     {
 
         if(ArrayToIncrease[0] == 0 && id == 0)
         {
             ArrayToIncrease[id] = baseValue;
         }
-        ArrayToIncrease[id] = baseValue * valueMultiplier * (id+1);
+        return ArrayToIncrease[id] = baseValue * valueMultiplier * (id + 1);
 
     }
-    // New assigning system
 
-    public void AutoAssigningObjects()
+    public double AutoIncomeAssigning(int id, double[] baseValue, double[] ownedLevels, double valueMultiplier)
     {
-        StageLevelText = new Text[stageLevel.Length];
-        EarningStage = new Text[stageLevel.Length];
-        ButtonUpgradeMaxText = new Text[stageLevel.Length];
-        progressBarObject = new GameObject[stageLevel.Length];
+        double temp = ((baseValue[id] * ownedLevels[id]) * valueMultiplier);
+        return temp;
+    }
 
-        for (int id = 0; id < stageObjects.Length; id++)
-        {
-            progressBarObject[id] = stageObjects[id].transform.Find("ProgressBarBack").GetChild(0).gameObject;
-            progressBar[id] = progressBarObject[id].GetComponentInChildren<Image>();
-
-            StageLevelText[id] = stageObjects[id].transform.Find("LevelWindowStage").GetComponentInChildren<Text>();
-            EarningStage[id] = stageObjects[id].transform.Find("ProgressBarBack").GetComponentInChildren<Text>();
-            ButtonUpgradeMaxText[id] = stageObjects[id].transform.Find("BuyMaxUpgrade").GetComponentInChildren<Text>();
-            upgradeButtons[id] = stageObjects[id].transform.Find("BuyMaxUpgrade").GetComponent<Button>();
-        }
-
-
+    public double StageIncomePerSecond(int id)
+    {
+        double temp = 0;
+        temp += AutoIncomeAssigning(id, stageIncome, stageLevel, RebirthBoost());
+        temp *= suitsUpgrades.SuitsBoost();
+        temp *= research.ResearchBoost();
+        return temp;
     }
 
     public void ResearchMultiplierCalculator()
     {
-        double baseValue = 0.2;
-        double increment = 0.3;
+        double baseValue = 1;
 
         for (int id = 0; id < research.upgradeResearchValues.Length; id++)
         {
-            research.upgradeResearchValues[id] = baseValue;
-            baseValue += increment;
+            AutoValuesAssigning(id, research.upgradeResearchValues, baseValue, 2);
         }
+
     }
 
     public void StageMaxTimeCalc()
     {
-        float baseValue = 5;
-        float changeValue = 5;
-        int multiplier = 0;
+        const float baseConstValue = 40; 
+        float baseValue = baseConstValue;
+        float changeValue = 25;
+        
         for (int id = 0; id < stageLevel.Length; id++)
         {
             upgradeMaxTime[id] = baseValue;
 
-            if (upgradeMaxTime[id] % (15 + multiplier) == 0)
-            {
-                changeValue = 10;
-            }
+            baseValue += changeValue;
 
-            baseValue = baseValue + changeValue;
-
-            if (upgradeMaxTime[id] % (35 + multiplier) == 0)
+            if (id % 4 == 0 && id != 0)
             {
-                multiplier++;
-                baseValue = 5 + multiplier;
-                changeValue = 5;       
+                baseValue = baseConstValue;
             }
         }
     }
 
-    public double ResearchPointsCalculator()
+    public double TotalIncome()
     {
         double temp = 0;
 
         for (int id = 0; id < stageLevel.Length; id++)
         {
-            temp += (stageLevel[id] * upgradesCounts[id]);
+            temp += StageIncomePerSecond(id);
 
         }
-
-        temp += research.ResearchBoost();
-        temp += astronautBehaviour.AstronautsBoost();
-        temp += suitsUpgrades.SuitsBoost();
-        temp += RebirthBoost();
 
         return temp;
     }
@@ -369,7 +383,7 @@ public class GameManager : MonoBehaviour
 
                 if (progressTimer[id] >= upgradeMaxTime[id])
                 {
-                    mainCurrency += ResearchPointsCalculator();
+                    mainCurrency += TotalIncome();
                     progressTimer[id] = 0f;
                 }
             }
@@ -392,15 +406,6 @@ public class GameManager : MonoBehaviour
         {
             ButtonStatus[id].interactable = false;
         }
-    }
-
-    public double StageEarningPerSecond(int id)
-    {
-        double temp = 0;
-
-        temp += stageLevel[id] * upgradesCounts[id];
-        temp += astronautBehaviour.AstronautsBoostStage(id);
-        return temp;
     }
 
     public static string ExponentLetterSystem(double value, string numberToString)
@@ -525,9 +530,8 @@ public class GameManager : MonoBehaviour
         upgradeLevel1 = gameData.upgradeLevelData;
         mainResetLevel = gameData.mainResetLevelData;
 
-        for (int id = 0; id < research.ResearchLevel.Length; id++)
+        for (int id = 0; id < research.researchUnlocked.Length; id++)
         {
-            research.ResearchLevel[id] = gameData.researchLevel[id];
             research.researchCanBeDone[id] = gameData.researchCanBeDone[id];
             research.researchUnlocked[id] = gameData.researchUnlocked[id];
         }
@@ -689,11 +693,6 @@ public class GameManager : MonoBehaviour
                 stageLevel[id] = 0;
             }
 
-            for (int id = 0; id < research.ResearchLevel.Length; id++)
-            {
-                research.ResearchLevel[id] = 0;
-            }
-            
             for (int id = 0; id < SuitsLevel.Length; id++)
             {
                 SuitsLevel[id] = 0;
@@ -715,6 +714,7 @@ public class GameManager : MonoBehaviour
                 planetUnlocked[id] = false;
             }
 
+            research.ResearchActiveStatusAssign();
             astronautBehaviour.AstronautsControl();
             unlockingSystem.LoadUnlocksStatus();
             unlockingSystem.PlanetsUnlockCheck();
@@ -727,7 +727,7 @@ public class GameManager : MonoBehaviour
     public double RebirthBoost()
     {
       
-        double rBoost = 0;
+        double rBoost = 1;
         // secure to not give bonus before going higher than 1 lvl of rebirth
         if (mainResetLevel != 1)
         {
@@ -757,5 +757,19 @@ public class GameManager : MonoBehaviour
         }
         else
             rebirthRequirements.color = Color.red;
+    }
+
+    public void QuitButtonAndroid()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+    }
+
+    public void QuitGame()
+    {
+        Save();
+        Application.Quit();
     }
 }

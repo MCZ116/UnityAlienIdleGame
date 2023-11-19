@@ -45,7 +45,7 @@ TextureImporter:
       213: -1814797105988295865
     second: astronautpalette_6
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -62,10 +62,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -104,6 +106,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -115,6 +119,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -127,6 +132,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -139,6 +145,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -151,6 +158,20 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
@@ -172,7 +193,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: e4210337d994dbde0800000000000000
-      internalID: -1315814575531093426
+      internalID: -4102724404063392821
       vertices: []
       indices: 
       edges: []
@@ -193,7 +214,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: f0d877e21c2f47960800000000000000
-      internalID: 7598965382803066127
+      internalID: -1391871922410145785
       vertices: []
       indices: 
       edges: []
@@ -214,7 +235,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 1486873ea39bc4190800000000000000
-      internalID: -7976797177404430271
+      internalID: -6028509203415492188
       vertices: []
       indices: 
       edges: []
@@ -235,7 +256,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: de4c18f3f03d0b6c0800000000000000
-      internalID: -4129568795855305491
+      internalID: 1567131655364097856
       vertices: []
       indices: 
       edges: []
@@ -256,7 +277,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 475af5c4cf190c2c0800000000000000
-      internalID: -4413367122023963276
+      internalID: -3751711881283294636
       vertices: []
       indices: 
       edges: []
@@ -277,7 +298,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 9062d53f6500a3060800000000000000
-      internalID: 6933854949740455433
+      internalID: 4852824453217196696
       vertices: []
       indices: 
       edges: []
@@ -298,7 +319,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 7432926b5ab80d6e0800000000000000
-      internalID: -1814797105988295865
+      internalID: 1424705757897743778
       vertices: []
       indices: 
       edges: []
@@ -313,9 +334,16 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-  spritePackingTag: 
+    nameFileIdTable:
+      astronautpalette_0: -4102724404063392821
+      astronautpalette_1: -1391871922410145785
+      astronautpalette_2: -6028509203415492188
+      astronautpalette_3: 1567131655364097856
+      astronautpalette_4: -3751711881283294636
+      astronautpalette_5: 4852824453217196696
+      astronautpalette_6: 1424705757897743778
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
