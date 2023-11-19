@@ -188,7 +188,7 @@ public class GameManager : MonoBehaviour
 
         astronautBehaviour.AstronautsControl();
         offline.OfflineProgressLoad();
-        
+        ChangePlanetTab(0);
     }
 
     IEnumerator MySave()
@@ -475,10 +475,14 @@ public class GameManager : MonoBehaviour
 
     public void ChangePlanetTab(int planetID)
     {
-        Enumerable.Range(0, canvasPlanetsTabs.Length)
-            .Where(id => id != planetID && planetUnlocked[planetID])
-            .ToList()
-            .ForEach(id => CanvasGroupMenuSwitch(false, canvasPlanetsTabs[id]));
+        for (int id = 0; id < canvasPlanetsTabs.Length; id++)
+        {
+            if (id != planetID)
+            {
+                CanvasGroupMenuSwitch(false, canvasPlanetsTabs[id]);
+                planets[id].SetActive(false);
+            }
+        }
 
         for (int id = 0; id < canvasTabs.Length; id++)
         {
@@ -486,8 +490,10 @@ public class GameManager : MonoBehaviour
             activeTab[id] = false;
         }
 
+        planets[planetID].SetActive(true);
         CanvasGroupMenuSwitch(true, canvasPlanetsTabs[planetID]);
         CanvasGroupMenuSwitch(true, canvasMainGame);
+
         this.planetID = planetID;
     }
 
