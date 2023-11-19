@@ -162,7 +162,6 @@ public class GameManager : MonoBehaviour
 
         AutoAssigningObjects();
         
-        astronautBehaviour.AssigningAstronautsOnStart();
         offline.offlineRewards.SetActive(true);
     }
 
@@ -186,7 +185,7 @@ public class GameManager : MonoBehaviour
             AutoValuesAssigning(id, stageIncome, 5, 1.37);
         }
 
-        astronautBehaviour.AstronautsControl();
+        astronautBehaviour.AstronautsObjectActivationControl();
         offline.OfflineProgressLoad();
         ChangePlanetTab(0);
     }
@@ -721,7 +720,7 @@ public class GameManager : MonoBehaviour
             }
 
             research.ResearchActiveStatusAssign();
-            astronautBehaviour.AstronautsControl();
+            astronautBehaviour.AstronautsObjectActivationControl();
             unlockingSystem.LoadUnlocksStatus();
             unlockingSystem.PlanetsUnlockCheck();
             rebirthCost *= (System.Math.Pow(2, mainResetLevel) * (System.Math.Pow(2, 1) - 1) / (2 - 1));

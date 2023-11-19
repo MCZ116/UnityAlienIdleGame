@@ -25,6 +25,12 @@ public class AstronautBehaviour : MonoBehaviour
 
     int astronautsTotalAmount;
 
+    void Awake()
+    {
+        AssignAstronautSection();
+        AssigningAstronautsOnStart();
+    }
+
     void Start()
     {
         astronautCost = new double[gameManager.StageLevel.Length];
@@ -41,7 +47,7 @@ public class AstronautBehaviour : MonoBehaviour
             astronautMaxConfirm[id] = false;
         }
 
-        AssignAstronautSection();
+        
         // It's here because first load of game not always check that so all buttons are interactable
         AstronautButtonTextCheck();
     }
@@ -80,55 +86,34 @@ public class AstronautBehaviour : MonoBehaviour
     {
         astronautsBuyButton = new Button[gameManager.stageObjects.Length];
         AstronautCostText = new Text[gameManager.stageObjects.Length];
+        astronautsObjectsContainer = new GameObject[gameManager.stageObjects.Length];
 
         for (int id = 0; id < gameManager.stageObjects.Length; id++)
         {
             astronautsBuyButton[id] = gameManager.stageObjects[id].transform.Find("BuyAstronautsButton").GetComponent<Button>();
             AstronautCostText[id] = gameManager.stageObjects[id].transform.Find("BuyAstronautsButton").GetComponentInChildren<Text>();
+            astronautsObjectsContainer[id] = gameManager.stages[id].transform.GetChild(2).gameObject;
         }
 
     }
 
-    //NEED DEBUG
     public void AssigningAstronautsOnStart()
     {
-        int TempID = 0;
-        for (int id = 0; id < astronautsObjectsContainer.Length; id++)
+        int currentIndex = 0;
+
+        for (int containerIndex = 0; containerIndex < astronautsObjectsContainer.Length; containerIndex++)
         {
-            int i = 0;
-            
-            for (int n = TempID; n < astronautsUpgrades.Length; n++)
+            Transform containerTransform = astronautsObjectsContainer[containerIndex].transform;
+
+            for (int childIndex = 0; childIndex < containerTransform.childCount; childIndex++)
             {
-                if (astronautsObjectsContainer[id].transform.childCount > i)
-                {
-                    astronautsUpgrades[n] = astronautsObjectsContainer[id].transform.GetChild(i).gameObject;
-                    i++;
-                }
-                else
-                {
-                    break;
-                }
-                    
-            }
-
-            TempID = TempID + astronautsObjectsContainer[id].transform.childCount;
-            astronautsTotalAmount = TempID;
-
-        }
-
-        for (int id = 0; id < astronautsUpgrades.Length; id++)
-        {
-
-            astronautsUpgrades[id].SetActive(false);
-
-            if (gameManager.confirmAstronautBuy[id] == true)
-            {
-                astronautsUpgrades[id].SetActive(true);
+                astronautsUpgrades[currentIndex] = containerTransform.GetChild(childIndex).gameObject;
+                currentIndex++;
             }
         }
     }
-  
-    public void AstronautsAppearing(int id)
+
+    public void AstronautsBuyButton(int id)
     {
         var h = astronautCost[id];
         var astronautTempCost = h * (gameManager.astronautsLevel[id]+1);
@@ -138,7 +123,6 @@ public class AstronautBehaviour : MonoBehaviour
         if ( astronautTempCost <= 300 && gameManager.astronautsLevel[id] <= 3 && gameManager.crystalCurrency >= astronautTempCost)
         {  
             gameManager.crystalCurrency -= astronautTempCost;
-            //GameManager.instance.allObjects[gameManager.astronautBuyStartID[id]].SetActive(true);
             astronautsUpgrades[gameManager.astronautBuyStartID[id]].SetActive(true);
             gameManager.confirmAstronautBuy[gameManager.astronautBuyStartID[id]] = true;
             gameManager.astronautBuyStartID[id]++;
@@ -179,13 +163,10 @@ public class AstronautBehaviour : MonoBehaviour
         }
     }
 
-    // Controlling display of activated astronauts
-    public void AstronautsControl()
+    public void AstronautsObjectActivationControl()
     {
-        // NEED TO CHANGE IT A BIT 
-        for (int id = 0; id < astronautsTotalAmount; id++)
+        for (int id = 0; id < astronautsUpgrades.Length; id++)
         {
-
             if (gameManager.confirmAstronautBuy[id] == false)
             {
                 astronautsUpgrades[id].SetActive(false);
@@ -208,18 +189,6 @@ public class AstronautBehaviour : MonoBehaviour
             asBoost += (gameManager.astronautsLevel[id] * 2) * ((gameManager.StageLevel[id] * gameManager.stageIncome[id]));
             
         }
-        return asBoost;
-        
+        return asBoost;   
     }
-
-    public double AstronautsBoostStage(int id)
-    {
-        double[] asBoost = new double[gameManager.astronautsLevel.Length];
-
-        asBoost[id] += (gameManager.astronautsLevel[id] * 2) * ((gameManager.StageLevel[id] * gameManager.stageIncome[id]));
-        
-        return asBoost[id];
-
-    }
-
 }
