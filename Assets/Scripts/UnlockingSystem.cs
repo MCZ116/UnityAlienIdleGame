@@ -69,7 +69,7 @@ public class UnlockingSystem : MonoBehaviour
         AssignUnlockObjects();
         for (int id = 0; id < unlockText.Length; id++)
         {
-            unlockText[id] = gateUnlockButtonObject[id].transform.Find("Text").GetComponent<Text>();
+            unlockText[id] = gateUnlockButtonObject[id].transform.Find("StagePrice").GetComponent<Text>();
         }
       
     }
@@ -121,14 +121,14 @@ public class UnlockingSystem : MonoBehaviour
         {
             if (!gameManager.planetUnlocked[id])
             {
-                planetPriceText[id].enabled = true;
-                planetRequirementResearch[id].enabled = true;
+                planetPriceText[id].gameObject.SetActive(true);
+                planetRequirementResearch[id].gameObject.SetActive(true);
                 planetPriceText[id].text = GameManager.ExponentLetterSystem(planetCost[id], "F2");
             }
             else
             {
-                planetPriceText[id].enabled = false;
-                planetRequirementResearch[id].enabled = false;
+                planetPriceText[id].gameObject.SetActive(false);
+                planetRequirementResearch[id].gameObject.SetActive(false);
             }
                 
 
