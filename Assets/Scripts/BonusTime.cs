@@ -1,39 +1,91 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BonusTime : MonoBehaviour
 {
-    double timeLeft;
-    double timeAdded = 7200.0f;
+    private const int BUFF_DURATION_MINUTES = 120;
+    private const int MAX_DURATION_MINUTES = 480;
+
+    private DateTime buffEndTime;
+
+    public bool IsBuffActive => DateTime.UtcNow < buffEndTime;
+
     [SerializeField] GameObject boostMenu;
     [SerializeField] GameObject boostArea;
-    //[SerializeField] GameObject boostMenuArea;
+    public Text bonusTimeText;
+
     bool activeTab = false;
-    [SerializeField] GameManager gameManager;
+
+    void Start()
+    {
+        LoadBuff();
+        Debug.Log("Loaded buff");
+    }
 
     void Update()
     {
-        if (timeLeft != 0)
-        {
-            timeLeft -= Time.deltaTime;
-            BonusAdded();
-        }
-
         HideIfClickedOutside(boostArea);
+
+        if (IsBuffActive)
+        {
+            TimeSpan remaining = buffEndTime - DateTime.UtcNow;
+            bonusTimeText.text = $"{remaining:hh\\:mm\\:ss}";
+        }
+        else
+        {
+            bonusTimeText.text = "Not activated";
+        }
     }
 
     public void ClickedBonusBtn()
     {
-        timeLeft += timeAdded;
+        ExtendBuff();
+        Debug.Log("Buff activated until: " + buffEndTime);
     }
 
-    public void BonusAdded()
+    public void ExtendBuff()
     {
-        if (timeLeft > 0)
+        DateTime now = DateTime.UtcNow;
+
+        DateTime newBuffEnd = buffEndTime > now
+            ? buffEndTime.AddMinutes(BUFF_DURATION_MINUTES)
+            : now.AddMinutes(BUFF_DURATION_MINUTES);
+
+        // Enforce max duration
+        TimeSpan totalBuff = newBuffEnd - now;
+        if (totalBuff.TotalMinutes > MAX_DURATION_MINUTES)
         {
-            gameManager.mainCurrency += gameManager.TotalIncome();
+            newBuffEnd = now.AddMinutes(MAX_DURATION_MINUTES);
         }
+
+        buffEndTime = newBuffEnd;
+        Debug.Log(buffEndTime);
+        SaveBuff();
+    }
+
+    public float GetIncomeMultiplier()
+    {
+        return IsBuffActive ? 2f : 1f;
+    }
+
+    public void LoadBuff()
+    {
+        if (PlayerPrefs.HasKey("BuffEnd"))
+        {
+            long binary = Convert.ToInt64(PlayerPrefs.GetString("BuffEnd"));
+            buffEndTime = DateTime.FromBinary(binary);
+        }
+        else
+        {
+            buffEndTime = DateTime.UtcNow;
+        }
+    }
+
+    public void SaveBuff()
+    {
+        PlayerPrefs.SetString("BuffEnd", buffEndTime.ToBinary().ToString());
+        PlayerPrefs.Save();
     }
 
     public void BoostMenu()
@@ -47,7 +99,8 @@ public class BonusTime : MonoBehaviour
 
     private void HideIfClickedOutside(GameObject panel)
     {
-        if (Input.GetMouseButton(0) && panel.activeSelf && !RectTransformUtility.RectangleContainsScreenPoint(panel.GetComponent<RectTransform>(),
+        if (Input.GetMouseButton(0) && panel.activeSelf &&
+            !RectTransformUtility.RectangleContainsScreenPoint(panel.GetComponent<RectTransform>(),
             Input.mousePosition, Camera.main))
         {
             boostMenu.SetActive(false);

@@ -9,9 +9,16 @@ public class AstronautBehaviour : MonoBehaviour
     private GameManager gameManager;
     [SerializeField]
     private UnlockingSystem unlockingSystem;
+    [SerializeField] 
+    private List<Transform> buttonsContainers;
+
+    private List<BuyButton> buyAstronautsButtons = new List<BuyButton>();
 
     public GameObject[] astronautsUpgrades;
     public GameObject[] astronautsObjectsContainer;
+
+    public GameObject buyButtonPrefab;
+    public List<Sprite> itemIcons;
 
     private Animator animationIdle;
 
@@ -47,7 +54,22 @@ public class AstronautBehaviour : MonoBehaviour
             astronautMaxConfirm[id] = false;
         }
 
-        
+
+        // Instantiate buttons in each Elements container
+        for (int id = 0; id < Mathf.Min(itemIcons.Count, buttonsContainers.Count); id++)
+        {
+            Transform elementTransform = buttonsContainers[id].transform;
+
+            GameObject buttonGO = Instantiate(buyButtonPrefab, elementTransform, false);
+            BuyButton buyButton = buttonGO.GetComponent<BuyButton>();
+
+            string label = "50";
+            Sprite icon = itemIcons[id];
+            buyButton.Init(id, label, icon, AstronautsBuyButton);
+            RectTransform rt = buttonGO.GetComponent<RectTransform>();
+            buyAstronautsButtons.Add(buyButton);
+        }
+
         // It's here because first load of game not always check that so all buttons are interactable
         AstronautButtonTextCheck();
     }
@@ -59,24 +81,17 @@ public class AstronautBehaviour : MonoBehaviour
 
     public void AstronautButtonTextCheck()
     {
-        for (int id = 0; id < gameManager.StageLevel.Length; id++)
+        for (int id = 0; id < Mathf.Min(itemIcons.Count, buttonsContainers.Count); id++)
         {
             if (astronautMaxConfirm[id] == false)
             {
-                AstronautCostText[id].text = AstronautPriceDisplay(id).ToString("F0");
+                buyAstronautsButtons[id].UpdateLabel(AstronautPriceDisplay(id).ToString("F0"));
 
-                AstronautCostText[id].color = Color.white;
-
-                astronautsBuyButton[id].GetComponent<Image>().color = Color.white;
-                
+                buyAstronautsButtons[id].UpdateTextColor(Color.white);
             }
             else
             {
-                AstronautCostText[id].text = "MAX";
-
-                astronautsBuyButton[id].GetComponent<Image>().color = Color.yellow;
-
-                AstronautCostText[id].color = Color.black;
+                buyAstronautsButtons[id].gameObject.SetActive(false);
             }
             AstronautsBuyButtonControl(id);
         }
@@ -116,12 +131,12 @@ public class AstronautBehaviour : MonoBehaviour
     public void AstronautsBuyButton(int id)
     {
         var h = astronautCost[id];
-        var astronautTempCost = h * (gameManager.astronautsLevel[id]+1);
-        
+        var astronautTempCost = h * (gameManager.astronautsLevel[id] + 1);
+
         if (astronautTempCost == 200) { astronautTempCost = 300; }
 
-        if ( astronautTempCost <= 300 && gameManager.astronautsLevel[id] <= 3 && gameManager.crystalCurrency >= astronautTempCost)
-        {  
+        if (astronautTempCost <= 300 && gameManager.astronautsLevel[id] <= 3 && gameManager.crystalCurrency >= astronautTempCost)
+        {
             gameManager.crystalCurrency -= astronautTempCost;
             astronautsUpgrades[gameManager.astronautBuyStartID[id]].SetActive(true);
             gameManager.confirmAstronautBuy[gameManager.astronautBuyStartID[id]] = true;
@@ -155,11 +170,11 @@ public class AstronautBehaviour : MonoBehaviour
         if (astronautTempCost == 200) { astronautTempCost = 300; }
         if (gameManager.crystalCurrency >= astronautTempCost && astronautMaxConfirm[id] == false)
         {
-            astronautsBuyButton[id].interactable = true;
+            buyAstronautsButtons[id].gameObject.SetActive(true);
         }
         else
         {
-            astronautsBuyButton[id].interactable = false;
+            buyAstronautsButtons[id].gameObject.SetActive(false);
         }
     }
 

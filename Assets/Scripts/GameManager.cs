@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.AnimatedValues;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -11,6 +10,7 @@ public class GameManager : MonoBehaviour
 {
     public OfflineProgress offline;
     public AudioControler AC;
+    public BonusTime bonusTime;
     public int buyModeID;
     public Text[] StageLevelText;
     public Text[] EarningStage;
@@ -366,7 +366,7 @@ public class GameManager : MonoBehaviour
 
         }
 
-        return temp;
+        return temp * bonusTime.GetIncomeMultiplier();
     }
 
     public void ProgressBarsIncomeTimer()

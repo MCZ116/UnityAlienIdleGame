@@ -83,11 +83,10 @@ public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
             switch(buttonName)
             {
                 case "DoubleReward":
-                    gameManager.mainCurrency += offlineProgress.totalRewards;
+                    gameManager.mainCurrency += gameManager.TotalIncome() * (float)offlineProgress.BuffSeconds;
                     break;
 
                 case"SpinButton":
-                    Debug.Log("SPIN!!!!");
                     spinWheel.SpinWheelMenu();
                     spinWheel.SpinWheelButton();
                     spinBtn.onClick.RemoveAllListeners();
