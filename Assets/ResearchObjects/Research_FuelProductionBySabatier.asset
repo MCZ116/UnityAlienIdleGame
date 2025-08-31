@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ef3939f98eeee84a9b757d49ce00daf, type: 3}
+  m_Name: Research_FuelProductionBySabatier
+  m_EditorClassIdentifier: 
+  researchName: Fuel Production
+  price: 20971520000
+  requiredResearches:
+  - {fileID: 11400000, guid: a1aaf86419adca147b1dfef6c9e982bb, type: 2}
+  - {fileID: 11400000, guid: aa3edfdc226c8544e88617722b0e24ed, type: 2}
+  - {fileID: 11400000, guid: 8cb0983c78c104f46a74e0fb3bac4501, type: 2}
+  icon: {fileID: 0}
+  tier: 21
+  description: 
+  useFormula: 1
+  customMultiplier: 1
+  formulaPercentPerTier: 0.1

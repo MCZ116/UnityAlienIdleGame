@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ef3939f98eeee84a9b757d49ce00daf, type: 3}
+  m_Name: Research_RadiationShield
+  m_EditorClassIdentifier: 
+  researchName: Radiation Shielding
+  price: 2560000
+  requiredResearches:
+  - {fileID: 11400000, guid: f8b07d01fb1cb9a458a447051fe4aec2, type: 2}
+  - {fileID: 11400000, guid: dc885641abd6e064e9ce88cbd4219276, type: 2}
+  - {fileID: 11400000, guid: b94e118b410a68348b5c8e44f7a24c66, type: 2}
+  icon: {fileID: 21300000, guid: ca1490c6c14a7c24fbee570e41e35a20, type: 3}
+  tier: 8
+  description: 
+  useFormula: 0
+  customMultiplier: 1.2
+  formulaPercentPerTier: 0.1

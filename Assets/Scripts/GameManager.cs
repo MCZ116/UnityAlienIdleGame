@@ -53,6 +53,8 @@ public class GameManager : MonoBehaviour
 
     public Research research;
 
+    public ResearchManager researchManager;
+
     public AstronautBehaviour astronautBehaviour;
 
     public SuitsUpgrades suitsUpgrades;
@@ -323,6 +325,7 @@ public class GameManager : MonoBehaviour
         temp += AutoIncomeAssigning(id, stageIncome, stageLevel, RebirthBoost());
         temp *= suitsUpgrades.SuitsBoost();
         temp *= research.ResearchBoost();
+        temp += researchManager.GetTotalIncome(stageIncome[id]);
         return temp;
     }
 

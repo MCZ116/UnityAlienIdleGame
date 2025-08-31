@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ef3939f98eeee84a9b757d49ce00daf, type: 3}
+  m_Name: Research_AISystems
+  m_EditorClassIdentifier: 
+  researchName: AI Autonomous Systems
+  price: 687194767360000
+  requiredResearches:
+  - {fileID: 11400000, guid: 8e2d8d920b11e8c41ba496baf2d7a43b, type: 2}
+  icon: {fileID: 0}
+  tier: 36
+  description: 
+  useFormula: 1
+  customMultiplier: 1
+  formulaPercentPerTier: 0.1

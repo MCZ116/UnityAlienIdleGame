@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ef3939f98eeee84a9b757d49ce00daf, type: 3}
+  m_Name: Research_LunarOxygen
+  m_EditorClassIdentifier: 
+  researchName: Lunar Oxygen Extraction
+  price: 20000
+  requiredResearches: []
+  icon: {fileID: 21300000, guid: 42ce3821f7319d443811a025e8dd42fb, type: 3}
+  tier: 2
+  description: Establish basic oxygen harvesting on the Moon, enabling early profit
+    from extraterrestrial resources. Increase income by 10%.
+  useFormula: 1
+  customMultiplier: 1
+  formulaPercentPerTier: 0.1
