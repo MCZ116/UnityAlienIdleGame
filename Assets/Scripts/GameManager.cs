@@ -517,7 +517,7 @@ public class GameManager : MonoBehaviour
     public void Save()
     {
 
-        SaveSystem.SaveGameData(this,research);
+        SaveSystem.SaveGameData(this,research,researchManager);
 
     }
 
@@ -566,6 +566,8 @@ public class GameManager : MonoBehaviour
         {
             planetUnlocked[id] = gameData.planetUnlocked[id];
         }
+
+        researchManager.ApplyLoadedData(gameData, researchManager.allResearches);
     }
 
     public void SaveDate()

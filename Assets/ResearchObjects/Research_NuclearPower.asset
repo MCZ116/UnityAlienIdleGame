@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ef3939f98eeee84a9b757d49ce00daf, type: 3}
   m_Name: Research_NuclearPower
   m_EditorClassIdentifier: 
+  researchId: 779813961
   researchName: Nuclear Fission Reactor
   price: 640000
   requiredResearches:

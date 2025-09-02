@@ -31,10 +31,20 @@ public class ResearchButtonUI : MonoBehaviour
         button.interactable = canUnlock;
 
         priceText.color = canUnlock ? Color.green : Color.red;
+        SetActiveState();
     }
 
     private void OnClick()
     {
         researchManager.Unlock(research);
+    }
+
+    public void SetActiveState()
+    {
+        if (researchManager.IsUnlocked(research))
+        {
+            priceText.text = "Active" ;
+            priceText.color = Color.green;
+        }
     }
 }

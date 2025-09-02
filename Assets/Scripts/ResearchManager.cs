@@ -9,6 +9,20 @@ public class ResearchManager : MonoBehaviour
     public GameObject researchButtonPrefab;
     public List<ResearchRow> researchRows;
     public List<ResearchData> unlockedResearches = new();
+    public List<ResearchData> allResearches;
+
+    void Awake()
+    {
+        // Collect all researches from researchRows
+        allResearches = new List<ResearchData>();
+        foreach (var row in researchRows)
+        {
+            if (row.researches != null)
+            {
+                allResearches.AddRange(row.researches);
+            }
+        }
+    }
 
     private IEnumerator Start()
     {
@@ -34,6 +48,7 @@ public class ResearchManager : MonoBehaviour
 
         // Draw lines
         FindObjectOfType<ResearchTreeLineDrawerUI>().DrawAllLines();
+        FindObjectOfType<ResearchTreeLineDrawerUI>().UpdateLineColors(this);
     }
 
     public bool IsUnlocked(ResearchData research) => unlockedResearches.Contains(research);
@@ -54,6 +69,7 @@ public class ResearchManager : MonoBehaviour
 
         gameManager.mainCurrency -= research.price;
         unlockedResearches.Add(research);
+        FindObjectOfType<ResearchTreeLineDrawerUI>().UpdateLineColors(this);
     }
 
     public double GetTotalIncome(double baseIncome)
@@ -67,4 +83,18 @@ public class ResearchManager : MonoBehaviour
 
         return baseIncome * totalMultiplier;
     }
+
+    public void ApplyLoadedData(GameData data, List<ResearchData> allResearches)
+    {
+        unlockedResearches.Clear();
+
+        foreach (int id in data.researchIds)
+        {
+            ResearchData match = allResearches.Find(r => r.researchId == id);
+            Debug.Log(match.ToString());
+            if (match != null)
+                unlockedResearches.Add(match);
+        }
+    }
+
 }

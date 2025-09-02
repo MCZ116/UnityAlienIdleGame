@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Research", menuName = "ScriptableObjects/Research Node")]
 public class ResearchData : ScriptableObject, IDescribable
 {
+    public int researchId;
     public string researchName;
     public double price = 10000;
     public List<ResearchData> requiredResearches;
@@ -31,4 +33,16 @@ public class ResearchData : ScriptableObject, IDescribable
     {
         return useFormula ? 1.0 + formulaPercentPerTier * tier : customMultiplier;
     }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (researchId == 0)
+        {
+            string guid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(this));
+            researchId = Mathf.Abs(guid.GetHashCode()); // unique int
+            EditorUtility.SetDirty(this);
+        }
+    }
+#endif
 }

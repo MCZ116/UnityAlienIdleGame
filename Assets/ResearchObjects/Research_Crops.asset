@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ef3939f98eeee84a9b757d49ce00daf, type: 3}
   m_Name: Research_Crops
   m_EditorClassIdentifier: 
+  researchId: 140899727
   researchName: Mars Greenhouses
   price: 160000
   requiredResearches:

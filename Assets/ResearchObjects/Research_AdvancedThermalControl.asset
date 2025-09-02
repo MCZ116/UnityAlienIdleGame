@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ef3939f98eeee84a9b757d49ce00daf, type: 3}
   m_Name: Research_AdvancedThermalControl
   m_EditorClassIdentifier: 
+  researchId: 163655507
   researchName: Advanced Thermal Control
   price: 171798691840000
   requiredResearches:

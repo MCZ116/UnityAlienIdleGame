@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,8 +7,12 @@ public class ResearchTreeLineDrawerUI : MonoBehaviour
     public RectTransform linesContainer;
     public RectTransform linePrefab;
 
+    private List<ResearchLine> allLines = new List<ResearchLine>();
+
     public void DrawAllLines()
     {
+        allLines.Clear(); // clear old lines
+
         var nodeUIs = FindObjectsOfType<ResearchButtonUI>();
         foreach (var nodeUI in nodeUIs)
         {
@@ -16,17 +21,21 @@ public class ResearchTreeLineDrawerUI : MonoBehaviour
                 var prereqUI = System.Array.Find(nodeUIs, x => x.research == prereqData);
                 if (prereqUI != null)
                 {
-                    DrawUILine(prereqUI.GetComponent<RectTransform>(), nodeUI.GetComponent<RectTransform>());
+                    // Create line only once
+                    RectTransform line = Instantiate(linePrefab, linesContainer);
+                    PositionLine(line, prereqUI.GetComponent<RectTransform>(), nodeUI.GetComponent<RectTransform>());
+
+                    // Store for later color updates
+                    var rLine = new ResearchLine(line, prereqData, nodeUI.research);
+                    allLines.Add(rLine);
                 }
             }
         }
     }
 
-    private void DrawUILine(RectTransform start, RectTransform end)
+    private void PositionLine(RectTransform line, RectTransform start, RectTransform end)
     {
-        RectTransform line = Instantiate(linePrefab, linesContainer);
-
-        // Convert world positions of buttons to LinesCanvas local positions
+        // Convert world positions to LinesContainer local positions
         Vector2 startPos, endPos;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             linesContainer, RectTransformUtility.WorldToScreenPoint(null, start.position), null, out startPos);
@@ -36,11 +45,21 @@ public class ResearchTreeLineDrawerUI : MonoBehaviour
         Vector2 direction = endPos - startPos;
         float distance = direction.magnitude;
 
+        // Move line to midpoint
         line.localPosition = startPos + direction / 2f;
+        // Stretch it
         line.sizeDelta = new Vector2(distance, line.sizeDelta.y);
-
+        // Rotate it
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         line.localRotation = Quaternion.Euler(0, 0, angle);
     }
 
+    public void UpdateLineColors(ResearchManager researchManager)
+    {
+        foreach (var rLine in allLines)
+        {
+            bool isUnlocked = researchManager.IsUnlocked(rLine.startResearch);
+            rLine.lineImage.color = isUnlocked ? Color.green : Color.gray;
+        }
+    }
 }
