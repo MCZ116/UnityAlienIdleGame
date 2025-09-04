@@ -25,3 +25,5 @@ MonoBehaviour:
   useFormula: 1
   customMultiplier: 1
   formulaPercentPerTier: 0.1
+  planetId: 1
+  planetIcon: {fileID: 21300000, guid: 1a60fa2b00429dc42819c88d60445dad, type: 3}

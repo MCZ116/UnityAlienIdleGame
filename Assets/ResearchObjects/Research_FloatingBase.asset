@@ -25,3 +25,4 @@ MonoBehaviour:
   useFormula: 1
   customMultiplier: 1
   formulaPercentPerTier: 0.1
+  planetId: -1

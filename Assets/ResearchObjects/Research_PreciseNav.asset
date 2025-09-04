@@ -16,7 +16,6 @@ MonoBehaviour:
   researchName: Precision Navigation
   price: 2621440000
   requiredResearches:
-  - {fileID: 11400000, guid: 4107024b859c2fe4e92e47a5b52e0f06, type: 2}
   - {fileID: 11400000, guid: 8ff327bbee284e24a868988f9b1ccff6, type: 2}
   icon: {fileID: 21300000, guid: b44e62ecc090fcd4a8c3a5c4d769bbe3, type: 3}
   tier: 18

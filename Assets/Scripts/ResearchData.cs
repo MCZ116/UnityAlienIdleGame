@@ -24,6 +24,10 @@ public class ResearchData : ScriptableObject, IDescribable
     public string Description => description;
     public Sprite Icon => icon;
 
+    [Header("Planet Unlock (optional)")]
+    public int planetId = -1; // -1 means no planet unlock
+    public Sprite planetIcon;
+
     public double GetPrice()
     {
         return Math.Round(price * Math.Pow(2, tier));

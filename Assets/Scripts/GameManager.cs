@@ -691,7 +691,7 @@ public class GameManager : MonoBehaviour
 
     public void FullReset()
     {
-        if (mainCurrency >= rebirthCost && research.researchUnlocked[0])
+        if (mainCurrency >= rebirthCost && researchManager.unlockedResearches.Count >= 6)
         {
             mainCurrency = 100;
             stageLevel[0] = 1;
@@ -718,6 +718,8 @@ public class GameManager : MonoBehaviour
                 research.researchCanBeDone[id] = false;
                 research.researchUnlocked[id] = false;
             }
+
+            researchManager.unlockedResearches.Clear();
 
             for (int id = 0; id < planetUnlocked.Length; id++)
             {
@@ -761,7 +763,7 @@ public class GameManager : MonoBehaviour
     //TODO
     public void RebirthUnlock()
     {
-        if (research.researchUnlocked[1])
+        if (researchManager.unlockedResearches.Count >= 6)
         {
             rebirthRequirements.color = Color.green;
         }

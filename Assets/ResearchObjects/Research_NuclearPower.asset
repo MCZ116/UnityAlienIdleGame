@@ -17,8 +17,6 @@ MonoBehaviour:
   price: 640000
   requiredResearches:
   - {fileID: 11400000, guid: f8b07d01fb1cb9a458a447051fe4aec2, type: 2}
-  - {fileID: 11400000, guid: dc885641abd6e064e9ce88cbd4219276, type: 2}
-  - {fileID: 11400000, guid: b94e118b410a68348b5c8e44f7a24c66, type: 2}
   icon: {fileID: 21300000, guid: 68450f8542606f4448514f89f2db24f6, type: 3}
   tier: 6
   description: 

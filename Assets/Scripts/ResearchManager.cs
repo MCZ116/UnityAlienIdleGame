@@ -53,15 +53,24 @@ public class ResearchManager : MonoBehaviour
 
     public bool IsUnlocked(ResearchData research) => unlockedResearches.Contains(research);
 
-    public bool CanUnlock(ResearchData research)
+    // Only checks if prerequisites are done, ignoring currency
+    public bool RequirementsMet(ResearchData research)
     {
         if (IsUnlocked(research)) return false;
+
         foreach (var pre in research.requiredResearches ?? new List<ResearchData>())
         {
             if (!IsUnlocked(pre)) return false;
         }
-        return gameManager.mainCurrency >= research.price;
+
+        return true;
     }
+
+    public bool CanUnlock(ResearchData research)
+    {
+        return RequirementsMet(research) && gameManager.mainCurrency >= research.price;
+    }
+
 
     public void Unlock(ResearchData research)
     {
@@ -91,7 +100,6 @@ public class ResearchManager : MonoBehaviour
         foreach (int id in data.researchIds)
         {
             ResearchData match = allResearches.Find(r => r.researchId == id);
-            Debug.Log(match.ToString());
             if (match != null)
                 unlockedResearches.Add(match);
         }
