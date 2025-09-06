@@ -1,6 +1,6 @@
 ﻿
 
-using UnityEngine;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class GameData
@@ -21,9 +21,9 @@ public class GameData
     public bool[] planetUnlocked;
     public bool[] researchCanBeDone;
     public bool[] researchUnlocked;
-    public int researchID;
+    public List<int> researchIds = new();
 
-    public GameData (GameManager gameManager, Research research)
+    public GameData (GameManager gameManager, ResearchManager researchManager)
     {
         researchPointsData = gameManager.mainCurrency;
 
@@ -32,10 +32,6 @@ public class GameData
         upgradeLevelData = gameManager.upgradeLevel1;
 
         mainResetLevelData = gameManager.mainResetLevel;
-
-        researchCanBeDone = research.researchCanBeDone;
-
-        researchUnlocked = research.researchUnlocked;
 
         upgradeActivated = gameManager.upgradesActivated;
 
@@ -52,6 +48,11 @@ public class GameData
         astronautIDStartPosition = gameManager.astronautBuyStartID;
 
         planetUnlocked = gameManager.planetUnlocked;
+
+        foreach (var researchData in researchManager.unlockedResearches)
+        {
+            researchIds.Add(researchData.researchId);
+        }
 
     }
 

@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
 
     public Button[] upgradeButtons;
 
-    public Research research;
+    public ResearchManager researchManager;
 
     public AstronautBehaviour astronautBehaviour;
 
@@ -322,19 +322,8 @@ public class GameManager : MonoBehaviour
         double temp = 0;
         temp += AutoIncomeAssigning(id, stageIncome, stageLevel, RebirthBoost());
         temp *= suitsUpgrades.SuitsBoost();
-        temp *= research.ResearchBoost();
+        temp += researchManager.GetTotalIncome(stageIncome[id]);
         return temp;
-    }
-
-    public void ResearchMultiplierCalculator()
-    {
-        double baseValue = 1;
-
-        for (int id = 0; id < research.upgradeResearchValues.Length; id++)
-        {
-            AutoValuesAssigning(id, research.upgradeResearchValues, baseValue, 2);
-        }
-
     }
 
     public void StageMaxTimeCalc()
@@ -514,7 +503,7 @@ public class GameManager : MonoBehaviour
     public void Save()
     {
 
-        SaveSystem.SaveGameData(this,research);
+        SaveSystem.SaveGameData(this,researchManager);
 
     }
 
@@ -534,12 +523,6 @@ public class GameManager : MonoBehaviour
 
         upgradeLevel1 = gameData.upgradeLevelData;
         mainResetLevel = gameData.mainResetLevelData;
-
-        for (int id = 0; id < research.researchUnlocked.Length; id++)
-        {
-            research.researchCanBeDone[id] = gameData.researchCanBeDone[id];
-            research.researchUnlocked[id] = gameData.researchUnlocked[id];
-        }
 
         for (int id = 0; id < upgradesActivated.Length; id++)
         {
@@ -563,6 +546,8 @@ public class GameManager : MonoBehaviour
         {
             planetUnlocked[id] = gameData.planetUnlocked[id];
         }
+
+        researchManager.ApplyLoadedData(gameData, researchManager.allResearches);
     }
 
     public void SaveDate()
@@ -686,7 +671,7 @@ public class GameManager : MonoBehaviour
 
     public void FullReset()
     {
-        if (mainCurrency >= rebirthCost && research.researchUnlocked[0])
+        if (mainCurrency >= rebirthCost && researchManager.unlockedResearches.Count >= 6)
         {
             mainCurrency = 100;
             stageLevel[0] = 1;
@@ -708,18 +693,13 @@ public class GameManager : MonoBehaviour
                 upgradesActivated[id] = false;
             }
 
-            for (int id = 0; id < research.researchCanBeDone.Length; id++)
-            {
-                research.researchCanBeDone[id] = false;
-                research.researchUnlocked[id] = false;
-            }
+            researchManager.unlockedResearches.Clear();
 
             for (int id = 0; id < planetUnlocked.Length; id++)
             {
                 planetUnlocked[id] = false;
             }
 
-            research.ResearchActiveStatusAssign();
             astronautBehaviour.AstronautsObjectActivationControl();
             unlockingSystem.LoadUnlocksStatus();
             unlockingSystem.PlanetsUnlockCheck();
@@ -756,7 +736,7 @@ public class GameManager : MonoBehaviour
     //TODO
     public void RebirthUnlock()
     {
-        if (research.researchUnlocked[1])
+        if (researchManager.unlockedResearches.Count >= 6)
         {
             rebirthRequirements.color = Color.green;
         }
