@@ -68,7 +68,7 @@ public class ResearchManager : MonoBehaviour
 
     public bool CanUnlock(ResearchData research)
     {
-        return RequirementsMet(research) && gameManager.mainCurrency >= research.price;
+        return RequirementsMet(research) && gameManager.mainCurrency >= research.GetPrice();
     }
 
 
@@ -76,7 +76,7 @@ public class ResearchManager : MonoBehaviour
     {
         if (!CanUnlock(research)) return;
 
-        gameManager.mainCurrency -= research.price;
+        gameManager.mainCurrency -= research.GetPrice();
         unlockedResearches.Add(research);
         FindObjectOfType<ResearchTreeLineDrawerUI>().UpdateLineColors(this);
     }

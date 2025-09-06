@@ -8,7 +8,7 @@ public class ResearchData : ScriptableObject, IDescribable
 {
     public int researchId;
     public string researchName;
-    public double price = 10000;
+    public double basePrice = 10000;
     public List<ResearchData> requiredResearches;
     public Sprite icon;
     public int tier;
@@ -30,7 +30,7 @@ public class ResearchData : ScriptableObject, IDescribable
 
     public double GetPrice()
     {
-        return Math.Round(price * Math.Pow(2, tier));
+        return Math.Round(basePrice * Math.Pow(2, tier));
     }
 
     public double GetIncomeMultiplier()
