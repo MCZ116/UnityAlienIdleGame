@@ -26,7 +26,6 @@ public class ResearchButtonUI : MonoBehaviour
 
         if (planetIconImage != null)
         {
-            Debug.Log($"Initializing planet icon for research {research.researchName} with planetId {research.planetId}");
             if (research.planetId != -1 && research.planetIcon != null)
             {
                 planetIconImage.sprite = research.planetIcon;

@@ -23,7 +23,7 @@ public class GameData
     public bool[] researchUnlocked;
     public List<int> researchIds = new();
 
-    public GameData (GameManager gameManager, Research research, ResearchManager researchManager)
+    public GameData (GameManager gameManager, ResearchManager researchManager)
     {
         researchPointsData = gameManager.mainCurrency;
 
@@ -32,10 +32,6 @@ public class GameData
         upgradeLevelData = gameManager.upgradeLevel1;
 
         mainResetLevelData = gameManager.mainResetLevel;
-
-        researchCanBeDone = research.researchCanBeDone;
-
-        researchUnlocked = research.researchUnlocked;
 
         upgradeActivated = gameManager.upgradesActivated;
 
