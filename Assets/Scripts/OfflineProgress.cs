@@ -9,7 +9,7 @@ public class OfflineProgress : MonoBehaviour
     public Text offlineRewardText;
     public Text offlineTimeText;
     public double totalRewards;
-    public RewardedAdsButton rewardedAdsButton;
+    public AdsManager adsManager;
     public float BuffSeconds { get; private set; }
 
     public void OfflineProgressLoad()
@@ -58,10 +58,10 @@ public class OfflineProgress : MonoBehaviour
         }
     }
 
-    public void DoubleOfflineIncome()
+    public void DoubleOfflineReward()
     {
-        rewardedAdsButton.ButtonHandler("DoubleReward");
-        rewardedAdsButton.ShowAd();
+        gameManager.mainCurrency += gameManager.TotalIncome() * (float)BuffSeconds;
+        CloseOfflineProgress();
     }
 
     public void CloseOfflineProgress()
