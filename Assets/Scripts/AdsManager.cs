@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class AdsManager : MonoBehaviour
 {
     [SerializeField] private string rewardedAdUnitId;
+    [SerializeField] private bool useTestMode = false; // Toggle this in Inspector when go live or remove
 
     [Header("Your buttons")]
     [SerializeField] private Button spinButton;
@@ -21,28 +22,33 @@ public class AdsManager : MonoBehaviour
     public SpinWheel spinWheel;
     public BonusTime bonusTime;
 
-    async void Awake()
+    async void Start()
     {
+        SetButtons(false);
+
+        // Hook up buttons
+        spinButton.onClick.AddListener(() => ShowRewardedAd("SpinButton"));
+        doubleRewardButton.onClick.AddListener(() => ShowRewardedAd("DoubleReward"));
+        bonusTimeButton.onClick.AddListener(() => ShowRewardedAd("DoubleTime"));
+
+        if (useTestMode)
+    {
+            Debug.Log("Ads in TEST MODE – skipping Unity Services init");
+            SetButtons(true); // allow testing immediately
+            return;
+        }
+
+        // Wait for Unity Services to initialize
         try
         {
             await UnityServices.InitializeAsync();
             Debug.Log("Unity Services Initialized");
+            LoadRewardedAd();
         }
         catch (Exception e)
         {
             Debug.LogError("Failed to initialize Unity Services: " + e.Message);
         }
-    }
-
-    void Start()
-    {
-        // Hook up button clicks **once**
-        spinButton.onClick.AddListener(() => ShowRewardedAd("SpinButton"));
-        doubleRewardButton.onClick.AddListener(() => ShowRewardedAd("DoubleReward"));
-        bonusTimeButton.onClick.AddListener(() => ShowRewardedAd("DoubleTime"));
-
-        // Load the first rewarded ad
-        LoadRewardedAd();
     }
 
     void LoadRewardedAd()
@@ -74,6 +80,14 @@ public class AdsManager : MonoBehaviour
 
     void ShowRewardedAd(string button)
     {
+        if (useTestMode)
+        {
+            Debug.Log("Test Mode: Simulating ad watched for " + button);
+            currentButton = button;
+            OnRewardedEarned(null, null);
+            return;
+        }
+
         if (rewardedAd != null && rewardedAd.IsAdReady())
         {
             currentButton = button;
@@ -111,9 +125,12 @@ public class AdsManager : MonoBehaviour
     {
         Debug.Log("Rewarded closed, load a new ad");
 
+        if (!useTestMode)
+        {
         // Destroy old ad before creating a new one
         rewardedAd.DestroyAd();
         LoadRewardedAd(); // reload for next round
+        }
     }
 
     void SetButtons(bool state)
