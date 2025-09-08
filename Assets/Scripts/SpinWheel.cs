@@ -145,16 +145,10 @@ public class SpinWheel : MonoBehaviour
 
     public void SpinWheelMenu()
     {
-
         if (!activeSpinTab) {
             spinWheelMenu.gameObject.SetActive(true);
             activeSpinTab = true;
         }
-        //else
-        //{
-        //    spinWheelMenu.gameObject.SetActive(false);
-        //    activeSpinTab = false;
-        //}
     }
 
     private void HideIfClickedOutside(GameObject panel)
