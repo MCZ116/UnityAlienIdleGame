@@ -10,7 +10,6 @@ public class GameData
     public double[] stageLevelData;
     public double upgradeLevelData;
     public double mainResetLevelData;
-    public double[] researchLevel;
     public bool[] upgradeActivated;
     public bool[] astronautsbuy;
     public double rebirthCostData;
@@ -18,12 +17,11 @@ public class GameData
     public double upgradesLoopLenght;
     public int[] astronautsLevel;
     public int[] astronautIDStartPosition;
-    public bool[] planetUnlocked;
-    public bool[] researchCanBeDone;
-    public bool[] researchUnlocked;
     public List<int> researchIds = new();
+    public List<int> planetIds = new();
 
-    public GameData (GameManager gameManager, ResearchManager researchManager)
+
+    public GameData (GameManager gameManager, ResearchManager researchManager, PlanetManager planetManager)
     {
         researchPointsData = gameManager.mainCurrency;
 
@@ -47,14 +45,14 @@ public class GameData
 
         astronautIDStartPosition = gameManager.astronautBuyStartID;
 
-        planetUnlocked = gameManager.planetUnlocked;
-
         foreach (var researchData in researchManager.unlockedResearches)
         {
             researchIds.Add(researchData.researchId);
         }
 
+        foreach (var planetData in planetManager.unlockedPlanets)
+        {
+            planetIds.Add(planetData.planetId);
+        }
     }
-
-
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class ResearchManager : MonoBehaviour
 {
     public GameManager gameManager;
+    public PlanetManager planetManager;
     [SerializeField] private InfoWindow infoWindow;
     public GameObject researchButtonPrefab;
     public List<ResearchRow> researchRows;
@@ -32,7 +33,7 @@ public class ResearchManager : MonoBehaviour
             {
                 GameObject buttonGO = Instantiate(researchButtonPrefab, row.rowParent);
                 var buttonUI = buttonGO.GetComponent<ResearchButtonUI>();
-                buttonUI.Initialize(research, this, infoWindow);
+                buttonUI.Initialize(research, this, planetManager, infoWindow);
 
                 var infoButton = buttonGO.GetComponentInChildren<InfoButton>();
                 if (infoButton != null)

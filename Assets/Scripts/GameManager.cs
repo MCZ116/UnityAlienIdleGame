@@ -42,16 +42,15 @@ public class GameManager : MonoBehaviour
     private bool[] earnedCrystal;
     [System.NonSerialized]
     public bool[] confirmAstronautBuy;
-    public bool[] planetUnlocked;
-    
     private bool[] activeTab;
-    double[] copyArray;
-    //bool activateRB = false;
+
     public Image[] progressBar;
 
     public Button[] upgradeButtons;
 
-    public ResearchManager researchManager;
+    [SerializeField] ResearchManager researchManager;
+
+    [SerializeField] PlanetManager planetManager;
 
     public AstronautBehaviour astronautBehaviour;
 
@@ -115,9 +114,7 @@ public class GameManager : MonoBehaviour
         upgradesActivated = new bool[unlockingSystem.upgradeObjects.Length];
         stageUpgradeCosts = new double[StageLevel.Length];
         earnedCrystal = new bool[StageLevel.Length];
-        planetUnlocked = new bool[unlockingSystem.planetsPanelsObjects.Length];
-        
-        planetUnlocked[0] = false;
+
         planetID = 0;
    
         canvasPlanetsTabs = new CanvasGroup[planets.Length];
@@ -200,7 +197,6 @@ public class GameManager : MonoBehaviour
     {
         QuitButtonAndroid();
         
-        unlockingSystem.PlanetsUnlockCheck();
         CurrencyText.text = ExponentLetterSystem(mainCurrency, "F2");
         RPointsText.text = ExponentLetterSystem(TotalIncome(), "F2") + "/s ";
         RebirthPriceText.text = ExponentLetterSystem(rebirthCost, "F2");
@@ -463,47 +459,70 @@ public class GameManager : MonoBehaviour
 
     public void ChangePlanetTab(int planetID)
     {
+        if (!planetManager.CanAccessPlanet(planetID))
+            return;
+
         for (int id = 0; id < canvasPlanetsTabs.Length; id++)
         {
+            Debug.Log("Checking " + id + " with planetID " + planetID);
             if (id != planetID)
             {
+                Debug.Log("Switching off " + id);
                 CanvasGroupMenuSwitch(false, canvasPlanetsTabs[id]);
                 planets[id].SetActive(false);
+            } else
+            {
+                Debug.Log("Switching on " + id);
+                CanvasGroupMenuSwitch(true, canvasPlanetsTabs[id]);
+                planets[id].SetActive(true);
             }
         }
 
-        for (int id = 0; id < canvasTabs.Length; id++)
-        {
-            CanvasGroupMenuSwitch(false, canvasTabs[id]);
-            activeTab[id] = false;
-        }
-
-        planets[planetID].SetActive(true);
-        CanvasGroupMenuSwitch(true, canvasPlanetsTabs[planetID]);
+        DisableAllTabs();
         CanvasGroupMenuSwitch(true, canvasMainGame);
-
         this.planetID = planetID;
     }
 
     public void SwitchPlanetsButtons(string buttonName)
     {
-        if (buttonName == "Next" && planetID < planetUnlocked.Length && planetUnlocked[planetID] == true)
+        if (buttonName == "Next")
         {
-            planetID += 1;
-            ChangePlanetTab(planetID);
-
-        } else if(buttonName == "Prev" && planetID < planetUnlocked.Length && planetID != 0)
+            int next = planetManager.GetNextUnlockedPlanetId(planetID);
+            if (next != -1)
+            {
+                planetID = next;
+                ChangePlanetTab(planetID);
+                Debug.Log("Next to " + planetID);
+            }
+            else Debug.Log("No next unlocked planet");
+        }
+        else if (buttonName == "Prev")
         {
+            int prev = planetManager.GetPrevUnlockedPlanetId(planetID);
+            if (prev != -1)
+            {
+                planetID = prev;
+                ChangePlanetTab(planetID);
+                Debug.Log("Prev to " + planetID);
+            }
+            else Debug.Log("No previous unlocked planet");
+        }
+    }
 
-            planetID -= 1;
-            ChangePlanetTab(planetID); 
+
+    public void DisableAllTabs()
+    {
+        for (int id = 0; id < canvasTabs.Length; id++)
+        {
+            CanvasGroupMenuSwitch(false, canvasTabs[id]);
+            activeTab[id] = false;
         }
     }
 
     public void Save()
     {
 
-        SaveSystem.SaveGameData(this,researchManager);
+        SaveSystem.SaveGameData(this,researchManager, planetManager);
 
     }
 
@@ -541,12 +560,7 @@ public class GameManager : MonoBehaviour
             SuitsLevel[id] = gameData.suitsLevel[id];
         }
 
-
-        for (int id = 0; id < planetUnlocked.Length; id++)
-        {
-            planetUnlocked[id] = gameData.planetUnlocked[id];
-        }
-
+        planetManager.ApplyLoadedData(gameData, planetManager.allPlanets);
         researchManager.ApplyLoadedData(gameData, researchManager.allResearches);
     }
 
@@ -694,15 +708,13 @@ public class GameManager : MonoBehaviour
             }
 
             researchManager.unlockedResearches.Clear();
+            planetManager.unlockedPlanets.Clear();
 
-            for (int id = 0; id < planetUnlocked.Length; id++)
-            {
-                planetUnlocked[id] = false;
-            }
+            // First planet always unlocked
+            planetManager.unlockedPlanets.Add(planetManager.allPlanets[0]);
 
             astronautBehaviour.AstronautsObjectActivationControl();
             unlockingSystem.LoadUnlocksStatus();
-            unlockingSystem.PlanetsUnlockCheck();
             rebirthCost *= (System.Math.Pow(2, mainResetLevel) * (System.Math.Pow(2, 1) - 1) / (2 - 1));
             ChangePlanetTab(0);
         }
