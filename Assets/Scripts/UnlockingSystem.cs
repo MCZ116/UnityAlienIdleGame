@@ -7,35 +7,19 @@ public class UnlockingSystem : MonoBehaviour
 {
     public GameManager gameManager;
     public ResearchManager researchManager;
-    public List<ResearchData> unlockingPlanetResearches;
     public GameObject[] upgradeObjects;
-    public GameObject[] planetsPanelsObjects;
-    public Button[] planetsUnlockBtnObj;
     public Button nextButton;
     public GameObject[] gateUnlockButtonObject;
     public Text[] unlockText;
-    public Text[] planetPriceText;
-    public Text[] planetRequirementResearch;
 
     [System.NonSerialized]
     public double[] unlockCost;
-    public double[] planetCost;
-    public int researchID = 0;
-    public bool[] planetCanBeUnlocked;
-    public int planetsForUnlockAmount;
 
     private void Awake()
     {
-        planetsForUnlockAmount = GameObject.FindGameObjectsWithTag("unlockPlanets").Length;
-        planetCanBeUnlocked = new bool[planetsForUnlockAmount];
-        planetCost = new double[planetsForUnlockAmount];
-        UpgradeCostCalculator(planetCost, 200000, 2200.7);
-
         unlockText = new Text[upgradeObjects.Length];
         unlockCost = new double[upgradeObjects.Length];
         UpgradeCostCalculator(unlockCost, 550, 4.5); // Calculating unlock price for stages  
-
-        planetCanBeUnlocked = new bool[4];
 
         AssignUnlockObjects();
         for (int id = 0; id < unlockText.Length; id++)
@@ -47,41 +31,16 @@ public class UnlockingSystem : MonoBehaviour
 
     private void Start()
     {
-
-        // TODO Change when refactoring planets
-        unlockingPlanetResearches = new List<ResearchData>();
-        foreach (var research in researchManager.allResearches)
-        {
-            if (research.planetId > -1)
-            {
-                unlockingPlanetResearches.Add(research);
-            }
-        }
-
-        for (int id = 0; id < planetsForUnlockAmount; id++)
-        {
-            planetCanBeUnlocked[id] = false;
-            planetRequirementResearch[id].text = unlockingPlanetResearches[id].researchName;
-        }
-        planetCanBeUnlocked[0] = true;
-
-        PlanetsUnlockCheck();
         LoadUnlocksStatus();
     }
 
     void Update()
     {
         StageUnlockTextControl();
-        PlanetStatusCheck();
     }
 
     public void AssignUnlockObjects()
     {
-        for (int id = 0; id < planetsForUnlockAmount; id++)
-        {
-            planetsPanelsObjects[id] = gameManager.planets[id + 1].transform.GetChild(0).gameObject;
-        }
-
         int unlockObjectIdPosition = gameManager.stages.Length - upgradeObjects.Length;
         for (int id = 0; id < upgradeObjects.Length; id++)
         {
@@ -101,42 +60,6 @@ public class UnlockingSystem : MonoBehaviour
             }
             else
                 unlockText[id].color = Color.red;
-        }
-    }
-
-    public void PlanetStatusCheck()
-    {
-        for (int id = 0; id < planetsPanelsObjects.Length; id++)
-        {
-            if (!gameManager.planetUnlocked[id])
-            {
-                planetPriceText[id].gameObject.SetActive(true);
-                planetRequirementResearch[id].gameObject.SetActive(true);
-                planetPriceText[id].text = GameManager.ExponentLetterSystem(planetCost[id], "F2");
-            }
-            else
-            {
-                planetPriceText[id].gameObject.SetActive(false);
-                planetRequirementResearch[id].gameObject.SetActive(false);
-            }
-                
-
-            if (gameManager.mainCurrency >= planetCost[id])
-            {
-                planetPriceText[id].color = Color.green;
-            } else
-                planetPriceText[id].color = Color.red;
-        }
-
-        foreach (var research in unlockingPlanetResearches)
-        {
-            if (researchManager.unlockedResearches.Contains(research) && unlockingPlanetResearches.Contains(research))
-            {
-                planetRequirementResearch[research.planetId].color = Color.green;
-            }
-            else {
-                planetRequirementResearch[research.planetId].color = Color.red;
-            }
         }
     }
 
@@ -183,34 +106,6 @@ public class UnlockingSystem : MonoBehaviour
                 gateUnlockButtonObject[id].SetActive(true);
                 gateUnlockButtonObject[id].GetComponent<Button>().interactable = true;
             }
-        }
-    }
-
-    public void PlanetsUnlockCheck()
-    {
-        for (int id = 0; id < planetsPanelsObjects.Length; id++)
-        {
-
-            if (gameManager.planetUnlocked[id] == true)
-            {
-                planetsPanelsObjects[id].SetActive(true);
-            }
-            else if (!gameManager.planetUnlocked[id])
-            {
-
-                planetsPanelsObjects[id].SetActive(false);
-            }
-        }
-    }
-    // TODO Change when refactoring planets
-    public void PlanetsUnlocking(int id)
-    {
-        if (researchManager.unlockedResearches.Contains(unlockingPlanetResearches[id]) && gameManager.mainCurrency >= planetCost[id] && gameManager.planetUnlocked[id] == false)
-        {
-            gameManager.mainCurrency -= planetCost[id];
-            planetsPanelsObjects[id].SetActive(true);
-            planetsUnlockBtnObj[id].interactable = true;
-            gameManager.planetUnlocked[id] = true;
         }
     }
 

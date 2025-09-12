@@ -10,25 +10,29 @@ public class ResearchButtonUI : MonoBehaviour
     public ResearchData research;
     private ResearchData lastShownResearch;
     private ResearchManager researchManager;
+    private PlanetManager planetManager;
     private InfoWindow infoWindow;
     public Image planetIconImage;
 
-    public void Initialize(ResearchData data, ResearchManager manager, InfoWindow info)
+    public void Initialize(ResearchData data, ResearchManager manager, PlanetManager planetManager, InfoWindow info)
     {
         research = data;
         researchManager = manager;
         infoWindow = info;
+        this.planetManager = planetManager;
 
         button.onClick.AddListener(OnClick);
 
         if (icon != null && research.icon != null)
             icon.sprite = research.icon;
 
+        var planet = planetManager.GetPlanetUnlockedByResearch(research);
+
         if (planetIconImage != null)
         {
-            if (research.planetId != -1 && research.planetIcon != null)
+            if (planet != null && planet.Icon != null)
             {
-                planetIconImage.sprite = research.planetIcon;
+                planetIconImage.sprite = planet.Icon;
                 planetIconImage.gameObject.SetActive(true);
             }
             else
@@ -36,6 +40,7 @@ public class ResearchButtonUI : MonoBehaviour
                 planetIconImage.gameObject.SetActive(false);
             }
         }
+
     }
 
     private void Update()
