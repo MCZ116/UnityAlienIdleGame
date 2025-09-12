@@ -708,6 +708,7 @@ public class GameManager : MonoBehaviour
             }
 
             researchManager.unlockedResearches.Clear();
+            researchManager.UpdateLinesColor();
             planetManager.unlockedPlanets.Clear();
 
             // First planet always unlocked

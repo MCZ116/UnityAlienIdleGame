@@ -1,6 +1,9 @@
+using NUnit.Framework.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public class ResearchTreeLineDrawerUI : MonoBehaviour
 {
@@ -8,26 +11,24 @@ public class ResearchTreeLineDrawerUI : MonoBehaviour
     public RectTransform linePrefab;
 
     private List<ResearchLine> allLines = new List<ResearchLine>();
+    [SerializeField] private Transform researchPanel;
+    private List<ResearchButtonUI> nodeUIs;
 
     public void DrawAllLines()
     {
-        allLines.Clear(); // clear old lines
+        nodeUIs = researchPanel.GetComponentsInChildren<ResearchButtonUI>(true).ToList();
 
-        var nodeUIs = FindObjectsOfType<ResearchButtonUI>();
+        allLines.Clear();
         foreach (var nodeUI in nodeUIs)
         {
             foreach (var prereqData in nodeUI.research.requiredResearches)
             {
-                var prereqUI = System.Array.Find(nodeUIs, x => x.research == prereqData);
+                var prereqUI = nodeUIs.Find(x => x.research == prereqData);
                 if (prereqUI != null)
                 {
-                    // Create line only once
                     RectTransform line = Instantiate(linePrefab, linesContainer);
                     PositionLine(line, prereqUI.GetComponent<RectTransform>(), nodeUI.GetComponent<RectTransform>());
-
-                    // Store for later color updates
-                    var rLine = new ResearchLine(line, prereqData, nodeUI.research);
-                    allLines.Add(rLine);
+                    allLines.Add(new ResearchLine(line, prereqData, nodeUI.research));
                 }
             }
         }

@@ -11,6 +11,7 @@ public class ResearchManager : MonoBehaviour
     public List<ResearchRow> researchRows;
     public List<ResearchData> unlockedResearches = new();
     public List<ResearchData> allResearches;
+    private ResearchTreeLineDrawerUI treeLines;
 
     void Awake()
     {
@@ -23,6 +24,8 @@ public class ResearchManager : MonoBehaviour
                 allResearches.AddRange(row.researches);
             }
         }
+        // Find ResearchTreeLineDrawerUI in children
+        treeLines = FindFirstObjectByType<ResearchTreeLineDrawerUI>();
     }
 
     private IEnumerator Start()
@@ -48,8 +51,9 @@ public class ResearchManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         // Draw lines
-        FindObjectOfType<ResearchTreeLineDrawerUI>().DrawAllLines();
-        FindObjectOfType<ResearchTreeLineDrawerUI>().UpdateLineColors(this);
+        if (treeLines != null)
+            treeLines.DrawAllLines();
+            UpdateLinesColor();
     }
 
     public bool IsUnlocked(ResearchData research) => unlockedResearches.Contains(research);
@@ -79,7 +83,7 @@ public class ResearchManager : MonoBehaviour
 
         gameManager.mainCurrency -= research.GetPrice();
         unlockedResearches.Add(research);
-        FindObjectOfType<ResearchTreeLineDrawerUI>().UpdateLineColors(this);
+        UpdateLinesColor();
     }
 
     public double GetTotalIncome(double baseIncome)
@@ -92,6 +96,11 @@ public class ResearchManager : MonoBehaviour
         }
 
         return baseIncome * totalMultiplier;
+    }
+
+    public void UpdateLinesColor()
+    {
+        treeLines?.UpdateLineColors(this);
     }
 
     public void ApplyLoadedData(GameData data, List<ResearchData> allResearches)
