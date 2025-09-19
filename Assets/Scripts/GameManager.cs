@@ -52,6 +52,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] PlanetManager planetManager;
 
+    [SerializeField] BuildingManager buildingManager;
+
     public AstronautBehaviour astronautBehaviour;
 
     public SuitsUpgrades suitsUpgrades;
@@ -196,7 +198,9 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         QuitButtonAndroid();
-        
+
+        ProcessBuildingIncomeCycle();
+
         CurrencyText.text = ExponentLetterSystem(mainCurrency, "F2");
         RPointsText.text = ExponentLetterSystem(TotalIncome(), "F2") + "/s ";
         RebirthPriceText.text = ExponentLetterSystem(rebirthCost, "F2");
@@ -221,6 +225,49 @@ public class GameManager : MonoBehaviour
         SaveDate();
 
     }
+
+    public void ProcessBuildingIncomeCycle()
+    {
+        foreach (var building in buildingManager.buildings)
+        {
+            // Skip locked or level 0 buildings
+            if (building.level <= 0)
+            {
+                building.currentProgress = 0f; // keep bar empty
+                continue;
+            }
+
+            building.timer += Time.deltaTime;
+            building.currentProgress = building.timer / building.data.incomeInterval;
+
+            if (building.timer >= building.data.incomeInterval)
+            {
+                ProcessBuildingIncome(building);
+                building.timer = 0f;
+                building.currentProgress = 0f;
+            }
+        }
+
+    }
+
+
+    public void AddCurrency(double amount)
+    {
+        mainCurrency += amount;
+    }
+
+    public void ProcessBuildingIncome(BuildingState building)
+    {
+        //Income from building level and astronauts
+        double profit = building.GetCurrentProfit();
+
+        // Apply global bonuses
+        profit *= researchManager.GetGlobalIncomeMultiplier();
+
+        AddCurrency(profit);
+    }
+
+
 
     public GameObject[] FindObsWithTagAndSortByNumber(string tag)
     {
@@ -318,8 +365,16 @@ public class GameManager : MonoBehaviour
         double temp = 0;
         temp += AutoIncomeAssigning(id, stageIncome, stageLevel, RebirthBoost());
         temp *= suitsUpgrades.SuitsBoost();
-        temp += researchManager.GetTotalIncome(stageIncome[id]);
+        //temp += researchManager.GetTotalIncome(stageIncome[id]);
         return temp;
+    }
+
+    public double BuildingIncomePerSecond(BuildingState buildingState)
+    {
+        double baseIncome = buildingState.GetCurrentProfit();
+        double multiplier = researchManager.GetGlobalIncomeMultiplier();
+
+        return baseIncome * multiplier / buildingState.data.incomeInterval;
     }
 
     public void StageMaxTimeCalc()

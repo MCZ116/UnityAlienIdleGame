@@ -86,16 +86,16 @@ public class ResearchManager : MonoBehaviour
         UpdateLinesColor();
     }
 
-    public double GetTotalIncome(double baseIncome)
+    public double GetGlobalIncomeMultiplier()
     {
         double totalMultiplier = 1.0;
 
         foreach (var research in unlockedResearches)
         {
-            totalMultiplier *= research.GetIncomeMultiplier(); // multiplicative stacking
+            totalMultiplier *= research.GetIncomeMultiplier();
         }
 
-        return baseIncome * totalMultiplier;
+        return totalMultiplier;
     }
 
     public void UpdateLinesColor()
