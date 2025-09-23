@@ -8,6 +8,7 @@ public class UpgradePanelUI : MonoBehaviour
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI priceText;
     public TextMeshProUGUI priceAstronautText;
+    public TextMeshProUGUI profitPerSecondText;
     public Button upgradeButton;
     public Button astronautButton;
 
@@ -40,13 +41,20 @@ public class UpgradePanelUI : MonoBehaviour
         });
     }
 
+    private void Update()
+    {
+        if (targetState != null)
+            UpdateButtons();
+    }
+
     private void UpdateButtons()
     {
-        priceText.text = GameManager.ExponentLetterSystem(targetState.GetCurrentPrice(), "F2");
+        priceText.text = GameManager.ExponentLetterSystem(GameManager.instance.GetCostPreview(targetState), "F2");
         priceAstronautText.text = GameManager.ExponentLetterSystem(targetState.GetCurrentAstronautsPrice(), "F0");
 
-        upgradeButton.interactable = targetManager.HasEnoughCurrency(targetState);
+        upgradeButton.interactable = targetManager.HasEnoughCurrency(targetState,GameManager.instance.GetBuyAmount());
         astronautButton.interactable = targetManager.HasEnoughCrystals(targetState)
                                       && targetState.astronautsHired < targetState.data.maxAstronauts;
+        profitPerSecondText.text = GameManager.ExponentLetterSystem(targetState.profitPerSecond, "F2") + "/sec";
     }
 }

@@ -19,9 +19,10 @@ public class GameData
     public int[] astronautIDStartPosition;
     public List<int> researchIds = new();
     public List<int> planetIds = new();
+    public List<int> buildingLevels = new();
+    public List<int> astronautsHired = new();
 
-
-    public GameData (GameManager gameManager, ResearchManager researchManager, PlanetManager planetManager)
+    public GameData (GameManager gameManager, ResearchManager researchManager, PlanetManager planetManager, BuildingManager buildingManager)
     {
         researchPointsData = gameManager.mainCurrency;
 
@@ -53,6 +54,16 @@ public class GameData
         foreach (var planetData in planetManager.unlockedPlanets)
         {
             planetIds.Add(planetData.planetId);
+        }
+
+        foreach (var buildingState in buildingManager.buildings)
+        {
+            buildingLevels.Add(buildingState.level);
+        }
+
+        foreach (var buildingState in buildingManager.buildings)
+        {
+            astronautsHired.Add(buildingState.astronautsHired);
         }
     }
 }

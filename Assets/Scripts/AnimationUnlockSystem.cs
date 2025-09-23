@@ -13,34 +13,34 @@ public class AnimationUnlockSystem : MonoBehaviour
 
     private void Awake()
     {
-        for (int id = 0; id < unlockingSystem.upgradeObjects.Length; id++)
-        {
-            gateOpeningAnimation[id] = unlockingSystem.gateUnlockButtonObject[id].transform.Find("unlockGate").GetComponent<Animator>();
-        }
+        //for (int id = 0; id < unlockingSystem.upgradeObjects.Length; id++)
+        //{
+        //    gateOpeningAnimation[id] = unlockingSystem.gateUnlockButtonObject[id].transform.Find("unlockGate").GetComponent<Animator>();
+        //}
     }
 
     void Update()
     {
-        for (int id = 0; id < unlockingSystem.upgradeObjects.Length; id++)
-        {
-            AnimationUnlock(id);
-        }
+        //for (int id = 0; id < unlockingSystem.upgradeObjects.Length; id++)
+        //{
+        //    AnimationUnlock(id);
+        //}
 
     }
 
-    public void AnimationUnlock(int id)
-    {
+    //public void AnimationUnlock(int id)
+    //{
 
-            if (gameManager.upgradesActivated[id] == true)
-            {
-                unlockingSystem.unlockText[id].text = "";
-                gateOpeningAnimation[id].SetBool("unlockAnimation", true);
-            }
-            else if (gameManager.upgradesActivated[id] == false)
-            {
-                gateOpeningAnimation[id].SetBool("unlockAnimation", false);
-            }
+    //        if (gameManager.upgradesActivated[id] == true)
+    //        {
+    //            unlockingSystem.unlockText[id].text = "";
+    //            gateOpeningAnimation[id].SetBool("unlockAnimation", true);
+    //        }
+    //        else if (gameManager.upgradesActivated[id] == false)
+    //        {
+    //            gateOpeningAnimation[id].SetBool("unlockAnimation", false);
+    //        }
 
-    }
+    //}
 
 }

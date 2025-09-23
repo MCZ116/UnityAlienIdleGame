@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class BuildingManager : MonoBehaviour
 {
@@ -20,10 +21,19 @@ public class BuildingManager : MonoBehaviour
         }
     }
 
-    public bool HasEnoughCurrency(BuildingState building)
+    public bool HasEnoughCurrency(BuildingState state, int levelsToBuy)
     {
-        return gameManager.mainCurrency >= building.GetCurrentPrice();
+        if (levelsToBuy == int.MaxValue)
+        {
+            // Calculate actual max affordable levels
+            levelsToBuy = gameManager.CalculateMaxAffordableLevels(state);
+        }
+
+        double totalCost = gameManager.CalculateTotalCost(state, levelsToBuy);
+        return gameManager.mainCurrency >= totalCost && levelsToBuy > 0;
     }
+
+
 
     public bool HasEnoughCrystals(BuildingState building)
     {
@@ -32,17 +42,44 @@ public class BuildingManager : MonoBehaviour
 
     public void BuyLevel(BuildingState state)
     {
-        if (!HasEnoughCurrency(state)) return;
-        gameManager.mainCurrency -= state.GetCurrentPrice();
-        state.level++;
-        state.profitPerSecond = state.GetCurrentProfit() / state.data.incomeInterval;
+        int buyAmount = gameManager.GetBuyAmount();
+        // Handle MAX: calculate the maximum affordable levels
+        if (buyAmount == int.MaxValue)
+            buyAmount = gameManager.CalculateMaxAffordableLevels(state);
+
+        if (buyAmount <= 0) return;
+
+        double totalCost = gameManager.CalculateTotalCost(state, buyAmount);
+
+        if (gameManager.mainCurrency >= totalCost)
+        {
+            gameManager.mainCurrency -= totalCost;
+            state.level += buyAmount;
+            state.profitPerSecond = state.GetCurrentProfit() / state.data.incomeInterval;
+            state.UpdateVisuals();
+        }
     }
+
 
     public void BuyAstronaut(BuildingState state)
     {
-        if (!HasEnoughCurrency(state)) return;
+        if (!HasEnoughCrystals(state)) return;
         gameManager.crystalCurrency -= state.GetCurrentAstronautsPrice();
-        state.astronautsHired++;
+        state.UnlockNextAstronaut();
+    }
+
+    public void ApplyLoadedData(GameData data)
+    {
+        for (int i = 0; i < buildings.Count; i++)
+        {
+            buildings[i].level = data.buildingLevels[i];
+            buildings[i].astronautsHired = data.astronautsHired[i];
+
+            // Restore astronauts visuals
+            buildings[i].RestoreAstronauts();
+            buildings[i].UpdateVisuals();
+            buildings[i].profitPerSecond = buildings[i].GetCurrentProfit() / buildings[i].data.incomeInterval;
+        }
     }
 
 }

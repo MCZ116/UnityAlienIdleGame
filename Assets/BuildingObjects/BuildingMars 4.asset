@@ -18,9 +18,9 @@ MonoBehaviour:
   basePrice: 100
   buildingMultiplier: 1.15
   levelMultiplier: 1.1
-  buildingIndex: 0
+  buildingIndex: 9
   maxLevel: 1000
-  baseProfit: 1
+  baseProfit: 100
   incomeInterval: 10
   maxAstronauts: 5
   astronautBaseCost: 50

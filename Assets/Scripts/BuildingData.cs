@@ -21,7 +21,7 @@ public class BuildingData : ScriptableObject, IDescribable
     public int maxLevel = 1000; // cap (you can tune this per building)
 
     // Base profit per level
-    public double baseProfit = 1;
+    public double baseProfit = 100;
     public float incomeInterval = 10f;
     // Astronaut settings
     public int maxAstronauts = 5;

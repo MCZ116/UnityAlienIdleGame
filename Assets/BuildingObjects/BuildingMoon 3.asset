@@ -15,11 +15,13 @@ MonoBehaviour:
   buildingName: 
   description: 
   icon: {fileID: -2347862896895799533, guid: 69189576672e309429fa5837a7d9ba5a, type: 3}
-  baseCost: 200
-  growthRate: 1.15
-  scaling: 1
+  basePrice: 100
+  buildingMultiplier: 1.15
+  levelMultiplier: 1.1
+  buildingIndex: 3
   maxLevel: 1000
-  baseProfit: 1
+  baseProfit: 100
+  incomeInterval: 10
   maxAstronauts: 5
   astronautBaseCost: 50
   astronautCostStep: 50

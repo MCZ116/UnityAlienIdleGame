@@ -52,7 +52,7 @@ public class SuitsUpgrades : MonoBehaviour
                 suitsTextLevels[id].enabled = false;
             }
             suitsTextCost[id].text = GameManager.ExponentLetterSystem(SuitsUpgradeCalc(id), "F2");
-            
+
         }
         SuitshButtonStatus();
         //HideIfClickedOutside(suitsObjectInfoWindow);
