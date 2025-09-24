@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 public class BuildingManager : MonoBehaviour
 {
-    public GameObject buildingPrefab;    // Assign prefab
+    public GameObject buildingPrefab;
     public Transform container;          // UI parent (e.g., ScrollView content)
     public GameManager gameManager;
     public List<BuildingState> buildings = new();
@@ -37,7 +37,8 @@ public class BuildingManager : MonoBehaviour
 
     public bool HasEnoughCrystals(BuildingState building)
     {
-        return gameManager.crystalCurrency >= building.GetCurrentAstronautsPrice();
+        Debug.Log($"Checking crystals: Have {gameManager.crystalCurrency}, Need {building.GetAstronautCost()}");
+        return gameManager.crystalCurrency >= building.GetAstronautCost();
     }
 
     public void BuyLevel(BuildingState state)
@@ -56,7 +57,20 @@ public class BuildingManager : MonoBehaviour
             gameManager.mainCurrency -= totalCost;
             state.level += buyAmount;
             state.profitPerSecond = state.GetCurrentProfit() / state.data.incomeInterval;
+
+            CheckCrystalRewards(state);
             state.UpdateVisuals();
+        }
+    }
+
+    private void CheckCrystalRewards(BuildingState state)
+    {
+        int newCheckpoint = state.level / 10;
+        if (newCheckpoint > state.lastCrystalCheckpoint)
+        {
+            int crystalsEarned = newCheckpoint - state.lastCrystalCheckpoint;
+            state.lastCrystalCheckpoint = newCheckpoint;
+            gameManager.crystalCurrency += crystalsEarned;
         }
     }
 
@@ -64,8 +78,19 @@ public class BuildingManager : MonoBehaviour
     public void BuyAstronaut(BuildingState state)
     {
         if (!HasEnoughCrystals(state)) return;
-        gameManager.crystalCurrency -= state.GetCurrentAstronautsPrice();
+        gameManager.crystalCurrency -= state.GetAstronautCost();
         state.UnlockNextAstronaut();
+    }
+
+    public void ResetAllBuildings()
+    {
+        foreach (var building in buildings)
+        {
+            building.level = 0;
+            building.astronautsHired = 0;
+            building.profitPerSecond = 0;
+            building.UpdateVisuals();
+        }
     }
 
     public void ApplyLoadedData(GameData data)
@@ -78,6 +103,7 @@ public class BuildingManager : MonoBehaviour
             // Restore astronauts visuals
             buildings[i].RestoreAstronauts();
             buildings[i].UpdateVisuals();
+            // Recalculate profit per second
             buildings[i].profitPerSecond = buildings[i].GetCurrentProfit() / buildings[i].data.incomeInterval;
         }
     }

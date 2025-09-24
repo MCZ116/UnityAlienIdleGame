@@ -24,7 +24,7 @@ public class BuildingData : ScriptableObject, IDescribable
     public double baseProfit = 100;
     public float incomeInterval = 10f;
     // Astronaut settings
-    public int maxAstronauts = 5;
+    public int maxAstronauts = 4;
     public int astronautBaseCost = 50;  // first astronaut
     public int astronautCostStep = 50;  // added cost for each new astronaut
     public double astronautBonusPercent = 0.2; // 20% profit per astronaut
@@ -32,12 +32,6 @@ public class BuildingData : ScriptableObject, IDescribable
     public double GetProfit(int level)
     {
         return baseProfit * level;
-    }
-
-    public int GetAstronautCost(int currentAstronauts)
-    {
-        // e.g. 50, 100, 150, 200, ...
-        return astronautBaseCost + astronautCostStep * currentAstronauts;
     }
 
     public double GetAstronautMultiplier(int astronautsHired)

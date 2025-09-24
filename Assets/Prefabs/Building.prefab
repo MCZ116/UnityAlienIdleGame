@@ -1921,7 +1921,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2717844943549230028}
   - component: {fileID: 5455588773034293761}
-  - component: {fileID: 1239107383373472248}
   m_Layer: 5
   m_Name: Astronaut5
   m_TagString: astronauts
@@ -1971,18 +1970,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1239107383373472248
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4071178713008306961}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1a824dc21013444ca69ceb86e452464, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4144554623559194987
 GameObject:
   m_ObjectHideFlags: 0
@@ -2407,7 +2394,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3872519495119359234}
   - component: {fileID: 7607414912272233657}
-  - component: {fileID: 5370128124527113756}
   m_Layer: 5
   m_Name: Astronaut4
   m_TagString: astronauts
@@ -2457,18 +2443,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &5370128124527113756
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4946697954460789662}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1a824dc21013444ca69ceb86e452464, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5076913390619594230
 GameObject:
   m_ObjectHideFlags: 0
@@ -2479,7 +2453,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5959380519064969107}
   - component: {fileID: 7555515420988933230}
-  - component: {fileID: 6214551753850528823}
   m_Layer: 5
   m_Name: Astronaut2
   m_TagString: astronauts
@@ -2529,18 +2502,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6214551753850528823
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5076913390619594230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1a824dc21013444ca69ceb86e452464, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5624362144090341977
 GameObject:
   m_ObjectHideFlags: 0
@@ -3303,7 +3264,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4595766168014847410}
   - component: {fileID: 3248998845434044851}
-  - component: {fileID: 7891657648663791934}
   m_Layer: 5
   m_Name: Astronaut3
   m_TagString: astronauts
@@ -3354,18 +3314,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &7891657648663791934
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7225561395628651864}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1a824dc21013444ca69ceb86e452464, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7272482782018474079
 GameObject:
   m_ObjectHideFlags: 0

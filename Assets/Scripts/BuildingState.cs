@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 [System.Serializable]
@@ -17,6 +16,7 @@ public class BuildingState : MonoBehaviour
     [Header("Astronauts")]
     public List<GameObject> astronautObjects; // assign in inspector
     public int astronautsHired; // extra unlocked astronauts (first one free)
+    public int lastCrystalCheckpoint = 0;
 
     [SerializeField] ResearchManager researchManager;
 
@@ -72,8 +72,12 @@ public class BuildingState : MonoBehaviour
     }
 
 
-    public double GetCurrentAstronautsPrice()
+    public int GetAstronautCost()
     {
-        return data.GetAstronautCost(astronautsHired);
+        if (astronautsHired >= data.maxAstronauts)
+            return 0;
+
+        return data.astronautBaseCost + astronautsHired * data.astronautCostStep;
     }
+
 }

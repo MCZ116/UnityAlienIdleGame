@@ -22,7 +22,7 @@ MonoBehaviour:
   maxLevel: 1000
   baseProfit: 100
   incomeInterval: 10
-  maxAstronauts: 5
+  maxAstronauts: 4
   astronautBaseCost: 50
   astronautCostStep: 50
   astronautBonusPercent: 0.2

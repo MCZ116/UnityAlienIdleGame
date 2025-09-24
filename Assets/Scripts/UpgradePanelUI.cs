@@ -7,21 +7,23 @@ public class UpgradePanelUI : MonoBehaviour
     [Header("UI Elements")]
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI priceText;
+    public TextMeshProUGUI maxText;
     public TextMeshProUGUI priceAstronautText;
     public TextMeshProUGUI profitPerSecondText;
     public Button upgradeButton;
     public Button astronautButton;
+    [SerializeField] private GameObject priceContainer;
 
-    private BuildingState targetState;
-    private BuildingManager targetManager;
+    private BuildingState buildingState;
+    private BuildingManager buildingManager;
 
     public void SetBuilding(BuildingUI building)
     {
-        targetState = building.state;
-        targetManager = building.buildingManager;
+        buildingState = building.state;
+        buildingManager = building.buildingManager;
 
         nameText.text = building.state.data.name; // example
-        UpdateButtons();
+        RefreshUI();
 
         // Remove previous listeners
         upgradeButton.onClick.RemoveAllListeners();
@@ -30,31 +32,69 @@ public class UpgradePanelUI : MonoBehaviour
         // Assign new listeners for this building
         upgradeButton.onClick.AddListener(() =>
         {
-            targetManager.BuyLevel(targetState);
-            UpdateButtons();
+            buildingManager.BuyLevel(buildingState);
+            RefreshUI();
         });
 
         astronautButton.onClick.AddListener(() =>
         {
-            targetManager.BuyAstronaut(targetState);
-            UpdateButtons();
+            buildingManager.BuyAstronaut(buildingState);
+            RefreshUI();
         });
     }
 
     private void Update()
     {
-        if (targetState != null)
-            UpdateButtons();
+        if (buildingState != null)
+            RefreshUI();
     }
 
-    private void UpdateButtons()
+    private void RefreshUI()
     {
-        priceText.text = GameManager.ExponentLetterSystem(GameManager.instance.GetCostPreview(targetState), "F2");
-        priceAstronautText.text = GameManager.ExponentLetterSystem(targetState.GetCurrentAstronautsPrice(), "F0");
+        UpdateUpgradeButton(buildingState);
+        UpdateAstronautButton(buildingState);
 
-        upgradeButton.interactable = targetManager.HasEnoughCurrency(targetState,GameManager.instance.GetBuyAmount());
-        astronautButton.interactable = targetManager.HasEnoughCrystals(targetState)
-                                      && targetState.astronautsHired < targetState.data.maxAstronauts;
-        profitPerSecondText.text = GameManager.ExponentLetterSystem(targetState.profitPerSecond, "F2") + "/sec";
+        // Profit preview
+        profitPerSecondText.text =
+            GameManager.ExponentLetterSystem(buildingState.profitPerSecond, "F2") + "/sec";
     }
+
+    private void UpdateUpgradeButton(BuildingState buildingState)
+    {
+        int buyAmount = GameManager.instance.GetBuyAmount();
+        double previewCost = GameManager.instance.GetCostPreview(buildingState);
+
+        upgradeButton.interactable = buildingManager.HasEnoughCurrency(buildingState, buyAmount);
+
+        priceText.text = GameManager.ExponentLetterSystem(previewCost, "F2");
+    }
+
+    private void UpdateAstronautButton(BuildingState buildingState)
+    {
+        int maxAstronauts = buildingState.data.maxAstronauts;
+        bool atMax = buildingState.astronautsHired >= maxAstronauts;
+
+        astronautButton.gameObject.SetActive(true);
+        priceAstronautText.gameObject.SetActive(true);
+
+        if (atMax)
+        {
+            astronautButton.interactable = false;
+            priceContainer.SetActive(false);
+            maxText.gameObject.SetActive(true);
+            maxText.text = "MAX";
+            return;
+        }
+
+        maxText.gameObject.SetActive(false);
+        astronautButton.interactable = buildingManager.HasEnoughCrystals(buildingState);
+        priceContainer.SetActive(true);
+        priceAstronautText.text = GameManager.ExponentLetterSystem(
+            buildingState.GetAstronautCost(),
+            "F0"
+        );
+    }
+
+
+
 }

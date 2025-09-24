@@ -22,8 +22,8 @@ public class SuitsUpgrades : MonoBehaviour
 
         for (int id = 0; id < suitsUpgradesCosts.Length; id++)
         {
-            gameManager.AutoValuesAssigning(id, suitsUpgradesCosts, 10000000, 1000*id+1);
-            gameManager.AutoValuesAssigning(id, suitsUpgradesValues, 1, 0.4);
+            suitsUpgradesCosts[id] = 10000000 * (id + 1) * 1000;
+            suitsUpgradesValues[id] = 1 + 0.4 * id;
         }   
     }
 
@@ -55,26 +55,12 @@ public class SuitsUpgrades : MonoBehaviour
 
         }
         SuitshButtonStatus();
-        //HideIfClickedOutside(suitsObjectInfoWindow);
     }
-
-    //private void HideIfClickedOutside(GameObject panel)
-    //{
-    //    if (Input.GetMouseButton(0) && panel.activeSelf && !RectTransformUtility.RectangleContainsScreenPoint(panel.GetComponent<RectTransform>(),
-    //        Input.mousePosition,Camera.main))
-    //    {
-    //        panel.SetActive(false);
-    //    }
-    //}
 
     public void SuitsInfoWindowOnClick(int id)
     {
         suitsObjectInfoWindow.SetActive(true);
         suitsTextField.text = $"{suitsUpgradeText[id]}";
-
-        //researchWindowIcon.sprite = researchImage[id].sprite;
-
-
     }
 
     public void SuitsUpgradeButtons(int id)

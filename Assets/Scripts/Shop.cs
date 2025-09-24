@@ -5,10 +5,6 @@ using UnityEngine;
 public class Shop : MonoBehaviour
 {
 
-    public GameManager alienScript;
-
-    public AstronautBehaviour astroBehaviour;
-
     void Start()
     {
         

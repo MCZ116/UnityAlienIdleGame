@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BonusTime : MonoBehaviour
+public class BonusManager : MonoBehaviour
 {
     private const int BUFF_DURATION_MINUTES = 120;
     private const int MAX_DURATION_MINUTES = 480;
