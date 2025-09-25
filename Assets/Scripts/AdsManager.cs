@@ -20,7 +20,7 @@ public class AdsManager : MonoBehaviour
     public GameManager gameManager;
     public OfflineProgress offlineProgress;
     public SpinWheel spinWheel;
-    public BonusTime bonusTime;
+    public BonusManager bonusManager;
 
     async void Start()
     {
@@ -116,7 +116,7 @@ public class AdsManager : MonoBehaviour
                 break;
 
             case "DoubleTime":
-                bonusTime.ClickedBonusBtn();
+                bonusManager.ClickedBonusBtn();
                 break;
         }
     }

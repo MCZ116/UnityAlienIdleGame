@@ -50,7 +50,7 @@ public class ResearchButtonUI : MonoBehaviour
         button.interactable = canUnlock;
 
         priceText.color = canUnlock ? Color.green : Color.red;
-        priceText.text = requiredResearchDone ? GameManager.ExponentLetterSystem(research.GetPrice(), "F2") : "";
+        priceText.text = requiredResearchDone ? GameManager.ExponentLetterSystem(research.GetPrice()) : "";
         SetActiveState();
     }
 

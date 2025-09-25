@@ -7,31 +7,22 @@ public class GameData
 {
     public double researchPointsData;
     public double crystals;
-    public double[] stageLevelData;
-    public double upgradeLevelData;
-    public double mainResetLevelData;
-    public bool[] upgradeActivated;
-    public bool[] astronautsbuy;
+    public int resetLevel;
     public double rebirthCostData;
     public double[] suitsLevel;
-    public double upgradesLoopLenght;
-    public int[] astronautsLevel;
-    public int[] astronautIDStartPosition;
+    public double incomeMultiplier;
+    public double totalCurrencyEarned;
+
     public List<int> researchIds = new();
     public List<int> planetIds = new();
+    public List<int> buildingLevels = new();
+    public List<int> astronautsHired = new();
 
-
-    public GameData (GameManager gameManager, ResearchManager researchManager, PlanetManager planetManager)
+    public GameData (GameManager gameManager, ResearchManager researchManager, PlanetManager planetManager, BuildingManager buildingManager)
     {
         researchPointsData = gameManager.mainCurrency;
 
-        stageLevelData = gameManager.StageLevel;
-
-        upgradeLevelData = gameManager.upgradeLevel1;
-
-        mainResetLevelData = gameManager.mainResetLevel;
-
-        upgradeActivated = gameManager.upgradesActivated;
+        resetLevel = gameManager.resetLevel;
 
         rebirthCostData = gameManager.rebirthCost;
 
@@ -39,11 +30,9 @@ public class GameData
 
         crystals = gameManager.crystalCurrency;
 
-        astronautsbuy = gameManager.confirmAstronautBuy;
+        incomeMultiplier = gameManager.incomeMultiplier;
 
-        astronautsLevel = gameManager.astronautsLevel;
-
-        astronautIDStartPosition = gameManager.astronautBuyStartID;
+        totalCurrencyEarned = gameManager.totalCurrencyEarned;
 
         foreach (var researchData in researchManager.unlockedResearches)
         {
@@ -53,6 +42,16 @@ public class GameData
         foreach (var planetData in planetManager.unlockedPlanets)
         {
             planetIds.Add(planetData.planetId);
+        }
+
+        foreach (var buildingState in buildingManager.buildings)
+        {
+            buildingLevels.Add(buildingState.level);
+        }
+
+        foreach (var buildingState in buildingManager.buildings)
+        {
+            astronautsHired.Add(buildingState.astronautsHired);
         }
     }
 }

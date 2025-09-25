@@ -28,7 +28,7 @@ public class SpinWheel : MonoBehaviour
         rewardPoints = new double[6];
         for(int i = 0; i < researchPointsOnSpin.Length; i++)
         {
-            rewardPoints[i] = (5000 * (i+1)) * gameManager.mainResetLevel;
+            rewardPoints[i] = (5000 * (i+1)) * gameManager.resetLevel;
             researchPointsOnSpin[i].text = GameManager.ExponentLetterSystem(rewardPoints[i], "F0");
         }
     }
