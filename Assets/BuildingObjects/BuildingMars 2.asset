@@ -12,16 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e18a8eec18388c4f9ab7bc7619e7e57, type: 3}
   m_Name: BuildingMars 2
   m_EditorClassIdentifier: Assembly-CSharp::BuildingData
-  buildingName: MarsShelter
-  description: 
+  buildingName: Shelter
+  description: Test
   icon: {fileID: -2347862896895799533, guid: 69189576672e309429fa5837a7d9ba5a, type: 3}
   basePrice: 100
   buildingMultiplier: 1.15
   levelMultiplier: 1.1
-  buildingIndex: 7
+  buildingIndex: 8
   maxLevel: 1000
   baseProfit: 100
   incomeInterval: 10
+  baseProfitMultiplier: 8
   maxAstronauts: 4
   astronautBaseCost: 50
   astronautCostStep: 50

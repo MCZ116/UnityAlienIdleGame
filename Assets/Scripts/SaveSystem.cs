@@ -7,7 +7,7 @@ public static class SaveSystem
 {
 
     public static string savePath = Application.persistentDataPath;
-    public static string saveName = "/savegame.nbn";
+    public static string saveName = "/savegame_dev_v1.0.nbn";
 
     public static void SaveGameData(GameManager gameManager, ResearchManager researchManager, PlanetManager planetManager, BuildingManager buildingManager)
     {
@@ -52,5 +52,9 @@ public static class SaveSystem
         }
     }
 
+    public static bool SaveExists()
+    {
+        return File.Exists(savePath + saveName);
+    }
 
 }

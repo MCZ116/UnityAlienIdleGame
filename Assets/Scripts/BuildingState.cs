@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,7 +6,7 @@ using UnityEngine;
 public class BuildingState : MonoBehaviour
 {
     public BuildingData data;
-    public int level;
+    public int level = 0;
     public float currentProgress; // for progress bar, optional
     public double profitPerSecond;  // income rate
     public float timer;
@@ -15,10 +16,45 @@ public class BuildingState : MonoBehaviour
 
     [Header("Astronauts")]
     public List<GameObject> astronautObjects; // assign in inspector
-    public int astronautsHired; // extra unlocked astronauts (first one free)
+    public int astronautsHired = 0; // extra unlocked astronauts (first one free)
     public int lastCrystalCheckpoint = 0;
 
     [SerializeField] ResearchManager researchManager;
+
+    public double GetCurrentPrice()
+    {
+        double indexMultiplier = Math.Pow(data.buildingMultiplier, data.buildingIndex);
+        double levelMultiplier = Math.Pow(data.levelMultiplier, level);
+
+        return data.basePrice * indexMultiplier * levelMultiplier;
+    }
+
+    public double GetBaseProfit(BuildingData data)
+    {
+        // Example: 8x per building
+        return Math.Pow(data.baseProfitMultiplier, data.buildingIndex);
+    }
+
+    public double GetCurrentProfit()
+    {
+        if (!IsUnlocked) return 0;
+
+        double buildingBase = Math.Pow(data.baseProfitMultiplier, data.buildingIndex);
+        double levelGrowth = Math.Pow(1.15, level - 1);
+        double totalProfit = buildingBase * levelGrowth;
+        double astronautMultiplier = data.GetAstronautMultiplier(astronautsHired);
+        totalProfit *= astronautMultiplier;
+
+        return totalProfit;
+    }
+
+    public int GetAstronautCost()
+    {
+        if (astronautsHired >= data.maxAstronauts)
+            return 0;
+
+        return data.astronautBaseCost + astronautsHired * data.astronautCostStep;
+    }
 
     public void UnlockNextAstronaut()
     {
@@ -53,31 +89,6 @@ public class BuildingState : MonoBehaviour
         placeholderVisual.SetActive(!unlocked);
         activeVisual.SetActive(unlocked);
         astronautObjects[0].SetActive(true);
-    }
-
-    public double GetCurrentPrice()
-    {
-        return data.basePrice
-               * Mathf.Pow((float)data.buildingMultiplier, data.buildingIndex)
-               * Mathf.Pow((float)data.levelMultiplier, level);
-    }
-
-    public double GetCurrentProfit()
-    {
-        if (!IsUnlocked) return 0;
-        double baseProfit = data.GetProfit(level);
-
-        // Apply astronaut bonus
-        return baseProfit * data.GetAstronautMultiplier(astronautsHired);
-    }
-
-
-    public int GetAstronautCost()
-    {
-        if (astronautsHired >= data.maxAstronauts)
-            return 0;
-
-        return data.astronautBaseCost + astronautsHired * data.astronautCostStep;
     }
 
 }

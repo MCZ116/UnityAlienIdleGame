@@ -102,18 +102,27 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        if (PlayerPrefs.GetInt("NeverDone", 0) <= 0)
+        if (!SaveSystem.SaveExists())
         {
+            // First run: reset all buildings and astronauts
+            foreach (var building in buildingManager.buildings)
+            {
+                building.level = 0;
+                building.astronautsHired = 0;
+                building.RestoreAstronauts();
+                building.UpdateVisuals();
+            }
+
             Save();
             PlayerPrefs.SetInt("NeverDone", 1);
         }
+        else
+        {
+            Load();
+        }
+
         offline.offlineRewards.SetActive(false);
         ChangeBuyModeText.text = "1";
-
-        //Load after assigning variables and before loading unlock status or it won't appear
-        Load();
-        
-        //astronautBehaviour.AstronautsObjectActivationControl();
         offline.OfflineProgressLoad();
         ChangePlanetTab(0);
     }
@@ -130,11 +139,11 @@ public class GameManager : MonoBehaviour
 
         ProcessBuildingIncomeCycle();
 
-        CurrencyText.text = ExponentLetterSystem(mainCurrency, "F2");
-        IncomePerSecond.text = ExponentLetterSystem(GetTotalIncomePerSecond(), "F2") + "/s ";
-        RebirthPriceText.text = ExponentLetterSystem(rebirthCost, "F2");
-        RebirthLevel.text = "Returns: " + ExponentLetterSystem(resetLevel, "F0");
-        ProfileLevel.text = ExponentLetterSystem(resetLevel, "F0");
+        CurrencyText.text = ExponentLetterSystem(mainCurrency);
+        IncomePerSecond.text = ExponentLetterSystem(GetTotalIncomePerSecond()) + "/s ";
+        RebirthPriceText.text = ExponentLetterSystem(rebirthCost);
+        RebirthLevel.text = "Returns: " + resetLevel;
+        ProfileLevel.text = resetLevel.ToString();
         CrystalsAmount.text = crystalCurrency.ToString("F0");
         nickName.text = "Nick: " + PlayerPrefs.GetString("Nick");
 
@@ -212,26 +221,28 @@ public class GameManager : MonoBehaviour
         settingsScreenObject.SetActive(false);
     }
 
-    public static string ExponentLetterSystem(double value, string numberToString)
+    public static string ExponentLetterSystem(double value, string format = "F2")
     {
 
-        if (value <= 1000) return value.ToString(numberToString);
+        if (value < 1000) return value.ToString(format);
 
-        var exponentSci = Math.Floor(Math.Log10(value));
-        var exponentEng = 3 * Math.Floor(exponentSci / 3);
-        var letterOne = ((char)Math.Floor((((double)exponentEng - 3) / 3) % 26 + 97)).ToString();
+        // Determine exponent
+        int exponent = (int)Math.Floor(Math.Log10(value));
+        int exponentEng = 3 * (exponent / 3); // round down to nearest 3
 
-        if ((double)exponentEng / 3 >= 27)
+        // Number part
+        double scaledValue = value / Math.Pow(10, exponentEng);
+
+        // Letter(s) part
+        string letters = "";
+        int index = exponentEng / 3 - 1; // -1 because 1e3 = k
+        while (index >= 0)
         {
-            var letterTwo = ((char)(Math.Floor(((double)exponentEng - 3 * 26) / (3 * 26)) % 26 + 97)).ToString();
-            return (value / Math.Pow(10, exponentEng)).ToString(numberToString) + letterTwo + letterOne;
+            letters = (char)('a' + (index % 26)) + letters;
+            index = index / 26 - 1;
         }
-        if (value > 1000)
-        {
-            return (value / Math.Pow(10, exponentEng)).ToString(numberToString) + letterOne;
 
-        }
-        return value.ToString("F2");
+        return scaledValue.ToString(format) + letters;
 
     }
 

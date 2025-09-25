@@ -14,7 +14,7 @@ public class PlanetButtonUI : MonoBehaviour
 
     void Start()
     {
-        priceText.text = GameManager.ExponentLetterSystem(planet.GetPrice(), "F2");
+        priceText.text = GameManager.ExponentLetterSystem(planet.GetPrice());
         requirements.text = planet.GetResearchRequirement();
         description.text = planet.description;
 
@@ -42,7 +42,7 @@ public class PlanetButtonUI : MonoBehaviour
         else
         {
             priceText.gameObject.SetActive(true);
-            priceText.text = GameManager.ExponentLetterSystem(planet.GetPrice(), "F2");
+            priceText.text = GameManager.ExponentLetterSystem(planet.GetPrice());
             requirements.gameObject.SetActive(true);
         }
     }

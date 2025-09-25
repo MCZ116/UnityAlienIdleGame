@@ -14,7 +14,7 @@ public class BuildingManager : MonoBehaviour
         // Assign index based on the list order
         for (int i = 0; i < buildings.Count; i++)
         {
-            buildings[i].data.buildingIndex = i;
+            buildings[i].data.buildingIndex = i + 1; // start from 1
 
             // Optional: calculate initial profit per second
             buildings[i].profitPerSecond = buildings[i].GetCurrentProfit() / buildings[i].data.incomeInterval;

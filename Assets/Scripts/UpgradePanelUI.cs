@@ -54,9 +54,7 @@ public class UpgradePanelUI : MonoBehaviour
         UpdateUpgradeButton(buildingState);
         UpdateAstronautButton(buildingState);
 
-        // Profit preview
-        profitPerSecondText.text =
-            GameManager.ExponentLetterSystem(buildingState.profitPerSecond, "F2") + "/sec";
+        profitPerSecondText.text = GameManager.ExponentLetterSystem(buildingState.profitPerSecond) + "/s";
     }
 
     private void UpdateUpgradeButton(BuildingState buildingState)
@@ -66,7 +64,7 @@ public class UpgradePanelUI : MonoBehaviour
 
         upgradeButton.interactable = buildingManager.HasEnoughCurrency(buildingState, buyAmount);
 
-        priceText.text = GameManager.ExponentLetterSystem(previewCost, "F2");
+        priceText.text = GameManager.ExponentLetterSystem(previewCost);
     }
 
     private void UpdateAstronautButton(BuildingState buildingState)
@@ -89,10 +87,7 @@ public class UpgradePanelUI : MonoBehaviour
         maxText.gameObject.SetActive(false);
         astronautButton.interactable = buildingManager.HasEnoughCrystals(buildingState);
         priceContainer.SetActive(true);
-        priceAstronautText.text = GameManager.ExponentLetterSystem(
-            buildingState.GetAstronautCost(),
-            "F0"
-        );
+        priceAstronautText.text = buildingState.GetAstronautCost().ToString();
     }
 
 

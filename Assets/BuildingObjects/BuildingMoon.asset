@@ -13,15 +13,16 @@ MonoBehaviour:
   m_Name: BuildingMoon
   m_EditorClassIdentifier: Assembly-CSharp::BuildingData
   buildingName: Shelter
-  description: test
+  description: Test
   icon: {fileID: -2347862896895799533, guid: 69189576672e309429fa5837a7d9ba5a, type: 3}
   basePrice: 100
   buildingMultiplier: 1.15
   levelMultiplier: 1.1
-  buildingIndex: 0
+  buildingIndex: 1
   maxLevel: 1000
   baseProfit: 100
   incomeInterval: 10
+  baseProfitMultiplier: 8
   maxAstronauts: 4
   astronautBaseCost: 50
   astronautCostStep: 50

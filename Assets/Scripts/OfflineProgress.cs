@@ -50,7 +50,7 @@ public class OfflineProgress : MonoBehaviour
         // 5. Show UI
         offlineRewards.SetActive(true);
         offlineTimeText.text = $"Offline Time: {totalOfflineTime:d\\dhh\\hmm\\m}";
-        offlineRewardText.text = GameManager.ExponentLetterSystem(totalRewards, "F2");
+        offlineRewardText.text = GameManager.ExponentLetterSystem(totalRewards);
 
         // 6. Add base reward immediately
         gameManager.AddCurrency(totalRewards);
