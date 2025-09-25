@@ -1,42 +1,28 @@
 ﻿
 
-using UnityEngine;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class GameData
 {
-
     public double researchPointsData;
     public double crystals;
-    public double[] stageLevelData;
-    public double upgradeLevelData;
-    public double mainResetLevelData;
-    public double[] researchLevel;
-    public bool[] upgradeActivated;
-    public bool[] astronautsbuy;
+    public int resetLevel;
     public double rebirthCostData;
     public double[] suitsLevel;
-    public double upgradesLoopLenght;
-    public int[] astronautsLevel;
-    public int[] astronautIDStartPosition;
-    public bool[] planetUnlocked;
-    public bool[] researchCanBeDone;
-    public bool[] researchUnlocked;
-    public int researchID;
+    public double incomeMultiplier;
+    public double totalCurrencyEarned;
 
-    public GameData (GameManager gameManager)
+    public List<int> researchIds = new();
+    public List<int> planetIds = new();
+    public List<int> buildingLevels = new();
+    public List<int> astronautsHired = new();
+
+    public GameData (GameManager gameManager, ResearchManager researchManager, PlanetManager planetManager, BuildingManager buildingManager)
     {
         researchPointsData = gameManager.mainCurrency;
 
-        stageLevelData = gameManager.StageLevel;
-
-        upgradeLevelData = gameManager.upgradeLevel1;
-
-        mainResetLevelData = gameManager.mainResetLevel;
-
-        researchLevel = gameManager.Research1Level;
-
-        upgradeActivated = gameManager.upgradesActivated;
+        resetLevel = gameManager.resetLevel;
 
         rebirthCostData = gameManager.rebirthCost;
 
@@ -44,19 +30,28 @@ public class GameData
 
         crystals = gameManager.crystalCurrency;
 
-        astronautsbuy = gameManager.confirmAstronautBuy;
+        incomeMultiplier = gameManager.incomeMultiplier;
 
-        astronautsLevel = gameManager.astronautsLevel;
+        totalCurrencyEarned = gameManager.totalCurrencyEarned;
 
-        astronautIDStartPosition = gameManager.astronautBuyStartID;
+        foreach (var researchData in researchManager.unlockedResearches)
+        {
+            researchIds.Add(researchData.researchId);
+        }
 
-        planetUnlocked = gameManager.planetUnlocked;
+        foreach (var planetData in planetManager.unlockedPlanets)
+        {
+            planetIds.Add(planetData.planetId);
+        }
 
-        researchCanBeDone = gameManager.researchCanBeDone;
+        foreach (var buildingState in buildingManager.buildings)
+        {
+            buildingLevels.Add(buildingState.level);
+        }
 
-        researchUnlocked = gameManager.researchUnlocked;
-
+        foreach (var buildingState in buildingManager.buildings)
+        {
+            astronautsHired.Add(buildingState.astronautsHired);
+        }
     }
-
-
 }

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e18a8eec18388c4f9ab7bc7619e7e57, type: 3}
+  m_Name: BuildingMoon 3
+  m_EditorClassIdentifier: Assembly-CSharp::BuildingData
+  buildingName: Shelter
+  description: Test
+  icon: {fileID: -2347862896895799533, guid: 69189576672e309429fa5837a7d9ba5a, type: 3}
+  basePrice: 100
+  buildingMultiplier: 1.15
+  levelMultiplier: 1.1
+  buildingIndex: 4
+  maxLevel: 1000
+  baseProfit: 100
+  incomeInterval: 10
+  baseProfitMultiplier: 8
+  maxAstronauts: 4
+  astronautBaseCost: 50
+  astronautCostStep: 50
+  astronautBonusPercent: 0.2

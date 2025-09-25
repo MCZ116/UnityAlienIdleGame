@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f218585c24d73a4bb6a0ddd7e154e66, type: 3}
+  m_Name: Venus
+  m_EditorClassIdentifier: Assembly-CSharp::PlanetData
+  planetName: Mars
+  icon: {fileID: 21300000, guid: 3e15d925ccd28e941a21b53bee428163, type: 3}
+  basePrice: 100000
+  planetId: 3
+  requiredResearch: {fileID: 11400000, guid: 8e2d8d920b11e8c41ba496baf2d7a43b, type: 2}
+  requiredResearchName: 
+  tier: 30
+  description: Venus is the second planet from the Sun. It is named after the Roman
+    goddess of love and beauty. As the brightest natural object in Earth's night
+    sky after the Moon, Venus can cast shadows and can be, on rare occasions, visible
+    to the naked eye in broad daylight

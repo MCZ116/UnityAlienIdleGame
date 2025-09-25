@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ef3939f98eeee84a9b757d49ce00daf, type: 3}
+  m_Name: Research_HeatIsolators
+  m_EditorClassIdentifier: 
+  researchId: 550815836
+  researchName: Heat Resistant Isolators
+  price: 167772160000
+  requiredResearches:
+  - {fileID: 11400000, guid: 7d5239843b03e744c96b4b06e5394ea6, type: 2}
+  icon: {fileID: 21300000, guid: b44e62ecc090fcd4a8c3a5c4d769bbe3, type: 3}
+  tier: 24
+  description: 
+  useFormula: 1
+  customMultiplier: 1
+  formulaPercentPerTier: 0.1

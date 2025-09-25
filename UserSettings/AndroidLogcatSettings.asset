@@ -1,170 +1,13 @@
 {
     "m_SelectedDeviceId": "lvkfmbailvd6beey",
-    "m_SelectedPackage": {
+    "m_SelectedProcess": {
         "deviceId": "",
         "name": "",
         "processId": 0,
         "exited": false
     },
     "m_SelectedPriority": 0,
-    "m_KnownPackagesForSerialization": [
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 10455,
-            "exited": true
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 12965,
-            "exited": true
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 30314,
-            "exited": true
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 5061,
-            "exited": true
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.huawei.android.launcher",
-            "processId": 2779,
-            "exited": false
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 9450,
-            "exited": true
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 13553,
-            "exited": false
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 15375,
-            "exited": false
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 29218,
-            "exited": false
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 10970,
-            "exited": false
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 24627,
-            "exited": false
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 1972,
-            "exited": false
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 22704,
-            "exited": false
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 25571,
-            "exited": false
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 26922,
-            "exited": false
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 32186,
-            "exited": false
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 16346,
-            "exited": false
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 20957,
-            "exited": false
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 7087,
-            "exited": false
-        },
-        {
-            "deviceId": "26EBB18821153566",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 11516,
-            "exited": false
-        },
-        {
-            "deviceId": "192.168.0.73:5555",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 24640,
-            "exited": true
-        },
-        {
-            "deviceId": "192.168.0.73:5555",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 25345,
-            "exited": true
-        },
-        {
-            "deviceId": "192.168.0.73:5555",
-            "name": "com.facebook.orca",
-            "processId": 11350,
-            "exited": false
-        },
-        {
-            "deviceId": "lvkfmbailvd6beey",
-            "name": "com.mi.android.globallauncher",
-            "processId": 14048,
-            "exited": false
-        },
-        {
-            "deviceId": "lvkfmbailvd6beey",
-            "name": "com.MCZ.UniverseDiscoveryIdle",
-            "processId": 25829,
-            "exited": true
-        },
-        {
-            "deviceId": "lvkfmbailvd6beey",
-            "name": "com.android.settings",
-            "processId": 18896,
-            "exited": false
-        }
-    ],
+    "m_KnownProcessesForSerialization": [],
     "m_Tags": {
         "m_Entries": [
             {
@@ -197,8 +40,11 @@
             }
         ]
     },
+    "m_ExtraWindowState": {
+        "Type": 0,
+        "Height": 0.0
+    },
     "m_MemoryViewerState": {
-        "MemoryWindowHeight": 300.0,
         "MemoryWindowWidth": 170.0,
         "MemoryTypeEnabled": [
             true,
@@ -213,9 +59,46 @@
             true
         ],
         "MemoryGroup": 2,
-        "Behavior": 0
+        "AutoCapture": true
     },
-    "m_Filter": "",
-    "m_FilterIsRegularExpression": false,
-    "m_SymbolPaths": []
+    "m_FilterOptions": {
+        "m_Filter": "",
+        "m_UseRegularExpressions": false,
+        "m_MatchCase": false
+    },
+    "m_SymbolPaths": [],
+    "m_CaptureVideoSettings": {
+        "TimeLimitEnabled": false,
+        "TimeLimit": 180,
+        "VideoSizeEnabled": false,
+        "VideoSizeX": 1280,
+        "VideoSizeY": 720,
+        "BitRateEnabled": false,
+        "BitRateK": 20000,
+        "DisplayIdEnabled": false,
+        "DisplayId": ""
+    },
+    "m_ScreenCaptureSettings": {
+        "Mode": 0,
+        "m_LastSaveLocation": [
+            "C:\\Users\\mcz50\\UnityAlienIdleGame",
+            "C:\\Users\\mcz50\\UnityAlienIdleGame"
+        ]
+    },
+    "m_QueryLayoutSettings": {
+        "LastLayoutSaveLocation": "",
+        "LastScreenshotSaveLocation": ""
+    },
+    "m_InputSettings": {
+        "ShiftModifier": false,
+        "SendText": "",
+        "PosixKillSignal": 0,
+        "TargetProcess": {
+            "deviceId": "",
+            "name": "",
+            "processId": 0,
+            "exited": false
+        }
+    },
+    "m_AutoScroll": 2
 }

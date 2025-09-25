@@ -10,11 +10,26 @@ public class AudioControler : MonoBehaviour
     public AudioSource buttonClickSound;
     public Slider musicSlider;
     public Slider sfxSlider;
+    public static AudioControler instance;
+
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void Start()
     {
         musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
         sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume", 0.75f);
+        AttachClickSoundToAllButtons();
     }
 
     public void MusicVolume(float musiclvl)
@@ -36,5 +51,15 @@ public class AudioControler : MonoBehaviour
         buttonClickSound.Play();
     }
 
+    private void AttachClickSoundToAllButtons()
+    {
+        Button[] allButtons = Object.FindObjectsByType<Button>(FindObjectsSortMode.None);
+        foreach (Button btn in allButtons)
+        {
+            // Remove previous listener to avoid duplicates
+            btn.onClick.RemoveListener(ButtonClickSound);
+            btn.onClick.AddListener(ButtonClickSound);
+        }
+    }
 
 }

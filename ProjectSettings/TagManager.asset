@@ -17,6 +17,10 @@ TagManager:
   - astronauts
   - researchIconInfo
   - researchIcon
+  - unlockPlanets
+  - planetTab
+  - menuTab
+  - stageObjects
   layers:
   - Default
   - TransparentFX

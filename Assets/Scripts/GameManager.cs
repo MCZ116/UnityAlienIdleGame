@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -9,12 +10,10 @@ public class GameManager : MonoBehaviour
 {
     public OfflineProgress offline;
     public AudioControler AC;
+    public BonusManager bonusManager;
     public int buyModeID;
-    public Text[] StageLevelText;
-    public Text[] EarningStage;
     public Text CurrencyText;
-    public Text RPointsText;
-    public Text[] ButtonUpgradeMaxText;
+    public Text IncomePerSecond;
     public Text ChangeBuyModeText;
     public Text RebirthPriceText;
     public Text RebirthLevel;
@@ -25,76 +24,37 @@ public class GameManager : MonoBehaviour
     public double mainCurrency;
     public double crystalCurrency;
     public double rebirthCost;
-
-    double[] stageUpgradeCosts;
-    public double upgradeLevel1;
-    public double mainResetLevel;
-    public GameObject[] progressBarObject;
     public GameObject settingsScreenObject;
-    public static GameManager instance = null;
-    public bool[] upgradesActivated;
-    private bool[] earnedCrystal;
-    public bool[] confirmAstronautBuy;
-    public bool[] planetUnlocked;
-    public bool[] researchUnlocked;
-    private bool activeTab;
-    double[] copyArray;
-    //bool activateRB = false;
-    public Image[] progressBar;
+    public GameObject[] planets;
+    public GameObject homeSafeZone;
+    [System.NonSerialized]
+    private bool[] activeTab;
 
-    public Button[] upgradeButtons;
+    [SerializeField] ResearchManager researchManager;
 
-    public Research research;
+    [SerializeField] PlanetManager planetManager;
 
-    public AstronautBehaviour astronautBehaviour;
+    [SerializeField] BuildingManager buildingManager;
 
     public SuitsUpgrades suitsUpgrades;
 
-    public UnlockingSystem unlockingSystem;
+    public CanvasGroup[] canvasPlanetsTabs;
 
-    public AnimationUnlockSystem unlockingAnimations;
+    public CanvasGroup[] canvasTabs;
 
-    public CanvasGroup canvasShop;
+    public string[] tabsNames = {"gameMenu","shopMenu","researchMenu","rebirth","suitsMenu", "planetsMenu" };
 
     public CanvasGroup canvasMainGame;
 
-    public CanvasGroup canvasRebirthTab;
-
-    public CanvasGroup canvasResearchTab;
-
-    public CanvasGroup canvasSuitsTab;
-
-    public CanvasGroup moonMenu;
-
-    public CanvasGroup marsMenu;
-
-    public CanvasGroup planetsMenu;
-
-    public CanvasGroup phobosMenu;
-
-    public CanvasGroup venusMenu;
-
-    public CanvasGroup mercuryMenu;
-
-    private double[] stageLevel;
-
-    public double[] StageLevel { get => stageLevel; private set => stageLevel = value; }
-
-    private double[] research1Level;
-
-    public double[] Research1Level { get => research1Level; private set => research1Level = value; }
-
     private double[] suitsLevel;
-
     public double[] SuitsLevel { get => suitsLevel; private set => suitsLevel = value; }
-
-    public int[] astronautsLevel;
-    public int[] astronautBuyStartID;
-    public double[] upgradesCounts;
-    public float[] upgradeMaxTime;
-    public float[] progressTimer;
-    public bool[] researchCanBeDone;
     private int planetID;
+
+    public double incomeMultiplier = 1.0; // gets higher after resets
+    public int resetLevel = 1; // how many times the player has reset
+    public double totalCurrencyEarned = 0; // lifetime tracker
+
+    public static GameManager instance = null;
 
     void Awake()
     {
@@ -106,127 +66,65 @@ public class GameManager : MonoBehaviour
         else if (instance != this)
             Destroy(gameObject);
 
-        Debug.Log("GameManagerStarted!");
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
-        mainCurrency = 100;
-        rebirthCost = 10000;
-        StageLevel = new double[25];
-       // unlockingSystem.upgradeObjects = new GameObject[StageLevel.Length - 1];
-        upgradeMaxTime = new float[StageLevel.Length];
-        StageMaxTimeCalc();
-        unlockingSystem.unlockCost = new double[stageLevel.Length - 1];
-        UpgradeCostCalculator(unlockingSystem.unlockCost,250,3.2); // Calculating unlock price for stages  
-        unlockingSystem.planetCost = new double[4];
-        UpgradeCostCalculator(unlockingSystem.planetCost,220000,12.3); // Calculating unlock price for planets
-        progressTimer = new float[stageLevel.Length];
-        activeTab = false;
-        confirmAstronautBuy = new bool[StageLevel.Length * 4];
-        Research1Level = new double[16];
-        astronautsLevel = new int[stageLevel.Length];
+        mainCurrency = 200;
+        rebirthCost = 50000;
+        planets = FindObsWithTag("planetTab");
+        
         SuitsLevel = new double[6];
-        astronautBuyStartID = new int[stageLevel.Length];
-        researchUnlocked = new bool[Research1Level.Length];
-        unlockingSystem.animationUnlockConfirm = new bool[stageLevel.Length - 1];
-        upgradesCounts = new double[StageLevel.Length];
-        upgradesActivated = new bool[unlockingSystem.unlockCost.Length];
-        stageUpgradeCosts = new double[StageLevel.Length];
-        earnedCrystal = new bool[StageLevel.Length];
-        planetUnlocked = new bool[unlockingSystem.planetsPanelsObjects.Length];
-        researchCanBeDone = new bool[Research1Level.Length];
-        research.upgradeResearchValues = new double[research1Level.Length];
-        unlockingSystem.unlockText = new Text[unlockingSystem.upgradeObjects.Length];
-        ResearchMultiplierCalculator();
-        planetUnlocked[0] = false;
+
         planetID = 0;
-        // Here was AutoObjectAssigning
+        buyModeID = 0;
 
+        canvasPlanetsTabs = new CanvasGroup[planets.Length];
 
-        for (int id = 0; id < StageLevel.Length; id++)
+        for (int id = 0; id < canvasPlanetsTabs.Length; id++)
         {
-            progressTimer[id] = 0f;
-            StageLevel[id] = 0;
-            astronautBuyStartID[id] = id * 4;
-            astronautsLevel[id] = 0;
+            canvasPlanetsTabs[id] = planets[id].GetComponent<CanvasGroup>();
         }
 
-        for (int id = 0; id < unlockingSystem.animationUnlockConfirm.Length; id++)
+        canvasTabs = homeSafeZone.GetComponentsInChildren<CanvasGroup>()
+            .Where(child => child.name.Contains("Menu")).ToArray();
+        activeTab = new bool[canvasTabs.Length];
+        for (int id = 0; id < canvasTabs.Length; id++)
         {
-            unlockingSystem.animationUnlockConfirm[id] = false;
-            upgradesActivated[id] = false;
+            activeTab[id] = false;
         }
 
-        for (int id = 0; id < researchUnlocked.Length; id++)
-        {
-            researchUnlocked[id] = false;
-            researchCanBeDone[id] = false;
-        }
-
-        for (int id = 0; id < Research1Level.Length; id++)
-        {
-            Research1Level[id] = 0;
-        }
-
-        upgradeLevel1 = 0;
         suitsLevel[0] = 0;
         suitsLevel[1] = 0;
-        mainResetLevel = 1;
-
-        //StageLevelText = new Text[stageLevel.Length];
-        //EarningStage = new Text[stageLevel.Length];
-        //ButtonUpgradeMaxText = new Text[stageLevel.Length];
-        //progressBarObject = new GameObject[stageLevel.Length];
-
-        research.researchLevels = new Text[Research1Level.Length];
-        research.researchPriceText = new Text[Research1Level.Length];
-        research.researchButton = new Button[Research1Level.Length];
-        research.researchImage = new Image[Research1Level.Length];
-
-        AutoAssigningObjects();
-        research.AssigningResearchObjects();
-        astronautBehaviour.AssigningAstronautsOnStart();                
-        Debug.Log("Price for level = " + stageUpgradeCosts[0]);
-        Debug.Log("UpgradeCounts = " + upgradesCounts[0]);
-
-        if (PlayerPrefs.GetInt("NeverDone", 0) <= 0)
-        {
-            Save();
-            PlayerPrefs.SetInt("NeverDone", 1);
-        }
-
+        resetLevel = 1;
+        
+        offline.offlineRewards.SetActive(true);
     }
 
     void Start()
     {
-
-        for (int id = 0; id < astronautBehaviour.astronautsUpgrades.Length; id++) // add unlockingSystem.unlockCost.Length*4
+        if (!SaveSystem.SaveExists())
         {
-            confirmAstronautBuy[id] = false;
+            // First run: reset all buildings and astronauts
+            foreach (var building in buildingManager.buildings)
+            {
+                building.level = 0;
+                building.astronautsHired = 0;
+                building.RestoreAstronauts();
+                building.UpdateVisuals();
+            }
+
+            Save();
+            PlayerPrefs.SetInt("NeverDone", 1);
+        }
+        else
+        {
+            Load();
         }
 
+        offline.offlineRewards.SetActive(false);
         ChangeBuyModeText.text = "1";
-
-        Debug.Log(confirmAstronautBuy.Length + "Astronauts amount");
-        //Load after assigning variables and before loading unlock status or it won't appear
-        Load();
-        Debug.Log("Loaded");
-        // Assignign once before update for offline calculations
-        for (int id = 0; id < stageLevel.Length; id++)
-        {
-            AutoValuesAssigning(id, upgradesCounts, 0.3, 1.4);
-        }
-
-        for (int id = 0; id < astronautsLevel.Length; id++)
-        {
-            Debug.Log("astroLevelAfterLoad = " + astronautsLevel.Length);
-        }
-        astronautBehaviour.AstronautsControl();
-        unlockingSystem.PlanetsUnlockCheck();
-        unlockingSystem.LoadUnlocksStatus();
         offline.OfflineProgressLoad();
-        Debug.Log(" AstroLenght: " + StageLevel.Length);
-        
+        ChangePlanetTab(0);
     }
 
     IEnumerator MySave()
@@ -238,51 +136,79 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         QuitButtonAndroid();
-        
-        unlockingSystem.PlanetsUnlockCheck();
-        CurrencyText.text = ExponentLetterSystem(mainCurrency, "F2");
-        RPointsText.text = ExponentLetterSystem(ResearchPointsCalculator(), "F2") + "/s ";
-        RebirthPriceText.text = ExponentLetterSystem(rebirthCost, "F2");
-        RebirthLevel.text = "Returns: " + ExponentLetterSystem(mainResetLevel, "F0");
-        ProfileLevel.text = ExponentLetterSystem(mainResetLevel, "F0");
+
+        ProcessBuildingIncomeCycle();
+
+        CurrencyText.text = ExponentLetterSystem(mainCurrency);
+        IncomePerSecond.text = ExponentLetterSystem(GetTotalIncomePerSecond()) + "/s ";
+        RebirthPriceText.text = ExponentLetterSystem(rebirthCost);
+        RebirthLevel.text = "Returns: " + resetLevel;
+        ProfileLevel.text = resetLevel.ToString();
         CrystalsAmount.text = crystalCurrency.ToString("F0");
         nickName.text = "Nick: " + PlayerPrefs.GetString("Nick");
 
-        for (int id = 0; id < stageLevel.Length; id++)
-        {
-            AutoValuesAssigning(id, upgradesCounts, 0.3, 1.4);
-            AutoValuesAssigning(id, stageUpgradeCosts, 20, 2);
-            ProgressBarsIncomeTimer();
-            StageLevelText[id].text = StageLevel[id].ToString("F0");
-            ButtonUpgradeMaxText[id].text = "X" + BuyMaxCount(id) + "\n" + ExponentLetterSystem(BuyCount(id), "F2");
-            EarningStage[id].text = ExponentLetterSystem(StageEarningPerSecond(id), "F2") + " " + "/s ";
-            SoloEarningCrystals(id);
-            InteractableButtons(id, upgradeButtons);
-        }
-
-        for (int id = 0; id < suitsLevel.Length; id++)
-        {
-            AutoValuesAssigning(id, suitsUpgrades.suitsUpgradesCosts, 10000, ((id+1) * 150.32));
-        }
         RebirthButtonStatus();
         RebirthUnlock();
         StartCoroutine("MySave");
         SaveDate();
-
     }
 
-    public void QuitButtonAndroid()
+    public double GetTotalIncomePerSecond()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        double total = 0;
+        foreach (var building in buildingManager.buildings)
         {
-            Application.Quit();
+            if (building.level > 0)
+            {
+                double profitPerSecond = building.GetCurrentProfit() / building.data.incomeInterval;
+                profitPerSecond *= researchManager.GetGlobalIncomeMultiplier();
+                profitPerSecond *= bonusManager.GetIncomeMultiplier();
+                total += profitPerSecond;
+            }
+        }
+        return total * incomeMultiplier;
+    }
+
+    public void ProcessBuildingIncomeCycle()
+    {
+        foreach (var building in buildingManager.buildings)
+        {
+            if (building.level <= 0)
+            {
+                building.currentProgress = 0f;
+                continue;
+            }
+
+            building.timer += Time.deltaTime;
+            building.currentProgress = building.timer / building.data.incomeInterval;
+
+            if (building.timer >= building.data.incomeInterval)
+            {
+                double profit = building.GetCurrentProfit();
+                profit *= researchManager.GetGlobalIncomeMultiplier();
+                profit *= bonusManager.GetIncomeMultiplier();
+                AddCurrency(profit);
+                building.timer = 0f;
+                building.currentProgress = 0f;
+            }
         }
     }
 
-    public void QuitGame()
+
+    public void AddCurrency(double amount)
     {
-        Save();
-        Application.Quit();
+        double income = amount * incomeMultiplier;
+        mainCurrency += income;
+        totalCurrencyEarned += income; // track every earned coin
+    }
+
+    public GameObject[] FindObsWithTag(string tag)
+    {
+        GameObject[] objects = GameObject.FindGameObjectsWithTag(tag);
+
+        // Sort them by hierarchy order
+        var sorted = objects.OrderBy(go => go.transform.GetSiblingIndex()).ToArray();
+        return sorted;
     }
 
     public void EnterSettings()
@@ -295,180 +221,28 @@ public class GameManager : MonoBehaviour
         settingsScreenObject.SetActive(false);
     }
 
-    public void SoloEarningCrystals(int id)
-    {
-        if (stageLevel[id] % 10 == 0 && earnedCrystal[id] == true)
-        {
-            crystalCurrency++;
-            earnedCrystal[id] = false;
-        } else if (stageLevel[id] % 10 != 0)
-        {
-            earnedCrystal[id] = true;
-        }
-    }
-
-    public void AutoValuesAssigning(int id, double[] ArrayToIncrease, double baseValue, double valueMultiplier)
+    public static string ExponentLetterSystem(double value, string format = "F2")
     {
 
-        if(ArrayToIncrease[0] == 0 && id == 0)
+        if (value < 1000) return value.ToString(format);
+
+        // Determine exponent
+        int exponent = (int)Math.Floor(Math.Log10(value));
+        int exponentEng = 3 * (exponent / 3); // round down to nearest 3
+
+        // Number part
+        double scaledValue = value / Math.Pow(10, exponentEng);
+
+        // Letter(s) part
+        string letters = "";
+        int index = exponentEng / 3 - 1; // -1 because 1e3 = k
+        while (index >= 0)
         {
-            ArrayToIncrease[id] = baseValue;
-        }
-        ArrayToIncrease[id] = baseValue * valueMultiplier * (id+1);
-
-    }
-    // New assigning system
-
-    public void AutoAssigningObjects()
-    {
-        for (int id = 0; id < stageLevel.Length-1; id++)
-        {
-            progressBarObject[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("ProgressBarBack").GetChild(0).gameObject;
-            progressBar[id + 1] = progressBarObject[id + 1].GetComponentInChildren<Image>();
-
-            StageLevelText[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("LevelWindowStage").GetComponentInChildren<Text>();
-            EarningStage[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("ProgressBarBack").GetComponentInChildren<Text>();
-            ButtonUpgradeMaxText[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("BuyMaxUpgrade").GetComponentInChildren<Text>();
-            upgradeButtons[id + 1] = unlockingSystem.upgradeObjects[id].transform.Find("BuyMaxUpgrade").GetComponent<Button>();
-            unlockingSystem.unlockText[id] = unlockingSystem.gateUnlockButtonObject[id].transform.Find("Text").GetComponent<Text>();
-            unlockingAnimations.gateOpeningAnimation[id] = unlockingSystem.gateUnlockButtonObject[id].transform.Find("unlockGate").GetComponent<Animator>();
+            letters = (char)('a' + (index % 26)) + letters;
+            index = index / 26 - 1;
         }
 
-
-    }
-
-    public void UpgradeCostCalculator(double[] costArray, double basePrice, double multiplier)
-    {
-        for (int id = 0; id < costArray.Length; id++)
-        {
-            costArray[id] = basePrice;
-            basePrice *= multiplier;
-        }
-    }
-
-    public void ResearchMultiplierCalculator()
-    {
-        double baseValue = 0.2;
-        double increment = 0.3;
-
-        for (int id = 0; id < research.upgradeResearchValues.Length; id++)
-        {
-            research.upgradeResearchValues[id] = baseValue;
-            baseValue += increment;
-        }
-    }
-
-    public void StageMaxTimeCalc()
-    {
-        float baseValue = 5;
-        float changeValue = 5;
-        int multiplier = 0;
-        for (int id = 0; id < stageLevel.Length; id++)
-        {
-            upgradeMaxTime[id] = baseValue;
-
-            if (upgradeMaxTime[id] % (15 + multiplier) == 0)
-            {
-                changeValue = 10;
-            }
-
-            baseValue = baseValue + changeValue;
-
-            if (upgradeMaxTime[id] % (35 + multiplier) == 0)
-            {
-                multiplier++;
-                baseValue = 5 + multiplier;
-                changeValue = 5;       
-            }
-        }
-    }
-
-    public double ResearchPointsCalculator()
-    {
-        double temp = 0;
-
-        for (int id = 0; id < stageLevel.Length; id++)
-        {
-            temp += (stageLevel[id] * upgradesCounts[id]);
-
-        }
-
-        temp += research.ResearchBoost();
-        temp += astronautBehaviour.AstronautsBoost();
-        temp += suitsUpgrades.SuitsBoost();
-        temp += RebirthBoost();
-
-        Debug.Log(temp + "Research Outcome");
-        return temp;
-    }
-
-    public void ProgressBarsIncomeTimer()
-    {
-
-        // If level 0 bar doesn't move
-        for (int id = 0; id < progressBarObject.Length; id++)
-        {
-            if (stageLevel[id] >= 1)
-            {
-                progressTimer[id] += Time.deltaTime;
-                progressBar[id].fillAmount = (progressTimer[id] / upgradeMaxTime[id]);
-
-                if (progressTimer[id] >= upgradeMaxTime[id])
-                {
-                    mainCurrency += ResearchPointsCalculator();
-                    progressTimer[id] = 0f;
-                }
-            }
-            else
-            {
-                progressBar[id].fillAmount = 0;
-                progressTimer[id] = 0f;
-
-            }
-        }
-    }
-
-    public void InteractableButtons(int id, Button[] ButtonStatus)
-    {
-        if (mainCurrency >= BuyCount(id) && BuyCount(id) != 0)
-        {
-            ButtonStatus[id].interactable = true;
-        }
-        else
-        {
-            ButtonStatus[id].interactable = false;
-        }
-    }
-
-    public double StageEarningPerSecond(int id)
-    {
-        double temp = 0;
-
-        temp += stageLevel[id] * upgradesCounts[id];
-        temp += astronautBehaviour.AstronautsBoostStage(id);
-        return temp;
-    }
-
-    public static string ExponentLetterSystem(double value, string numberToString)
-    {
-
-        if (value <= 1000) return value.ToString(numberToString);
-
-        var exponentSci = Math.Floor(Math.Log10(value));
-        var exponentEng = 3 * Math.Floor(exponentSci / 3);
-        var letterOne = ((char)Math.Floor((((double)exponentEng - 3) / 3) % 26 + 97)).ToString();
-
-        if ((double)exponentEng / 3 >= 27)
-        {
-            var letterTwo = ((char)(Math.Floor(((double)exponentEng - 3 * 26) / (3 * 26)) % 26 + 97)).ToString();
-            return (value / Math.Pow(10, exponentEng)).ToString(numberToString) + letterTwo + letterOne;
-        }
-        if (value > 1000)
-        {
-            return (value / Math.Pow(10, exponentEng)).ToString(numberToString) + letterOne;
-
-        }
-        return value.ToString("F2");
+        return scaledValue.ToString(format) + letters;
 
     }
 
@@ -492,234 +266,87 @@ public class GameManager : MonoBehaviour
     
     public void ChangeTab(string tabName)
     {
-        switch (tabName)
+
+        for (int id = 0; id < canvasTabs.Length; id++)
         {
-            case "gameMenu":
+            if (tabName.Equals(tabsNames[id]) && !activeTab[id])
+            {
+                CanvasGroupMenuSwitch(true, canvasTabs[id]);
+                activeTab[id] = true;
+            }
+            else if(!tabName.Equals(tabsNames[id]))
+            {
+                CanvasGroupMenuSwitch(false, canvasTabs[id]);
+                activeTab[id] = false;
+            }
+            else if (tabName.Equals(tabsNames[id]) && activeTab[id])
+            {
+                CanvasGroupMenuSwitch(false, canvasTabs[id]);
+                activeTab[id] = false;
                 CanvasGroupMenuSwitch(true, canvasMainGame);
-                CanvasGroupMenuSwitch(false, canvasShop);
-                CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                CanvasGroupMenuSwitch(false, canvasResearchTab);
-                CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                CanvasGroupMenuSwitch(false, planetsMenu);
-                break;
-
-            case "shopMenu":
-                CanvasGroupMenuSwitch(false, canvasMainGame);
-                CanvasGroupMenuSwitch(true, canvasShop);
-                CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                CanvasGroupMenuSwitch(false, canvasResearchTab);
-                CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                CanvasGroupMenuSwitch(false, planetsMenu);
-
-                break;
-
-            case "rebirth":
-                if (!activeTab)
-                {
-                    CanvasGroupMenuSwitch(false, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(true, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(false, canvasResearchTab);
-                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(false, planetsMenu);
-                    activeTab = true;
-                }
-                else
-                {
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(false, canvasResearchTab);
-                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(true, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(false, planetsMenu);
-                    activeTab = false;
-                }
-                break;
-
-            case "researchMenu":
-                if (!activeTab)
-                {
-                    CanvasGroupMenuSwitch(false, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(true, canvasResearchTab);
-                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(false, planetsMenu);
-                    activeTab = true;
-                }
-                else
-                {
-                    CanvasGroupMenuSwitch(false, canvasResearchTab);
-                    CanvasGroupMenuSwitch(true, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(false, planetsMenu);
-                    activeTab = false;
-                }
-                break;
-
-            case "suitsMenu":
-                if (!activeTab)
-                {
-                    CanvasGroupMenuSwitch(false, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(false, canvasResearchTab);
-                    CanvasGroupMenuSwitch(true, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(false, planetsMenu);
-                    activeTab = true;
-                } else
-                {
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(false, canvasResearchTab);
-                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(true, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, planetsMenu);
-                    activeTab = false;
-                }
-
-                break;
-
-            case "planetsMenu":
-                if (!activeTab)
-                {
-                    CanvasGroupMenuSwitch(false, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(false, canvasResearchTab);
-                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(true, planetsMenu);
-                    activeTab = true;
-                }
-                else
-                {
-                    CanvasGroupMenuSwitch(true, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(false, canvasResearchTab);
-                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(false, planetsMenu);
-                    activeTab = false;
-                }
-                break;
-        } 
+            }
+        }
     }
 
     public void ChangePlanetTab(int planetID)
     {
-        switch (planetID)
+        if (!planetManager.CanAccessPlanet(planetID))
+            return;
+
+        for (int id = 0; id < canvasPlanetsTabs.Length; id++)
         {
-            case 0:
-                CanvasGroupMenuSwitch(true, canvasMainGame);
-                CanvasGroupMenuSwitch(false, canvasShop);
-                CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                CanvasGroupMenuSwitch(false, canvasResearchTab);
-                CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                CanvasGroupMenuSwitch(true, moonMenu);
-                CanvasGroupMenuSwitch(false, marsMenu);
-                CanvasGroupMenuSwitch(false, planetsMenu);
-                CanvasGroupMenuSwitch(false, phobosMenu);
-                CanvasGroupMenuSwitch(false, venusMenu);
-                CanvasGroupMenuSwitch(false, mercuryMenu);
-                activeTab = false;
-                break;
-
-            case 1:
-                if (planetUnlocked[0])
-                {
-                    CanvasGroupMenuSwitch(true, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(false, canvasResearchTab);
-                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(false, moonMenu);
-                    CanvasGroupMenuSwitch(false, planetsMenu);
-                    CanvasGroupMenuSwitch(true, marsMenu);
-                    CanvasGroupMenuSwitch(false, phobosMenu);
-                    CanvasGroupMenuSwitch(false, venusMenu);
-                    CanvasGroupMenuSwitch(false, mercuryMenu);
-                    activeTab = false;
-                }
-                break;
-
-            case 2:
-                if (planetUnlocked[1])
-                {
-                    CanvasGroupMenuSwitch(true, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(false, canvasResearchTab);
-                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(false, moonMenu);
-                    CanvasGroupMenuSwitch(false, planetsMenu);
-                    CanvasGroupMenuSwitch(false, marsMenu);
-                    CanvasGroupMenuSwitch(true, phobosMenu);
-                    CanvasGroupMenuSwitch(false, venusMenu);
-                    CanvasGroupMenuSwitch(false, mercuryMenu);
-                    activeTab = false;
-                }
-                break;
-
-            case 3:
-                if (planetUnlocked[2])
-                {
-                    CanvasGroupMenuSwitch(true, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(false, canvasResearchTab);
-                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(false, moonMenu);
-                    CanvasGroupMenuSwitch(false, planetsMenu);
-                    CanvasGroupMenuSwitch(false, marsMenu);
-                    CanvasGroupMenuSwitch(false, phobosMenu);
-                    CanvasGroupMenuSwitch(true, venusMenu);
-                    CanvasGroupMenuSwitch(false, mercuryMenu);
-                    activeTab = false;
-                }
-                break;
-
-            case 4:
-                if (planetUnlocked[3])
-                {
-                    CanvasGroupMenuSwitch(true, canvasMainGame);
-                    CanvasGroupMenuSwitch(false, canvasShop);
-                    CanvasGroupMenuSwitch(false, canvasRebirthTab);
-                    CanvasGroupMenuSwitch(false, canvasResearchTab);
-                    CanvasGroupMenuSwitch(false, canvasSuitsTab);
-                    CanvasGroupMenuSwitch(false, moonMenu);
-                    CanvasGroupMenuSwitch(false, planetsMenu);
-                    CanvasGroupMenuSwitch(false, marsMenu);
-                    CanvasGroupMenuSwitch(false, phobosMenu);
-                    CanvasGroupMenuSwitch(false, venusMenu);
-                    CanvasGroupMenuSwitch(true, mercuryMenu);
-                    activeTab = false;
-                }
-                break;
+            if (id != planetID)
+            {
+                CanvasGroupMenuSwitch(false, canvasPlanetsTabs[id]);
+                planets[id].SetActive(false);
+            } else
+            {
+                CanvasGroupMenuSwitch(true, canvasPlanetsTabs[id]);
+                planets[id].SetActive(true);
+            }
         }
+
+        DisableAllTabs();
+        CanvasGroupMenuSwitch(true, canvasMainGame);
+        this.planetID = planetID;
     }
 
     public void SwitchPlanetsButtons(string buttonName)
     {
-        
-        if(buttonName == "Next" && planetID < planetUnlocked.Length && planetUnlocked[planetID] == true)
+        if (buttonName == "Next")
         {
-            planetID += 1;
-            ChangePlanetTab(planetID);
-
-        } else if(buttonName == "Prev" && planetID <= planetUnlocked.Length && planetID != 0)
+            int next = planetManager.GetNextUnlockedPlanetId(planetID);
+            if (next != -1)
+            {
+                planetID = next;
+                ChangePlanetTab(planetID);
+            }
+        }
+        else if (buttonName == "Prev")
         {
-            planetID -= 1;
-            ChangePlanetTab(planetID);
+            int prev = planetManager.GetPrevUnlockedPlanetId(planetID);
+            if (prev != -1)
+            {
+                planetID = prev;
+                ChangePlanetTab(planetID);
+            }
+        }
+    }
 
+
+    public void DisableAllTabs()
+    {
+        for (int id = 0; id < canvasTabs.Length; id++)
+        {
+            CanvasGroupMenuSwitch(false, canvasTabs[id]);
+            activeTab[id] = false;
         }
     }
 
     public void Save()
     {
 
-        SaveSystem.SaveGameData(this);
+        SaveSystem.SaveGameData(this,researchManager, planetManager, buildingManager);
 
     }
 
@@ -729,46 +356,19 @@ public class GameManager : MonoBehaviour
 
         mainCurrency = gameData.researchPointsData;
         crystalCurrency = gameData.crystals;
-
-        for (int id = 0; id < stageLevel.Length; id++)
-        {
-            StageLevel[id] = gameData.stageLevelData[id];
-            astronautsLevel[id] = gameData.astronautsLevel[id];
-            astronautBuyStartID[id] = gameData.astronautIDStartPosition[id];
-        }
-
-        upgradeLevel1 = gameData.upgradeLevelData;
-        mainResetLevel = gameData.mainResetLevelData;
-
-        for (int id = 0; id < Research1Level.Length; id++)
-        {
-            Research1Level[id] = gameData.researchLevel[id];
-            researchCanBeDone[id] = gameData.researchCanBeDone[id];
-            researchUnlocked[id] = gameData.researchUnlocked[id];
-        }
-
-        for (int id = 0; id < upgradesActivated.Length; id++)
-        {
-            upgradesActivated[id] = gameData.upgradeActivated[id];
-        }
-
-        for (int id = 0; id < confirmAstronautBuy.Length; id++)
-        {
-            confirmAstronautBuy[id] = gameData.astronautsbuy[id];
-        }
-
+        resetLevel = gameData.resetLevel;
         rebirthCost = gameData.rebirthCostData;
+        incomeMultiplier = gameData.incomeMultiplier;
+        totalCurrencyEarned = gameData.totalCurrencyEarned;
 
         for (int id = 0; id < SuitsLevel.Length; id++)
         {
             SuitsLevel[id] = gameData.suitsLevel[id];
         }
 
-
-        for (int id = 0; id < planetUnlocked.Length; id++)
-        {
-            planetUnlocked[id] = gameData.planetUnlocked[id];
-        }
+        planetManager.ApplyLoadedData(gameData, planetManager.allPlanets);
+        researchManager.ApplyLoadedData(gameData, researchManager.allResearches);
+        buildingManager.ApplyLoadedData(gameData);
     }
 
     public void SaveDate()
@@ -778,196 +378,91 @@ public class GameManager : MonoBehaviour
 
     public void ChangeBuyButtonMode()
     {
-        switch (buyModeID)
-        {
-            case 0:
-                ChangeBuyModeText.text = "1";
-                buyModeID = 1;
-                break;
-            case 1:
-                ChangeBuyModeText.text = "10";
-                buyModeID = 2;
-                break;
-            case 2:
-                ChangeBuyModeText.text = "100";
-                buyModeID = 3;
-                break;
-            case 3:
-                ChangeBuyModeText.text = "MAX";
-                buyModeID = 0;
-                break;
-        }
-    }
-
-    public double BuyCount(int id)
-    {
-        var h = stageUpgradeCosts[id];
-        var c = mainCurrency;
-        var r = 1.07;
-        var u = StageLevel[id];
-        double n = 0;
+        buyModeID = (buyModeID + 1) % 4;
 
         switch (buyModeID)
         {
-            case 0:
-                n = System.Math.Floor(System.Math.Log(c * (r - 1) / (h * System.Math.Pow(r, u)) + 1, r));
-                break;
-            case 1:
-                n = 1;
-                break;
-            case 2:
-                n = 10;
-                break;
-            case 3:
-                n = 100;
-                break;
+            case 0: ChangeBuyModeText.text = "1"; break;
+            case 1: ChangeBuyModeText.text = "10"; break;
+            case 2: ChangeBuyModeText.text = "100"; break;
+            case 3: ChangeBuyModeText.text = "MAX"; break;
         }
-        var costUpgrade = h * (System.Math.Pow(r, u) * (System.Math.Pow(r, n) - 1) / (r - 1));
-        return costUpgrade;
     }
 
-    public double BuyMaxCount(int id)
+    public int GetBuyAmount()
     {
-        var h = stageUpgradeCosts[id];
-        var c = mainCurrency;
-        var r = 1.07;
-        var u = StageLevel[id];
-        double n = 0;
-
         switch (buyModeID)
         {
-            case 0:
-                return System.Math.Floor(System.Math.Log(c * (r - 1) / (h * System.Math.Pow(r, u)) + 1, r));
-            case 1:
-                return 1;
-            case 2:
-                return 10;
-            case 3:
-                return 100;
+            case 0: return 1;
+            case 1: return 10;
+            case 2: return 100;
+            case 3: return int.MaxValue; // We'll handle MAX separately
+            default: return 1;
         }
-        return n;
     }
 
-    public void BuyMaxUpgradeClicked(int id)
+    public double CalculateTotalCost(BuildingState state, int levelsToBuy)
     {
-            var h = stageUpgradeCosts[id];
-            var c = mainCurrency;
-            var r = 1.07;
-            var u = StageLevel[id];
+        double growth = 1.15; // Your upgrade multiplier
+        double currentPrice = state.GetCurrentPrice();
 
-        double n = 0;
-        int crystalsInMax;
-
-        switch (buyModeID)
-        {
-            case 0:
-                n = System.Math.Floor(System.Math.Log(c * (r - 1) / (h * System.Math.Pow(r, u)) + 1, r));
-                crystalsInMax = (int)n / 10;
-                Debug.Log(crystalsInMax);
-                crystalCurrency += crystalsInMax;
-                break;
-            case 1:
-                n = 1;
-                Debug.Log("Bought 1 of ID = " + id);
-                break;
-            case 2:
-                n = 10;
-                crystalCurrency++;
-                break;
-            case 3:
-                n = 100;
-                crystalCurrency += 10;
-                break;
-        }
-
-        var costUpgrade = h * (System.Math.Pow(r, u) * (System.Math.Pow(r, n) - 1) / (r - 1));
-
-            if(mainCurrency >= costUpgrade)
-            {
-              stageLevel[id] += (int)n;
-              mainCurrency -= costUpgrade;
-              upgradeLevel1 += (int)n;
-            }
-
-        AC.ButtonClickSound();
+        return currentPrice * (Math.Pow(growth, levelsToBuy) - 1) / (growth - 1);
     }
 
-    public void FullReset()
+    public int CalculateMaxAffordableLevels(BuildingState state)
     {
-        if (mainCurrency >= rebirthCost && researchUnlocked[0])
-        {
-            mainCurrency = 100;
-            stageLevel[0] = 1;
-            upgradeLevel1 = 0;
-            mainResetLevel++;
+        double growth = 1.15;
+        double currentPrice = state.GetCurrentPrice();
+        double currency = mainCurrency;
 
-            for (int id = 1; id < stageLevel.Length; id++)
-            {
-                stageLevel[id] = 0;
-            }
+        if (currency < currentPrice) return 0;
 
-            for (int id = 0; id < Research1Level.Length; id++)
-            {
-                Research1Level[id] = 0;
-            }
-            
-            for (int id = 0; id < SuitsLevel.Length; id++)
-            {
-                SuitsLevel[id] = 0;
-            }
-        
-            for (int id = 0; id < upgradesActivated.Length; id++)
-            {
-                upgradesActivated[id] = false;
-                unlockingSystem.animationUnlockConfirm[id] = false;
-            }
+        int maxLevels = (int)Math.Floor(
+            Math.Log(currency * (growth - 1) / currentPrice + 1, growth)
+        );
 
-            for (int id = 0; id < researchCanBeDone.Length; id++)
-            {
-                researchCanBeDone[id] = false;
-                researchUnlocked[id] = false;
-            }
-
-            for (int id = 0; id < planetUnlocked.Length; id++)
-            {
-                planetUnlocked[id] = false;
-            }
-
-            // No reset for that
-
-            //for (int id = 0; id < confirmAstronautBuy.Length; id++)
-            //{
-            //    confirmAstronautBuy[id] = false;
-            //}
-
-            //for (int id = 0; id < astronautsLevel.Length; id++)
-            //{
-            //    astronautsLevel[id] = 0;
-            //    astronautBehaviour.astronautMaxConfirm[id] = false;
-            //    astronautBuyStartID[id] = id * 4;
-            //}
-
-            astronautBehaviour.AstronautsControl();
-            unlockingSystem.LoadUnlocksStatus();
-            unlockingSystem.PlanetsUnlockCheck();
-            rebirthCost *= (System.Math.Pow(2, mainResetLevel) * (System.Math.Pow(2, 1) - 1) / (2 - 1));
-            ChangePlanetTab(0);
-        }
-        
+        return maxLevels;
     }
 
-    public double RebirthBoost()
+    public double GetCostPreview(BuildingState state)
     {
-      
-        double rBoost = 0;
-        // secure to not give bonus before going higher than 1 lvl of rebirth
-        if (mainResetLevel != 1)
-        {
-            rBoost += 0.5 * mainResetLevel * 1.7;
-            return rBoost;
-        } 
-        return rBoost;
+        int buyAmount = GetBuyAmount();
 
+        if (buyAmount == int.MaxValue)
+            buyAmount = CalculateMaxAffordableLevels(state);
+
+        double totalCost = CalculateTotalCost(state, buyAmount);
+
+        return totalCost;
+    }
+
+    public void ResetProgress()
+    {
+        resetLevel++;
+
+        // Prestige bonus based on total earned
+        double bonus = Math.Floor(totalCurrencyEarned / 1e6);
+        incomeMultiplier += bonus * 0.05; // +5% per million
+
+        // Reset everything else
+        buildingManager.ResetAllBuildings();
+        mainCurrency = 200;
+
+        //Reset astronauts animation
+        foreach (var buildingState in buildingManager.buildings)
+        {
+            buildingState.RestoreAstronauts();
+        }
+
+        researchManager.unlockedResearches.Clear();
+        researchManager.UpdateLinesColor();
+        planetManager.unlockedPlanets.Clear();
+        buildingManager.ResetAllBuildings();
+
+        // First planet always unlocked
+        planetManager.unlockedPlanets.Add(planetManager.allPlanets[0]);
+
+        ChangePlanetTab(0);
     }
 
     public void RebirthButtonStatus()
@@ -980,13 +475,28 @@ public class GameManager : MonoBehaviour
             RebirthPriceText.color = Color.red;
     }
 
+    //TODO
     public void RebirthUnlock()
     {
-        if (researchUnlocked[1])
+        if (researchManager.unlockedResearches.Count >= 6)
         {
             rebirthRequirements.color = Color.green;
         }
         else
             rebirthRequirements.color = Color.red;
+    }
+
+    public void QuitButtonAndroid()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+    }
+
+    public void QuitGame()
+    {
+        Save();
+        Application.Quit();
     }
 }

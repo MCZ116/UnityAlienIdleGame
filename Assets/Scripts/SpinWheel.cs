@@ -28,7 +28,7 @@ public class SpinWheel : MonoBehaviour
         rewardPoints = new double[6];
         for(int i = 0; i < researchPointsOnSpin.Length; i++)
         {
-            rewardPoints[i] = (5000 * (i+1)) * gameManager.mainResetLevel;
+            rewardPoints[i] = (5000 * (i+1)) * gameManager.resetLevel;
             researchPointsOnSpin[i].text = GameManager.ExponentLetterSystem(rewardPoints[i], "F0");
         }
     }
@@ -72,7 +72,6 @@ public class SpinWheel : MonoBehaviour
 
         float randomAngle = sectorAngles[Random.Range(0,sectorAngles.Length)];
         spinEndAngle = -(fullspins * 360 + randomAngle);
-        Debug.Log(spinEndAngle + "endangle");
         spinStarted = true;
     }
 
@@ -126,12 +125,13 @@ public class SpinWheel : MonoBehaviour
             case "crystal":
                 gameManager.crystalCurrency += award;
                 awardDisplay.text = award.ToString("F0");
-                Debug.Log(award + " Crystals");
+
                 break;
+
             case "points":
                 gameManager.mainCurrency += award;
                 awardDisplay.text = GameManager.ExponentLetterSystem(award, "F0");
-                Debug.Log(award + " Points");
+
                 break;
         }
         awardDisplay.gameObject.SetActive(true);
@@ -145,16 +145,10 @@ public class SpinWheel : MonoBehaviour
 
     public void SpinWheelMenu()
     {
-
         if (!activeSpinTab) {
             spinWheelMenu.gameObject.SetActive(true);
             activeSpinTab = true;
         }
-        //else
-        //{
-        //    spinWheelMenu.gameObject.SetActive(false);
-        //    activeSpinTab = false;
-        //}
     }
 
     private void HideIfClickedOutside(GameObject panel)
