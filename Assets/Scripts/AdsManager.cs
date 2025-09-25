@@ -27,9 +27,24 @@ public class AdsManager : MonoBehaviour
         SetButtons(false);
 
         // Hook up buttons
-        spinButton.onClick.AddListener(() => ShowRewardedAd("SpinButton"));
-        doubleRewardButton.onClick.AddListener(() => ShowRewardedAd("DoubleReward"));
-        bonusTimeButton.onClick.AddListener(() => ShowRewardedAd("DoubleTime"));
+        spinButton.onClick.AddListener(() =>
+        {
+            ShowRewardedAd("SpinButton");
+            AudioControler.instance.ButtonClickSound();
+        });
+
+        doubleRewardButton.onClick.AddListener(() =>
+        {
+            ShowRewardedAd("DoubleReward");
+            AudioControler.instance.ButtonClickSound();
+        });
+
+        bonusTimeButton.onClick.AddListener(() =>
+        {
+            ShowRewardedAd("DoubleTime");
+            AudioControler.instance.ButtonClickSound();
+        });
+
 
         if (useTestMode)
     {

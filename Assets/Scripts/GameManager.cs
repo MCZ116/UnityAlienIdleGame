@@ -446,7 +446,7 @@ public class GameManager : MonoBehaviour
 
         // Reset everything else
         buildingManager.ResetAllBuildings();
-        mainCurrency = 100;
+        mainCurrency = 200;
 
         //Reset astronauts animation
         foreach (var buildingState in buildingManager.buildings)

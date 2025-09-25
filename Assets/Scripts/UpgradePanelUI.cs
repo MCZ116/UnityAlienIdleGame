@@ -34,12 +34,14 @@ public class UpgradePanelUI : MonoBehaviour
         {
             buildingManager.BuyLevel(buildingState);
             RefreshUI();
+            AudioControler.instance.ButtonClickSound();
         });
 
         astronautButton.onClick.AddListener(() =>
         {
             buildingManager.BuyAstronaut(buildingState);
             RefreshUI();
+            AudioControler.instance.ButtonClickSound();
         });
     }
 
