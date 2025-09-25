@@ -37,7 +37,6 @@ public class BuildingManager : MonoBehaviour
 
     public bool HasEnoughCrystals(BuildingState building)
     {
-        Debug.Log($"Checking crystals: Have {gameManager.crystalCurrency}, Need {building.GetAstronautCost()}");
         return gameManager.crystalCurrency >= building.GetAstronautCost();
     }
 

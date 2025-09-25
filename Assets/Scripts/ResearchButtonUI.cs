@@ -22,6 +22,7 @@ public class ResearchButtonUI : MonoBehaviour
         this.planetManager = planetManager;
 
         button.onClick.AddListener(OnClick);
+        button.onClick.AddListener(AudioControler.instance.ButtonClickSound);
 
         if (icon != null && research.icon != null)
             icon.sprite = research.icon;
