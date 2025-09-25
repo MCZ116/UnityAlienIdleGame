@@ -6,13 +6,14 @@ public class ResearchButtonUI : MonoBehaviour
     public Button button;
     public Text priceText;
     public Image icon;
-
+    public GameObject priceContainer;
     public ResearchData research;
     private ResearchData lastShownResearch;
     private ResearchManager researchManager;
     private PlanetManager planetManager;
     private InfoWindow infoWindow;
     public Image planetIconImage;
+    private GlowEffectUI glowEffect;
 
     public void Initialize(ResearchData data, ResearchManager manager, PlanetManager planetManager, InfoWindow info)
     {
@@ -41,31 +42,47 @@ public class ResearchButtonUI : MonoBehaviour
                 planetIconImage.gameObject.SetActive(false);
             }
         }
-
+        glowEffect = button.GetComponent<GlowEffectUI>();
     }
 
     private void Update()
     {
+        RefreshUI();
+    }
+
+    private void RefreshUI()
+    {
         bool canUnlock = researchManager.CanUnlock(research);
         bool requiredResearchDone = researchManager.RequirementsMet(research);
-        button.interactable = canUnlock;
+
+        // Update price text
+        priceContainer.SetActive(requiredResearchDone);
+        if (requiredResearchDone)
+            priceText.text = GameManager.ExponentLetterSystem(research.GetPrice());
 
         priceText.color = canUnlock ? Color.green : Color.red;
-        priceText.text = requiredResearchDone ? GameManager.ExponentLetterSystem(research.GetPrice()) : "";
-        SetActiveState();
+
+        // Update button state & glow
+        UpdateVisuals();
     }
+
 
     private void OnClick()
     {
         researchManager.Unlock(research);
     }
 
-    public void SetActiveState()
+    private void UpdateVisuals()
     {
-        if (researchManager.IsUnlocked(research))
-        {
-            priceText.text = "Active" ;
-            priceText.color = Color.green;
-        }
+        bool unlocked = researchManager.IsUnlocked(research);
+
+        button.interactable = !unlocked;
+
+        ColorBlock cb = button.colors;
+        cb.disabledColor = cb.normalColor;
+        button.colors = cb;
+
+        glowEffect.SetGlow(unlocked);
     }
+
 }
