@@ -9,14 +9,14 @@ public static class SaveSystem
     public static string savePath = Application.persistentDataPath;
     public static string saveName = "/savegame_dev_v1.0.nbn";
 
-    public static void SaveGameData(GameManager gameManager, ResearchManager researchManager, PlanetManager planetManager, BuildingManager buildingManager)
+    public static void SaveGameData(GameManager gameManager, ResearchManager researchManager, PlanetManager planetManager, BuildingManager buildingManager, GlobalUpgradeManager globalUpgradeManager)
     {
 
         using (var writer = new StreamWriter(savePath + saveName))
         {
             var formatter = new BinaryFormatter();
             var memoryStream = new MemoryStream();
-            GameData gameData = new GameData(gameManager, researchManager, planetManager, buildingManager);
+            GameData gameData = new GameData(gameManager, researchManager, planetManager, buildingManager, globalUpgradeManager);
             formatter.Serialize(memoryStream, gameData);
             var dataWriter = Encryption.Encrypts(Convert.ToBase64String(memoryStream.ToArray()));
             writer.WriteLine(dataWriter);

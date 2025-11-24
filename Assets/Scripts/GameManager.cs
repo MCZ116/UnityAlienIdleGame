@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -12,17 +13,20 @@ public class GameManager : MonoBehaviour
     public AudioControler AC;
     public BonusManager bonusManager;
     public int buyModeID;
-    public Text CurrencyText;
-    public Text IncomePerSecond;
+    public TextMeshProUGUI CurrencyText;
+    public TextMeshProUGUI IncomePerSecond;
     public Text ChangeBuyModeText;
     public Text RebirthPriceText;
     public Text RebirthLevel;
-    public Text CrystalsAmount;
+    public TextMeshProUGUI AntiMatterEarned;
+    public TextMeshProUGUI CrystalsAmount;
+    public TextMeshProUGUI AntiMatter;
     public Text ProfileLevel;
     public Text rebirthRequirements;
     public Text nickName;
     public double mainCurrency;
     public double crystalCurrency;
+    public double antiMatter;
     public double rebirthCost;
     public GameObject settingsScreenObject;
     public GameObject[] planets;
@@ -35,6 +39,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] PlanetManager planetManager;
 
     [SerializeField] BuildingManager buildingManager;
+
+    [SerializeField] GlobalUpgradeManager globalUpgradeManager;
 
     public SuitsUpgrades suitsUpgrades;
 
@@ -51,7 +57,7 @@ public class GameManager : MonoBehaviour
     private int planetID;
 
     public double incomeMultiplier = 1.0; // gets higher after resets
-    public int resetLevel = 1; // how many times the player has reset
+    public int resetLevel = 0; // how many times the player has reset
     public double totalCurrencyEarned = 0; // lifetime tracker
 
     public static GameManager instance = null;
@@ -95,7 +101,6 @@ public class GameManager : MonoBehaviour
 
         suitsLevel[0] = 0;
         suitsLevel[1] = 0;
-        resetLevel = 1;
         
         offline.offlineRewards.SetActive(true);
     }
@@ -143,8 +148,10 @@ public class GameManager : MonoBehaviour
         IncomePerSecond.text = ExponentLetterSystem(GetTotalIncomePerSecond()) + "/s ";
         RebirthPriceText.text = ExponentLetterSystem(rebirthCost);
         RebirthLevel.text = "Returns: " + resetLevel;
-        ProfileLevel.text = resetLevel.ToString();
+        ProfileLevel.text = "1"; //Will be implemented later with XP system
         CrystalsAmount.text = crystalCurrency.ToString("F0");
+        AntiMatter.text = ExponentLetterSystem(antiMatter);
+        AntiMatterEarned.text = ExponentLetterSystem(globalUpgradeManager.CalculateAntimatterReward(totalCurrencyEarned));
         nickName.text = "Nick: " + PlayerPrefs.GetString("Nick");
 
         RebirthButtonStatus();
@@ -163,6 +170,7 @@ public class GameManager : MonoBehaviour
                 double profitPerSecond = building.GetCurrentProfit() / building.data.incomeInterval;
                 profitPerSecond *= researchManager.GetGlobalIncomeMultiplier();
                 profitPerSecond *= bonusManager.GetIncomeMultiplier();
+                profitPerSecond *= globalUpgradeManager.GetGlobalIncomeBoost();
                 total += profitPerSecond;
             }
         }
@@ -200,6 +208,27 @@ public class GameManager : MonoBehaviour
         double income = amount * incomeMultiplier;
         mainCurrency += income;
         totalCurrencyEarned += income; // track every earned coin
+    }
+
+    public double GetTotalIncomeWithPreview(GlobalUpgradeData previewUpgrade)
+    {
+        double total = 0;
+
+        foreach (var building in buildingManager.buildings)
+        {
+            if (building.level <= 0) continue;
+
+            double profitPerSecond = building.GetCurrentProfit() / building.data.incomeInterval;
+            profitPerSecond *= researchManager.GetGlobalIncomeMultiplier();
+            profitPerSecond *= bonusManager.GetIncomeMultiplier();
+
+            // Add the preview upgrade temporarily
+            profitPerSecond *= globalUpgradeManager.GetGlobalIncomeBoostWithPreview(previewUpgrade);
+
+            total += profitPerSecond;
+        }
+
+        return total * incomeMultiplier;
     }
 
     public GameObject[] FindObsWithTag(string tag)
@@ -346,7 +375,7 @@ public class GameManager : MonoBehaviour
     public void Save()
     {
 
-        SaveSystem.SaveGameData(this,researchManager, planetManager, buildingManager);
+        SaveSystem.SaveGameData(this,researchManager, planetManager, buildingManager, globalUpgradeManager);
 
     }
 
@@ -356,6 +385,7 @@ public class GameManager : MonoBehaviour
 
         mainCurrency = gameData.researchPointsData;
         crystalCurrency = gameData.crystals;
+        antiMatter = gameData.antiMatter;
         resetLevel = gameData.resetLevel;
         rebirthCost = gameData.rebirthCostData;
         incomeMultiplier = gameData.incomeMultiplier;
@@ -369,6 +399,7 @@ public class GameManager : MonoBehaviour
         planetManager.ApplyLoadedData(gameData, planetManager.allPlanets);
         researchManager.ApplyLoadedData(gameData, researchManager.allResearches);
         buildingManager.ApplyLoadedData(gameData);
+        globalUpgradeManager.ApplyLoadedData(gameData);
     }
 
     public void SaveDate()
@@ -439,7 +470,8 @@ public class GameManager : MonoBehaviour
     public void ResetProgress()
     {
         resetLevel++;
-
+        double antimatterReward = globalUpgradeManager.CalculateAntimatterReward(totalCurrencyEarned);
+        globalUpgradeManager.AddAntimatter(antimatterReward);
         // Prestige bonus based on total earned
         double bonus = Math.Floor(totalCurrencyEarned / 1e6);
         incomeMultiplier += bonus * 0.05; // +5% per million
@@ -461,7 +493,7 @@ public class GameManager : MonoBehaviour
 
         // First planet always unlocked
         planetManager.unlockedPlanets.Add(planetManager.allPlanets[0]);
-
+        totalCurrencyEarned = 0;
         ChangePlanetTab(0);
     }
 
