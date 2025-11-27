@@ -45,8 +45,6 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GlobalUpgradeManager globalUpgradeManager;
 
-    public SuitsUpgrades suitsUpgrades;
-
     public CanvasGroup[] canvasPlanetsTabs;
 
     public CanvasGroup[] canvasTabs;
@@ -55,8 +53,6 @@ public class GameManager : MonoBehaviour
 
     public CanvasGroup canvasMainGame;
 
-    private double[] suitsLevel;
-    public double[] SuitsLevel { get => suitsLevel; private set => suitsLevel = value; }
     private int planetID;
 
     public int returnCount = 0; // how many times the player has reset
@@ -81,8 +77,6 @@ public class GameManager : MonoBehaviour
         returnCost = 50000;
         planets = FindObsWithTag("planetTab");
         
-        SuitsLevel = new double[6];
-
         planetID = 0;
         buyModeID = 0;
 
@@ -100,9 +94,6 @@ public class GameManager : MonoBehaviour
         {
             activeTab[id] = false;
         }
-
-        suitsLevel[0] = 0;
-        suitsLevel[1] = 0;
         
         offline.offlineRewards.SetActive(true);
     }
@@ -404,11 +395,6 @@ public class GameManager : MonoBehaviour
         returnCount = gameData.returnCount;
         returnCost = gameData.returnCostData;
         totalCurrencyEarned = gameData.totalCurrencyEarned;
-
-        for (int id = 0; id < SuitsLevel.Length; id++)
-        {
-            SuitsLevel[id] = gameData.suitsLevel[id];
-        }
 
         planetManager.ApplyLoadedData(gameData, planetManager.allPlanets);
         researchManager.ApplyLoadedData(gameData, researchManager.allResearches);

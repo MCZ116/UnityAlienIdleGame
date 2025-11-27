@@ -10,8 +10,6 @@ public class GameData
     public double antiMatter;
     public int returnCount;
     public double returnCostData;
-    public double[] suitsLevel;
-    public double incomeMultiplier;
     public double totalCurrencyEarned;
 
     public List<int> researchIds = new();
@@ -27,8 +25,6 @@ public class GameData
         returnCount = gameManager.returnCount;
 
         returnCostData = gameManager.returnCost;
-
-        suitsLevel = gameManager.SuitsLevel;
 
         crystals = gameManager.crystalCurrency;
 
