@@ -15,7 +15,7 @@ MonoBehaviour:
   upgradeName: Research Discount
   description: Research will cost less
   icon: {fileID: 7272768664909427313, guid: 5bbfa8028d551f640a39b9e5eae1772b, type: 3}
-  baseCost: 10
-  costMultiplier: 1.25
-  baseBonus: 0.03
+  baseCost: 3
+  costMultiplier: 2.95
+  baseBonus: 0.5
   type: 2

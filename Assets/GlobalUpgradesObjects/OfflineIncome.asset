@@ -15,7 +15,7 @@ MonoBehaviour:
   upgradeName: Offline Income
   description: Offline time will provide more income
   icon: {fileID: 21300000, guid: 3f62b1c2e05316b47a402a0497ee3c3b, type: 3}
-  baseCost: 10
-  costMultiplier: 1.25
+  baseCost: 5
+  costMultiplier: 2.97
   baseBonus: 0.5
   type: 1

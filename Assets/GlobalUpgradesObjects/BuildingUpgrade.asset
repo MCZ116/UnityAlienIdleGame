@@ -16,6 +16,6 @@ MonoBehaviour:
   description: Buildings will provide more income
   icon: {fileID: -2347862896895799533, guid: 69189576672e309429fa5837a7d9ba5a, type: 3}
   baseCost: 10
-  costMultiplier: 1.25
+  costMultiplier: 3.16
   baseBonus: 0.15
   type: 0

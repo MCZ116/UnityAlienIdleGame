@@ -8,8 +8,8 @@ public class GameData
     public double researchPointsData;
     public double crystals;
     public double antiMatter;
-    public int resetLevel;
-    public double rebirthCostData;
+    public int returnCount;
+    public double returnCostData;
     public double[] suitsLevel;
     public double incomeMultiplier;
     public double totalCurrencyEarned;
@@ -24,17 +24,15 @@ public class GameData
     {
         researchPointsData = gameManager.mainCurrency;
 
-        resetLevel = gameManager.resetLevel;
+        returnCount = gameManager.returnCount;
 
-        rebirthCostData = gameManager.rebirthCost;
+        returnCostData = gameManager.returnCost;
 
         suitsLevel = gameManager.SuitsLevel;
 
         crystals = gameManager.crystalCurrency;
 
         antiMatter = gameManager.antiMatter;
-
-        incomeMultiplier = gameManager.incomeMultiplier;
 
         totalCurrencyEarned = gameManager.totalCurrencyEarned;
 

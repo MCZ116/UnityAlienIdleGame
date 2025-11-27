@@ -15,7 +15,7 @@ MonoBehaviour:
   upgradeName: Astronauts Income
   description: Astronauts will provide more income
   icon: {fileID: 21300000, guid: 8aacfde8988357c4196344154b54473c, type: 3}
-  baseCost: 10
-  costMultiplier: 1.25
+  baseCost: 8
+  costMultiplier: 2.92
   baseBonus: 0.07
   type: 3

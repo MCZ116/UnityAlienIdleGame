@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [System.Serializable]
@@ -7,5 +8,5 @@ public class GlobalUpgradeState : MonoBehaviour
     public int level = 0;
 
     public double GetUpgradeCost(GlobalUpgradeData data)
-     => data.baseCost * Mathf.Pow(data.costMultiplier, level);
+     => Math.Round(data.baseCost* Math.Pow(data.costMultiplier, level));
 }

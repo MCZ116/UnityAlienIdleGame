@@ -16,21 +16,24 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI CurrencyText;
     public TextMeshProUGUI IncomePerSecond;
     public Text ChangeBuyModeText;
-    public Text RebirthPriceText;
-    public Text RebirthLevel;
+    public TextMeshProUGUI ReturnPriceText;
+    public TextMeshProUGUI ReturnsCount;
     public TextMeshProUGUI AntiMatterEarned;
+    public TextMeshProUGUI AntiMatterToReward;
     public TextMeshProUGUI CrystalsAmount;
     public TextMeshProUGUI AntiMatter;
     public Text ProfileLevel;
-    public Text rebirthRequirements;
+    public TextMeshProUGUI returnRequirements;
     public Text nickName;
     public double mainCurrency;
     public double crystalCurrency;
     public double antiMatter;
-    public double rebirthCost;
+    public double returnCost;
     public GameObject settingsScreenObject;
     public GameObject[] planets;
     public GameObject homeSafeZone;
+    public GameObject returnConfirmMessage;
+    public Button globalUpgradesBtn;
     [System.NonSerialized]
     private bool[] activeTab;
 
@@ -48,7 +51,7 @@ public class GameManager : MonoBehaviour
 
     public CanvasGroup[] canvasTabs;
 
-    public string[] tabsNames = {"gameMenu","shopMenu","researchMenu","rebirth","suitsMenu", "planetsMenu" };
+    public string[] tabsNames = {"gameMenu","shopMenu","researchMenu","rebirth", "globalUpgradesMenu", "planetsMenu" };
 
     public CanvasGroup canvasMainGame;
 
@@ -56,8 +59,7 @@ public class GameManager : MonoBehaviour
     public double[] SuitsLevel { get => suitsLevel; private set => suitsLevel = value; }
     private int planetID;
 
-    public double incomeMultiplier = 1.0; // gets higher after resets
-    public int resetLevel = 0; // how many times the player has reset
+    public int returnCount = 0; // how many times the player has reset
     public double totalCurrencyEarned = 0; // lifetime tracker
 
     public static GameManager instance = null;
@@ -76,7 +78,7 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = 60;
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         mainCurrency = 200;
-        rebirthCost = 50000;
+        returnCost = 50000;
         planets = FindObsWithTag("planetTab");
         
         SuitsLevel = new double[6];
@@ -146,16 +148,18 @@ public class GameManager : MonoBehaviour
 
         CurrencyText.text = ExponentLetterSystem(mainCurrency);
         IncomePerSecond.text = ExponentLetterSystem(GetTotalIncomePerSecond()) + "/s ";
-        RebirthPriceText.text = ExponentLetterSystem(rebirthCost);
-        RebirthLevel.text = "Returns: " + resetLevel;
+        ReturnPriceText.text = ExponentLetterSystem(returnCost);
+        ReturnsCount.text = "Returns: " + returnCount;
         ProfileLevel.text = "1"; //Will be implemented later with XP system
         CrystalsAmount.text = crystalCurrency.ToString("F0");
         AntiMatter.text = ExponentLetterSystem(antiMatter);
         AntiMatterEarned.text = ExponentLetterSystem(globalUpgradeManager.CalculateAntimatterReward(totalCurrencyEarned));
+        AntiMatterToReward.text = AntiMatterEarned.text;
         nickName.text = "Nick: " + PlayerPrefs.GetString("Nick");
 
-        RebirthButtonStatus();
-        RebirthUnlock();
+        GlobalUpgradesController();
+        ReturnButtonStatus();
+        ReturnUnlock();
         StartCoroutine("MySave");
         SaveDate();
     }
@@ -174,7 +178,7 @@ public class GameManager : MonoBehaviour
                 total += profitPerSecond;
             }
         }
-        return total * incomeMultiplier;
+        return total;
     }
 
     public void ProcessBuildingIncomeCycle()
@@ -203,9 +207,8 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void AddCurrency(double amount)
+    public void AddCurrency(double income)
     {
-        double income = amount * incomeMultiplier;
         mainCurrency += income;
         totalCurrencyEarned += income; // track every earned coin
     }
@@ -228,7 +231,19 @@ public class GameManager : MonoBehaviour
             total += profitPerSecond;
         }
 
-        return total * incomeMultiplier;
+        return total;
+    }
+
+    public void GlobalUpgradesController()
+    {
+        if (returnCount >= 1)
+        {
+            globalUpgradesBtn.interactable = true;
+        }
+        else
+        {
+            globalUpgradesBtn.interactable = false;
+        }
     }
 
     public GameObject[] FindObsWithTag(string tag)
@@ -386,9 +401,8 @@ public class GameManager : MonoBehaviour
         mainCurrency = gameData.researchPointsData;
         crystalCurrency = gameData.crystals;
         antiMatter = gameData.antiMatter;
-        resetLevel = gameData.resetLevel;
-        rebirthCost = gameData.rebirthCostData;
-        incomeMultiplier = gameData.incomeMultiplier;
+        returnCount = gameData.returnCount;
+        returnCost = gameData.returnCostData;
         totalCurrencyEarned = gameData.totalCurrencyEarned;
 
         for (int id = 0; id < SuitsLevel.Length; id++)
@@ -467,14 +481,22 @@ public class GameManager : MonoBehaviour
         return totalCost;
     }
 
+    public void OpenReturnConfirmation()
+    {
+        returnConfirmMessage.SetActive(true);
+    }
+
+    public void CloseReturnConfirmation()
+    {
+        returnConfirmMessage.SetActive(false);
+    }
+
     public void ResetProgress()
     {
-        resetLevel++;
+        CloseReturnConfirmation();
+        returnCount++;
         double antimatterReward = globalUpgradeManager.CalculateAntimatterReward(totalCurrencyEarned);
         globalUpgradeManager.AddAntimatter(antimatterReward);
-        // Prestige bonus based on total earned
-        double bonus = Math.Floor(totalCurrencyEarned / 1e6);
-        incomeMultiplier += bonus * 0.05; // +5% per million
 
         // Reset everything else
         buildingManager.ResetAllBuildings();
@@ -497,25 +519,25 @@ public class GameManager : MonoBehaviour
         ChangePlanetTab(0);
     }
 
-    public void RebirthButtonStatus()
+    public void ReturnButtonStatus()
     {
-        if (mainCurrency >= rebirthCost)
+        if (mainCurrency >= returnCost)
         {
-            RebirthPriceText.color = Color.green;
+            ReturnPriceText.color = Color.green;
         }
         else
-            RebirthPriceText.color = Color.red;
+            ReturnPriceText.color = Color.red;
     }
 
     //TODO
-    public void RebirthUnlock()
+    public void ReturnUnlock()
     {
         if (researchManager.unlockedResearches.Count >= 6)
         {
-            rebirthRequirements.color = Color.green;
+            returnRequirements.color = Color.green;
         }
         else
-            rebirthRequirements.color = Color.red;
+            returnRequirements.color = Color.red;
     }
 
     public void QuitButtonAndroid()
