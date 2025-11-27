@@ -7,30 +7,28 @@ public class GameData
 {
     public double researchPointsData;
     public double crystals;
-    public int resetLevel;
-    public double rebirthCostData;
-    public double[] suitsLevel;
-    public double incomeMultiplier;
+    public double antiMatter;
+    public int returnCount;
+    public double returnCostData;
     public double totalCurrencyEarned;
 
     public List<int> researchIds = new();
     public List<int> planetIds = new();
     public List<int> buildingLevels = new();
     public List<int> astronautsHired = new();
+    public List<int> globalUpgradeLevels = new();
 
-    public GameData (GameManager gameManager, ResearchManager researchManager, PlanetManager planetManager, BuildingManager buildingManager)
+    public GameData (GameManager gameManager, ResearchManager researchManager, PlanetManager planetManager, BuildingManager buildingManager, GlobalUpgradeManager globalUpgradeManager)
     {
         researchPointsData = gameManager.mainCurrency;
 
-        resetLevel = gameManager.resetLevel;
+        returnCount = gameManager.returnCount;
 
-        rebirthCostData = gameManager.rebirthCost;
-
-        suitsLevel = gameManager.SuitsLevel;
+        returnCostData = gameManager.returnCost;
 
         crystals = gameManager.crystalCurrency;
 
-        incomeMultiplier = gameManager.incomeMultiplier;
+        antiMatter = gameManager.antiMatter;
 
         totalCurrencyEarned = gameManager.totalCurrencyEarned;
 
@@ -52,6 +50,11 @@ public class GameData
         foreach (var buildingState in buildingManager.buildings)
         {
             astronautsHired.Add(buildingState.astronautsHired);
+        }
+
+        foreach (var globalUpgradeState in globalUpgradeManager.playerUpgrades)
+        {
+            globalUpgradeLevels.Add(globalUpgradeState.level);
         }
     }
 }
