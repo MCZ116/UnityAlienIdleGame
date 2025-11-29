@@ -16,6 +16,7 @@ public class BuildingUI : MonoBehaviour
     private void Awake()
     {
         mainButton.onClick.AddListener(ToggleUpgradePanel);
+        icon.sprite = state.data.icon;
     }
 
     private void Update()

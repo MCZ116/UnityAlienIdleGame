@@ -10,8 +10,14 @@ public class UpgradePanelUI : MonoBehaviour
     public TextMeshProUGUI maxText;
     public TextMeshProUGUI priceAstronautText;
     public TextMeshProUGUI profitPerSecondText;
+    public TextMeshProUGUI possibleProfitPerSecond;
+    public TextMeshProUGUI totalProfit;
+    public TextMeshProUGUI incomeTimer;
+    public TextMeshProUGUI level;
     public Button upgradeButton;
     public Button astronautButton;
+    public Image buildingIcon;
+    public Image progressBar;
     [SerializeField] private GameObject priceContainer;
 
     private BuildingState buildingState;
@@ -22,7 +28,10 @@ public class UpgradePanelUI : MonoBehaviour
         buildingState = building.state;
         buildingManager = building.buildingManager;
 
-        nameText.text = building.state.data.name; // example
+        nameText.text = building.state.data.name;
+        buildingIcon.sprite = building.state.data.icon;
+        level.text = "Level " + building.state.level.ToString();
+        nameText.text = building.state.data.buildingName;
         RefreshUI();
 
         // Remove previous listeners
@@ -47,6 +56,8 @@ public class UpgradePanelUI : MonoBehaviour
 
     private void Update()
     {
+        progressBar.fillAmount = Mathf.Clamp01(buildingState.currentProgress);
+
         if (buildingState != null)
             RefreshUI();
     }
@@ -56,7 +67,12 @@ public class UpgradePanelUI : MonoBehaviour
         UpdateUpgradeButton(buildingState);
         UpdateAstronautButton(buildingState);
 
-        profitPerSecondText.text = GameManager.ExponentLetterSystem(buildingState.profitPerSecond) + "/s";
+        double currentProfit = GameManager.instance.GetIncomePerSecondOfBuilding(buildingState);
+        profitPerSecondText.text = GameManager.ExponentLetterSystem(currentProfit) + "/s";
+        double nextProfit = GameManager.instance.GetIncomePerSecondOfBuilding(buildingState, GameManager.instance.GetBuyAmount());
+        possibleProfitPerSecond.text = GameManager.ExponentLetterSystem(nextProfit) + "/s";
+        incomeTimer.text = buildingState.TimeRemaining.ToString("F1")+"s";
+        totalProfit.text = GameManager.ExponentLetterSystem(buildingState.GetCurrentProfit());
     }
 
     private void UpdateUpgradeButton(BuildingState buildingState)
