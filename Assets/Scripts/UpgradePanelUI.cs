@@ -11,6 +11,8 @@ public class UpgradePanelUI : MonoBehaviour
     public TextMeshProUGUI priceAstronautText;
     public TextMeshProUGUI profitPerSecondText;
     public TextMeshProUGUI possibleProfitPerSecond;
+    public TextMeshProUGUI possibleAddedLvlsAtMax;
+    public TextMeshProUGUI crystalProgressText;
     public TextMeshProUGUI totalProfit;
     public TextMeshProUGUI incomeTimer;
     public TextMeshProUGUI level;
@@ -19,6 +21,7 @@ public class UpgradePanelUI : MonoBehaviour
     public Image buildingIcon;
     public Image progressBar;
     [SerializeField] private GameObject priceContainer;
+    [SerializeField] private GameObject possibleLvlContainer;
 
     private BuildingState buildingState;
     private BuildingManager buildingManager;
@@ -30,7 +33,6 @@ public class UpgradePanelUI : MonoBehaviour
 
         nameText.text = building.state.data.name;
         buildingIcon.sprite = building.state.data.icon;
-        level.text = "Level " + building.state.level.ToString();
         nameText.text = building.state.data.buildingName;
         RefreshUI();
 
@@ -66,13 +68,14 @@ public class UpgradePanelUI : MonoBehaviour
     {
         UpdateUpgradeButton(buildingState);
         UpdateAstronautButton(buildingState);
-
+        level.text = "Lvl " + buildingState.level.ToString();
         double currentProfit = GameManager.instance.GetIncomePerSecondOfBuilding(buildingState);
         profitPerSecondText.text = GameManager.ExponentLetterSystem(currentProfit) + "/s";
         double nextProfit = GameManager.instance.GetIncomePerSecondOfBuilding(buildingState, GameManager.instance.GetBuyAmount());
         possibleProfitPerSecond.text = GameManager.ExponentLetterSystem(nextProfit) + "/s";
         incomeTimer.text = buildingState.TimeRemaining.ToString("F1")+"s";
         totalProfit.text = GameManager.ExponentLetterSystem(buildingState.GetCurrentProfit());
+        ShowPossibleLevelsContainer();
     }
 
     private void UpdateUpgradeButton(BuildingState buildingState)
@@ -108,6 +111,18 @@ public class UpgradePanelUI : MonoBehaviour
         priceAstronautText.text = buildingState.GetAstronautCost().ToString();
     }
 
-
+    public void ShowPossibleLevelsContainer()
+    {
+        int levels = GameManager.instance.CalculateMaxAffordableLevels(buildingState);
+        if (levels > 0 && GameManager.instance.GetBuyAmount() == int.MaxValue)
+        {
+            possibleAddedLvlsAtMax.text = "+" + levels;
+            possibleLvlContainer.SetActive(true);
+        }
+        else
+        {
+            possibleLvlContainer.SetActive(false);
+        }
+    }
 
 }

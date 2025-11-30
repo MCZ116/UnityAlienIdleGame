@@ -21,13 +21,13 @@ public class BuildingUI : MonoBehaviour
 
     private void Update()
     {
-        progressBar.fillAmount = Mathf.Clamp01(state.currentProgress);
         RefreshUI();
     }
 
     private void RefreshUI()
     {
         levelText.text = state.level.ToString();
+        progressBar.fillAmount = Mathf.Clamp01(state.currentProgress);
     }
 
     public void ToggleUpgradePanel()
