@@ -37,10 +37,15 @@ public class BuildingState : MonoBehaviour
 
     public double GetCurrentProfit()
     {
-        if (!IsUnlocked) return 0;
+        return GetProfitAtLevel(level);
+    }
+
+    public double GetProfitAtLevel(int targetLevel)
+    {
+        if (!IsUnlocked && targetLevel == 0) return 0;
 
         double buildingBase = Math.Pow(data.baseProfitMultiplier, data.buildingIndex);
-        double levelGrowth = Math.Pow(1.15, level - 1);
+        double levelGrowth = Math.Pow(1.15, targetLevel - 1);
         double totalProfit = buildingBase * levelGrowth;
         double astronautMultiplier = data.GetAstronautMultiplier(astronautsHired);
         totalProfit *= astronautMultiplier;
@@ -89,6 +94,15 @@ public class BuildingState : MonoBehaviour
         placeholderVisual.SetActive(!unlocked);
         activeVisual.SetActive(unlocked);
         astronautObjects[0].SetActive(true);
+    }
+
+    public float TimeRemaining
+    {
+        get
+        {
+            if (level <= 0) return 0;
+            return Mathf.Max(0f, data.incomeInterval - timer);
+        }
     }
 
 }

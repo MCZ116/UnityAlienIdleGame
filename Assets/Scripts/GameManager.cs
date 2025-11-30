@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -14,7 +12,7 @@ public class GameManager : MonoBehaviour
     public BonusManager bonusManager;
     public int buyModeID;
     public TextMeshProUGUI CurrencyText;
-    public TextMeshProUGUI IncomePerSecond;
+    public TextMeshProUGUI TotalIncomePerSecond;
     public Text ChangeBuyModeText;
     public TextMeshProUGUI ReturnPriceText;
     public TextMeshProUGUI ReturnsCount;
@@ -49,7 +47,7 @@ public class GameManager : MonoBehaviour
 
     public CanvasGroup[] canvasTabs;
 
-    public string[] tabsNames = {"gameMenu","shopMenu","researchMenu","rebirth", "globalUpgradesMenu", "planetsMenu" };
+    public string[] tabsNames;
 
     public CanvasGroup canvasMainGame;
 
@@ -138,7 +136,7 @@ public class GameManager : MonoBehaviour
         ProcessBuildingIncomeCycle();
 
         CurrencyText.text = ExponentLetterSystem(mainCurrency);
-        IncomePerSecond.text = ExponentLetterSystem(GetTotalIncomePerSecond()) + "/s ";
+        TotalIncomePerSecond.text = ExponentLetterSystem(GetTotalIncomePerSecond()) + "/s ";
         ReturnPriceText.text = ExponentLetterSystem(returnCost);
         ReturnsCount.text = "Returns: " + returnCount;
         ProfileLevel.text = "1"; //Will be implemented later with XP system
@@ -163,9 +161,7 @@ public class GameManager : MonoBehaviour
             if (building.level > 0)
             {
                 double profitPerSecond = building.GetCurrentProfit() / building.data.incomeInterval;
-                profitPerSecond *= researchManager.GetGlobalIncomeMultiplier();
-                profitPerSecond *= bonusManager.GetIncomeMultiplier();
-                profitPerSecond *= globalUpgradeManager.GetGlobalIncomeBoost();
+                profitPerSecond *= GetGlobalMultiplier();
                 total += profitPerSecond;
             }
         }
@@ -197,11 +193,38 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public double GetGlobalMultiplier()
+    {
+        return
+            researchManager.GetGlobalIncomeMultiplier() *
+            bonusManager.GetIncomeMultiplier() *
+            globalUpgradeManager.GetGlobalIncomeBoost();
+    }
 
     public void AddCurrency(double income)
     {
         mainCurrency += income;
         totalCurrencyEarned += income; // track every earned coin
+    }
+
+    public double GetIncomePerSecondOfBuilding(BuildingState state, int levelsToBuy = 0)
+    {
+        var building = state;
+        if (building.level <= 0 && levelsToBuy == 0)
+            return 0;
+        {
+        if (levelsToBuy == int.MaxValue)
+                levelsToBuy = CalculateMaxAffordableLevels(state);
+
+            int targetLevel = state.level + levelsToBuy;
+
+            double newIncome = building.GetProfitAtLevel(targetLevel) / building.data.incomeInterval;
+            newIncome *= researchManager.GetGlobalIncomeMultiplier();
+            newIncome *= bonusManager.GetIncomeMultiplier();
+            newIncome *= globalUpgradeManager.GetGlobalIncomeBoost();
+
+            return newIncome;
+        }
     }
 
     public double GetTotalIncomeWithPreview(GlobalUpgradeData previewUpgrade)
@@ -313,6 +336,7 @@ public class GameManager : MonoBehaviour
             {
                 CanvasGroupMenuSwitch(false, canvasTabs[id]);
                 activeTab[id] = false;
+
             }
             else if (tabName.Equals(tabsNames[id]) && activeTab[id])
             {
@@ -321,6 +345,7 @@ public class GameManager : MonoBehaviour
                 CanvasGroupMenuSwitch(true, canvasMainGame);
             }
         }
+        UpgradePanelController.Instance.HidePanel();
     }
 
     public void ChangePlanetTab(int planetID)

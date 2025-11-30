@@ -10,9 +10,18 @@ public class UpgradePanelUI : MonoBehaviour
     public TextMeshProUGUI maxText;
     public TextMeshProUGUI priceAstronautText;
     public TextMeshProUGUI profitPerSecondText;
+    public TextMeshProUGUI possibleProfitPerSecond;
+    public TextMeshProUGUI possibleAddedLvlsAtMax;
+    public TextMeshProUGUI crystalProgressText;
+    public TextMeshProUGUI totalProfit;
+    public TextMeshProUGUI incomeTimer;
+    public TextMeshProUGUI level;
     public Button upgradeButton;
     public Button astronautButton;
+    public Image buildingIcon;
+    public Image progressBar;
     [SerializeField] private GameObject priceContainer;
+    [SerializeField] private GameObject possibleLvlContainer;
 
     private BuildingState buildingState;
     private BuildingManager buildingManager;
@@ -22,7 +31,9 @@ public class UpgradePanelUI : MonoBehaviour
         buildingState = building.state;
         buildingManager = building.buildingManager;
 
-        nameText.text = building.state.data.name; // example
+        nameText.text = building.state.data.name;
+        buildingIcon.sprite = building.state.data.icon;
+        nameText.text = building.state.data.buildingName;
         RefreshUI();
 
         // Remove previous listeners
@@ -47,6 +58,8 @@ public class UpgradePanelUI : MonoBehaviour
 
     private void Update()
     {
+        progressBar.fillAmount = Mathf.Clamp01(buildingState.currentProgress);
+
         if (buildingState != null)
             RefreshUI();
     }
@@ -55,8 +68,14 @@ public class UpgradePanelUI : MonoBehaviour
     {
         UpdateUpgradeButton(buildingState);
         UpdateAstronautButton(buildingState);
-
-        profitPerSecondText.text = GameManager.ExponentLetterSystem(buildingState.profitPerSecond) + "/s";
+        level.text = "Lvl " + buildingState.level.ToString();
+        double currentProfit = GameManager.instance.GetIncomePerSecondOfBuilding(buildingState);
+        profitPerSecondText.text = GameManager.ExponentLetterSystem(currentProfit) + "/s";
+        double nextProfit = GameManager.instance.GetIncomePerSecondOfBuilding(buildingState, GameManager.instance.GetBuyAmount());
+        possibleProfitPerSecond.text = GameManager.ExponentLetterSystem(nextProfit) + "/s";
+        incomeTimer.text = buildingState.TimeRemaining.ToString("F1")+"s";
+        totalProfit.text = GameManager.ExponentLetterSystem(buildingState.GetCurrentProfit());
+        ShowPossibleLevelsContainer();
     }
 
     private void UpdateUpgradeButton(BuildingState buildingState)
@@ -92,6 +111,18 @@ public class UpgradePanelUI : MonoBehaviour
         priceAstronautText.text = buildingState.GetAstronautCost().ToString();
     }
 
-
+    public void ShowPossibleLevelsContainer()
+    {
+        int levels = GameManager.instance.CalculateMaxAffordableLevels(buildingState);
+        if (levels > 0 && GameManager.instance.GetBuyAmount() == int.MaxValue)
+        {
+            possibleAddedLvlsAtMax.text = "+" + levels;
+            possibleLvlContainer.SetActive(true);
+        }
+        else
+        {
+            possibleLvlContainer.SetActive(false);
+        }
+    }
 
 }
