@@ -130,8 +130,8 @@ public class SpinWheel : MonoBehaviour
 
             case "points":
                 gameManager.mainCurrency += award;
-                awardDisplay.text = GameManager.ExponentLetterSystem(award, "F0");
-
+                awardDisplay.text = currency;
+                Coin.gameObject.SetActive(true);
                 break;
         }
         awardDisplay.gameObject.SetActive(true);
