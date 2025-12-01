@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 581f636efaf87f74c86a7deffd185b90
+guid: 13be6583cf637b24cbf59f060a23497d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7745780601953772880
-    second: spinwheel 1_0
+      213: -8228234015499015415
+    second: wheelnewspin_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,7 +126,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: spinwheel 1_0
+      name: wheelnewspin_0
       rect:
         serializedVersion: 2
         x: 0
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0ba1f68d495718490800000000000000
-      internalID: -7745780601953772880
+      spriteID: 90b256902c07fcd80800000000000000
+      internalID: -8228234015499015415
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      spinwheel 1_0: -7745780601953772880
+      wheelnewspin_0: -8228234015499015415
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

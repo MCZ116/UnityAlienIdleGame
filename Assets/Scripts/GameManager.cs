@@ -304,6 +304,29 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public static double AggressiveRound(double value)
+    {
+        if (value <= 0)
+            return 0;
+
+        // Determine the magnitude
+        double magnitude = Math.Pow(10, Math.Floor(Math.Log10(value)));
+
+        // Scale to 1–10 range
+        double scaled = value / magnitude;
+
+        // Round to nearest single digit (1 digit precision)
+        // Examples:
+        // 5.07 -> 6
+        // 42.1 -> 4
+        // 507 -> 6
+        // 534829 -> 5
+        double rounded = Math.Round(scaled);
+
+        // Return full rounded number
+        return rounded * magnitude;
+    }
+
     public void CanvasGroupMenuSwitch(bool status, CanvasGroup choosenGroup)
     {
 

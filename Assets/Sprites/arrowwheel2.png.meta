@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 581f636efaf87f74c86a7deffd185b90
+guid: 9b1416ce6c3f854439f83f326430527e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7745780601953772880
-    second: spinwheel 1_0
+      213: 7112946437275743311
+    second: arrowwheel2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: spinwheel 1_0
+      name: arrowwheel2_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1586
-        height: 1586
+        width: 238
+        height: 321
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0ba1f68d495718490800000000000000
-      internalID: -7745780601953772880
+      spriteID: f447334491346b260800000000000000
+      internalID: 7112946437275743311
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      spinwheel 1_0: -7745780601953772880
+      arrowwheel2_0: 7112946437275743311
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
