@@ -1,164 +1,162 @@
 using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SpinWheel : MonoBehaviour
 {
+    [Header("Spin Wheel Settings")]
     public bool spinStarted = false;
     public bool activeSpinTab = false;
     public GameObject wheel;
     public GameObject spinWheelMenu;
     public GameObject spinArea;
-    public float[] sectorAngles;
-    public float spinStartAngle = 0;
-    public float spinEndAngle;
-    public Text awardDisplay;
-    public Text[] researchPointsOnSpin;
-    public double[] rewardPoints;
 
-    //changes
+    public Text[] wheelSlotTexts;
+
     public GameManager gameManager;
+
+    public WheelConfig config;
+    public float spinStartAngle = 0f;
+    public float spinEndAngle;
 
     public float currentLerpRotation;
     public float maxLerpRotationTime;
 
+    [Header("Reward Popup")]
+    public RewardPopup rewardPopup;
+
     private void Start()
     {
-        rewardPoints = new double[6];
-        for(int i = 0; i < researchPointsOnSpin.Length; i++)
-        {
-            rewardPoints[i] = (5000 * (i+1)) * gameManager.returnCount;
-            researchPointsOnSpin[i].text = GameManager.ExponentLetterSystem(rewardPoints[i], "F0");
-        }
+        UpdateWheelTexts();
     }
 
-    void Update()
+    private void Update()
     {
-
+        UpdateWheelTexts();
         HideIfClickedOutside(spinArea);
         if (!spinStarted)
             return;
 
         maxLerpRotationTime = 4f;
         currentLerpRotation += Time.deltaTime;
+
         if (currentLerpRotation > maxLerpRotationTime || wheel.transform.eulerAngles.z == spinEndAngle)
         {
             currentLerpRotation = maxLerpRotationTime;
             spinStarted = false;
-            spinStartAngle = spinEndAngle % 360;
+            spinStartAngle = spinEndAngle % 360f;
+            if (spinStartAngle < 0f) spinStartAngle += 360f;
 
-
-            GiveAwardByAngle();
-            StartCoroutine("HideAwardDisplay");
+            GiveRewardFromConfig();
         }
 
         float spinTime = currentLerpRotation / maxLerpRotationTime;
-
         spinTime = spinTime * spinTime * spinTime * (spinTime * (6f * spinTime - 15f) + 10f);
 
         float angle = Mathf.Lerp(spinStartAngle, spinEndAngle, spinTime);
         wheel.transform.eulerAngles = new Vector3(0, 0, angle);
-
     }
 
-    public void SpinWheelButton(){
+    public void UpdateWheelTexts()
+    {
+        for (int i = 0; i < config.slots.Length; i++)
+        {
+            var slot = config.slots[i];
+
+            double rewardAmount = GetFinalRewardAmount(slot);
+            wheelSlotTexts[i].text = GameManager.ExponentLetterSystem(rewardAmount,"F0");
+        }
+    }
+
+    public void SpinWheelButton()
+    {
+        if (spinStarted) return;
 
         currentLerpRotation = 0f;
 
-        sectorAngles = new float[] { 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360 };
+        // Pick a random slot from your config
+        int slotIndex = Random.Range(0, config.slots.Length);
+        WheelSlot selectedSlot = config.slots[slotIndex];
 
-        int fullspins = 5;
+        int fullSpins = 5;
+        spinEndAngle = -(fullSpins * 360f + selectedSlot.centerAngle); // negative for clockwise spin
 
-        float randomAngle = sectorAngles[Random.Range(0,sectorAngles.Length)];
-        spinEndAngle = -(fullspins * 360 + randomAngle);
         spinStarted = true;
     }
 
-    private void GiveAwardByAngle()
+    private void GiveRewardFromConfig()
     {
-        switch ((int)spinStartAngle)
-        {
-            case 0:
-                Rewards(300, "crystal");
-                break;
-            case -330:
-                Rewards(rewardPoints[5], "points");
-                break;
-            case -300:
-                Rewards(150, "crystal");
-                break;
-            case -270:
-                Rewards(rewardPoints[4], "points");
-                break;
-            case -240:
-                Rewards(100, "crystal");
-                break;
-            case -210:
-                Rewards(rewardPoints[3], "points");
-                break;
-            case -180:
-                Rewards(50, "crystal");
-                break;
-            case -150:
-                Rewards(rewardPoints[2], "points");
-                break;
-            case -120:
-                Rewards(25, "crystal");
-                break;
-            case -90:
-                Rewards(rewardPoints[1], "points");
-                break;
-            case -60:
-                Rewards(10, "crystal");
-                break;
-            case -30:
-                Rewards(rewardPoints[0], "points");
-                break;
-        }
+        float currentAngle = spinStartAngle % 360f;
+        if (currentAngle < 0) currentAngle += 360f;
+
+        WheelSlot rewardSlot = FindSlotByAngle(currentAngle);
+
+        double rewardAmount = GetFinalRewardAmount(rewardSlot);
+
+        bool isCrystal = rewardSlot.isCrystal;
+        rewardPopup.Show(rewardAmount, isCrystal);
     }
 
-    private void Rewards(double award, string currency)
+    public double GetFinalRewardAmount(WheelSlot slot)
     {
-        switch (currency)
-        {
-            case "crystal":
-                gameManager.crystalCurrency += award;
-                awardDisplay.text = award.ToString("F0");
-
-                break;
-
-            case "points":
-                gameManager.mainCurrency += award;
-                awardDisplay.text = GameManager.ExponentLetterSystem(award, "F0");
-
-                break;
-        }
-        awardDisplay.gameObject.SetActive(true);
+        double ips = gameManager.GetTotalIncomePerSecond();
+        double reward = slot.isCrystal ? slot.baseAmount : ips * slot.baseAmount;
+        return GameManager.AggressiveRound(reward);
     }
 
-    private IEnumerator HideAwardDisplay()
+    private WheelSlot FindSlotByAngle(float angle)
     {
-        yield return new WaitForSeconds(1f);
-        awardDisplay.gameObject.SetActive(false);
+        foreach (var slot in config.slots)
+        {
+            float half = slot.angleSize / 2f;
+            float min = NormalizeAngle(slot.centerAngle - half);
+            float max = NormalizeAngle(slot.centerAngle + half);
+
+            if (AngleInRange(angle, min, max))
+                return slot;
+        }
+
+        return config.slots[0]; // fallback
+    }
+
+    private bool AngleInRange(float angle, float min, float max)
+    {
+        if (min < max)
+            return angle >= min && angle <= max;
+        else
+            return angle >= min || angle <= max;
+    }
+
+    private float NormalizeAngle(float a)
+    {
+        a %= 360f;
+        if (a < 0f) a += 360f;
+        return a;
     }
 
     public void SpinWheelMenu()
     {
-        if (!activeSpinTab) {
-            spinWheelMenu.gameObject.SetActive(true);
+        if (!activeSpinTab)
+        {
+            spinWheelMenu.SetActive(true);
             activeSpinTab = true;
         }
     }
 
     private void HideIfClickedOutside(GameObject panel)
     {
-        if (Input.GetMouseButton(0) && panel.activeSelf && !RectTransformUtility.RectangleContainsScreenPoint(panel.GetComponent<RectTransform>(),
-            Input.mousePosition, Camera.main))
+        if (rewardPopup.gameObject.activeSelf)
+            return;
+
+        if (Input.GetMouseButton(0) && panel.activeSelf &&
+            !RectTransformUtility.RectangleContainsScreenPoint(
+                panel.GetComponent<RectTransform>(),
+                Input.mousePosition,
+                Camera.main))
         {
             spinWheelMenu.SetActive(false);
             activeSpinTab = false;
         }
     }
-
 }

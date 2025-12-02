@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b0f9f3e2fd59dd49bf6963ac01f13a8, type: 3}
+  m_Name: WheelConfig
+  m_EditorClassIdentifier: Assembly-CSharp::WheelConfig
+  slots:
+  - {fileID: 11400000, guid: 1681b0230ddd04840af972c284951128, type: 2}
+  - {fileID: 11400000, guid: b0e45f30030197a47ab034a965d443ab, type: 2}
+  - {fileID: 11400000, guid: 6e9eb691a156d51459c0be2d883d6e22, type: 2}
+  - {fileID: 11400000, guid: 4af3a97157e1dc54a944c76bf61dd510, type: 2}
+  - {fileID: 11400000, guid: 3b71fc34ffb4b0940ba5d3f4f51bb77e, type: 2}
+  - {fileID: 11400000, guid: c74a33cc1b9528641a2896dc877cf901, type: 2}
+  - {fileID: 11400000, guid: 333e7619053e1af4dabb815b14c129a3, type: 2}
+  - {fileID: 11400000, guid: ea490d07ad7b8c54e8cef911b8f4c8bc, type: 2}
+  - {fileID: 11400000, guid: 593afbdc066df3d4db8879d4340fce38, type: 2}
+  - {fileID: 11400000, guid: d91423ff7b9950547861ee613ce7146f, type: 2}
+  - {fileID: 11400000, guid: 117c4af67980c584b83694d64cd725fe, type: 2}
+  - {fileID: 11400000, guid: d74c36ebd0352e24991286cb481a542a, type: 2}

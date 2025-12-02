@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class AdsManager : MonoBehaviour
 {
+    public static AdsManager Instance;
+
     [SerializeField] private string rewardedAdUnitId;
     [SerializeField] private bool useTestMode = false; // Toggle this in Inspector when go live or remove
 
@@ -21,6 +23,15 @@ public class AdsManager : MonoBehaviour
     public OfflineProgress offlineProgress;
     public SpinWheel spinWheel;
     public BonusManager bonusManager;
+
+    public double pendingAmount;
+    public bool pendingIsCrystal;
+
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }
 
     async void Start()
     {
@@ -65,6 +76,11 @@ public class AdsManager : MonoBehaviour
             Debug.LogError("Failed to initialize Unity Services: " + e.Message);
         }
     }
+    public void PrepareDoubleReward(double amount, bool isCrystal)
+    {
+        pendingAmount = amount;
+        pendingIsCrystal = isCrystal;
+    }
 
     void LoadRewardedAd()
     {
@@ -93,8 +109,9 @@ public class AdsManager : MonoBehaviour
         SetButtons(false);
     }
 
-    void ShowRewardedAd(string button)
+    public void ShowRewardedAd(string button)
     {
+
         if (useTestMode)
         {
             Debug.Log("Test Mode: Simulating ad watched for " + button);
@@ -132,6 +149,10 @@ public class AdsManager : MonoBehaviour
 
             case "DoubleTime":
                 bonusManager.ClickedBonusBtn();
+                break;
+
+            case "SpinDoublePopup":
+                RewardPopup.Instance.ApplyDoubleReward();
                 break;
         }
     }
