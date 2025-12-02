@@ -207,6 +207,11 @@ public class GameManager : MonoBehaviour
         totalCurrencyEarned += income; // track every earned coin
     }
 
+    public void AddCrystal(double income)
+    {
+        crystalCurrency += income;
+    }
+
     public double GetIncomePerSecondOfBuilding(BuildingState state, int levelsToBuy = 0)
     {
         var building = state;
@@ -325,6 +330,19 @@ public class GameManager : MonoBehaviour
 
         // Return full rounded number
         return rounded * magnitude;
+    }
+    public static void PositionIconNextToText(TextMeshProUGUI text, Image icon, float spacing)
+    {
+        // Force TMP to update width
+        LayoutRebuilder.ForceRebuildLayoutImmediate(text.rectTransform);
+
+        float textWidth = text.preferredWidth;
+        Vector3 iconPos = icon.rectTransform.localPosition;
+        icon.rectTransform.localPosition = new Vector3(
+            -textWidth / 2 - spacing - icon.rectTransform.rect.width / 2,
+            iconPos.y,
+            iconPos.z
+        );
     }
 
     public void CanvasGroupMenuSwitch(bool status, CanvasGroup choosenGroup)
@@ -573,6 +591,21 @@ public class GameManager : MonoBehaviour
         else
             returnRequirements.color = Color.red;
     }
+
+    public void AddReward(double amount, bool isCrystal)
+    {
+        if (isCrystal)
+        {
+            crystalCurrency += amount;
+        }
+        else
+        {
+            mainCurrency += amount;
+        }
+
+        Save();
+    }
+
 
     public void QuitButtonAndroid()
     {

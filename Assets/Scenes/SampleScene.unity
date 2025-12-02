@@ -2525,6 +2525,8 @@ MonoBehaviour:
   offlineProgress: {fileID: 1697208892}
   spinWheel: {fileID: 1890783326}
   bonusManager: {fileID: 1791264747}
+  pendingAmount: 0
+  pendingIsCrystal: 0
 --- !u!1 &309026460
 GameObject:
   m_ObjectHideFlags: 0
@@ -13640,6 +13642,7 @@ RectTransform:
   m_Children:
   - {fileID: 1930842972}
   - {fileID: 2039874451}
+  - {fileID: 1930201171}
   m_Father: {fileID: 1890783323}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -25781,7 +25784,6 @@ RectTransform:
   m_Children:
   - {fileID: 1490094702}
   - {fileID: 1568718779}
-  - {fileID: 1930201171}
   m_Father: {fileID: 1180607494}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -28050,7 +28052,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 2039874451}
+    m_TransformParent: {fileID: 1180607494}
     m_Modifications:
     - target: {fileID: 3390996900862001187, guid: 8a123de5cc3ae3245bbcf9d468f242dc, type: 3}
       propertyPath: m_Name
@@ -28060,6 +28062,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3775649899510513768, guid: 8a123de5cc3ae3245bbcf9d468f242dc, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 297779243}
     - target: {fileID: 5915529541944048298, guid: 8a123de5cc3ae3245bbcf9d468f242dc, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -28070,27 +28076,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5915529541944048298, guid: 8a123de5cc3ae3245bbcf9d468f242dc, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5915529541944048298, guid: 8a123de5cc3ae3245bbcf9d468f242dc, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5915529541944048298, guid: 8a123de5cc3ae3245bbcf9d468f242dc, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5915529541944048298, guid: 8a123de5cc3ae3245bbcf9d468f242dc, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5915529541944048298, guid: 8a123de5cc3ae3245bbcf9d468f242dc, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 428.87
+      value: 2.880005
       objectReference: {fileID: 0}
     - target: {fileID: 5915529541944048298, guid: 8a123de5cc3ae3245bbcf9d468f242dc, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 100
+      value: 492.16003
       objectReference: {fileID: 0}
     - target: {fileID: 5915529541944048298, guid: 8a123de5cc3ae3245bbcf9d468f242dc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -28110,23 +28116,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5915529541944048298, guid: 8a123de5cc3ae3245bbcf9d468f242dc, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5915529541944048298, guid: 8a123de5cc3ae3245bbcf9d468f242dc, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5915529541944048298, guid: 8a123de5cc3ae3245bbcf9d468f242dc, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5915529541944048298, guid: 8a123de5cc3ae3245bbcf9d468f242dc, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.0029297
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5915529541944048298, guid: 8a123de5cc3ae3245bbcf9d468f242dc, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -393
+      value: 73.923706
       objectReference: {fileID: 0}
     - target: {fileID: 5915529541944048298, guid: 8a123de5cc3ae3245bbcf9d468f242dc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

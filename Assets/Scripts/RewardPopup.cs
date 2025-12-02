@@ -1,57 +1,91 @@
-using TMPro;
 using UnityEngine;
+using TMPro;
 using UnityEngine.UI;
+using System.Collections;
 
 public class RewardPopup : MonoBehaviour
 {
-    public Image icon;
-    public TMP_Text amountText;
+    public static RewardPopup Instance;
+
+    [Header("UI")]
+    public Image rewardIcon;
+    public TextMeshProUGUI amountText;
+    public Button collectButton;
+    public Button doubleButton;
+    public Button closeButton;
 
     [Header("Icons")]
-    public Sprite coinsSprite;
-    public Sprite crystalsSprite;
+    public Sprite coinIcon;
+    public Sprite crystalIcon;
 
-    [Header("Timing")]
-    public float displayTime = 2f;
-    public float fadeDuration = 0.5f;
+    private double baseAmount;
+    private bool isCrystal;
 
-    private CanvasGroup canvasGroup;
+    public GameObject root;
+    public GameObject buttons;
 
-    private void Awake()
+    void Awake()
     {
-        canvasGroup = gameObject.AddComponent<CanvasGroup>();
-        canvasGroup.alpha = 0f;
-    }
-
-    public void Show(double amount, string type)
-    {
-        // Reset state in case it's currently fading
-        StopAllCoroutines();
-        canvasGroup.alpha = 1f;
-        gameObject.SetActive(true);
-
-        amountText.text = "You won " + GameManager.ExponentLetterSystem(amount,"F0");
-        bool isCrystal = (type == "crystal");
-        icon.sprite = isCrystal ? crystalsSprite : coinsSprite;
-
-        // Auto-fade after displayTime
-        StartCoroutine(FadeAndHide());
-    }
-
-    private System.Collections.IEnumerator FadeAndHide()
-    {
-        yield return new WaitForSeconds(displayTime);
-
-        float elapsed = 0f;
-        float startAlpha = canvasGroup.alpha;
-
-        while (elapsed < fadeDuration)
-        {
-            elapsed += Time.deltaTime;
-            canvasGroup.alpha = Mathf.Lerp(startAlpha, 0f, elapsed / fadeDuration);
-            yield return null;
-        }
-
+        Instance = this;
         gameObject.SetActive(false);
+
+        collectButton.onClick.AddListener(OnCollect);
+        doubleButton.onClick.AddListener(OnDouble);
+        closeButton.onClick.AddListener(Close);
+
+        closeButton.gameObject.SetActive(false);
     }
+
+    public void Show(double amount, bool crystal)
+    {
+        baseAmount = amount;
+        isCrystal = crystal;
+
+        amountText.text = GameManager.ExponentLetterSystem(amount, "F0");
+
+        rewardIcon.sprite = isCrystal ? crystalIcon : coinIcon;
+
+        GameManager.PositionIconNextToText(amountText,rewardIcon,20f);
+
+        root.SetActive(true);
+    }
+
+    public void OnCollect()
+    {
+        GiveReward(baseAmount, isCrystal);
+        Close();
+    }
+
+    private void GiveReward(double amount, bool crystal)
+    {
+        if (crystal)
+            GameManager.instance.AddCrystal(amount);
+        else
+            GameManager.instance.AddCurrency(amount);
+    }
+
+    void OnDouble()
+    {
+        AdsManager.Instance.PrepareDoubleReward(baseAmount, isCrystal);
+        AdsManager.Instance.ShowRewardedAd("SpinDoublePopup");
+    }
+
+    public void ApplyDoubleReward()
+    {
+        buttons.SetActive(false);
+
+        GameManager.instance.AddReward(baseAmount * 2, isCrystal);
+        amountText.text = GameManager.ExponentLetterSystem(baseAmount * 2, "F0");
+        GameManager.PositionIconNextToText(amountText, rewardIcon, 20f);
+
+        closeButton.gameObject.SetActive(true);
+    }
+
+    public void Close()
+    {
+        gameObject.SetActive(false);
+        closeButton.gameObject.SetActive(false);
+        buttons.SetActive(true);
+    }
+
 }

@@ -94,10 +94,8 @@ public class SpinWheel : MonoBehaviour
 
         double rewardAmount = GetFinalRewardAmount(rewardSlot);
 
-        ApplyReward(
-            rewardAmount,
-            rewardSlot.isCrystal ? "crystal" : "coins"
-        );
+        bool isCrystal = rewardSlot.isCrystal;
+        rewardPopup.Show(rewardAmount, isCrystal);
     }
 
     public double GetFinalRewardAmount(WheelSlot slot)
@@ -137,22 +135,6 @@ public class SpinWheel : MonoBehaviour
         return a;
     }
 
-    private void ApplyReward(double award, string currency)
-    {
-        Debug.Log($"Awarded {award} {currency}");
-        switch (currency)
-        {
-            case "crystal":
-                gameManager.crystalCurrency += award;
-                break;
-
-            case "coins":
-                gameManager.mainCurrency += award;
-                break;
-        }
-        rewardPopup.Show(award, currency);
-    }
-
     public void SpinWheelMenu()
     {
         if (!activeSpinTab)
@@ -164,6 +146,9 @@ public class SpinWheel : MonoBehaviour
 
     private void HideIfClickedOutside(GameObject panel)
     {
+        if (rewardPopup.gameObject.activeSelf)
+            return;
+
         if (Input.GetMouseButton(0) && panel.activeSelf &&
             !RectTransformUtility.RectangleContainsScreenPoint(
                 panel.GetComponent<RectTransform>(),
